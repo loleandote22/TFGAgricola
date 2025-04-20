@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "AplicacionTFG",
+  "display": "standalone",
+  "name": "AplicacionTFG",
+  "short_name": "AplicacionTFG",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

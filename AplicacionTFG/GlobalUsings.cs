@@ -1,0 +1,15 @@
+﻿global using System.Collections.Immutable;
+global using AplicacionTFG.DataContracts;
+global using AplicacionTFG.DataContracts.Serialization;
+global using AplicacionTFG.Models;
+global using AplicacionTFG.Presentation;
+global using AplicacionTFG.Services.Caching;
+global using AplicacionTFG.Services.Endpoints;
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Localization;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Options;
+global using ApplicationExecutionState = Windows.ApplicationModel.Activation.ApplicationExecutionState;

@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="AplicacionTFG.Presentation.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <local:LoginViewModel/>
+    </Page.DataContext>
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <utu:ResponsiveView>
+            <utu:ResponsiveView.NormalTemplate>
+                <DataTemplate>
+
+                </DataTemplate>
+            </utu:ResponsiveView.NormalTemplate>
+            <utu:ResponsiveView.WideTemplate>
+                <DataTemplate>
+                    <Image Source="/Assets/Images/granja_logo.png" Width="500"  HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                </DataTemplate>
+            </utu:ResponsiveView.WideTemplate>
+        </utu:ResponsiveView>
+        <TabView Grid.Column="1" x:Name="tabView" Margin="10" Width="450" IsAddTabButtonVisible="False" CanDrag="False" CanDragTabs="False"
+            CanReorderTabs="False" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TabViewItem Header="Iniciar Sesión" HorizontalContentAlignment="Center" IsClosable="False">
+                <StackPanel>
+                    <TextBox Text="{Binding UserNameLogin, Mode=TwoWay}" PlaceholderText="Usuario" Margin="10"/>
+                    <PasswordBox Password="{Binding PasswordLogin, Mode=TwoWay}" PlaceholderText="Contraseña" Margin="10"/>
+                    <Button Content="Iniciar Sesión" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300" Margin="10"/>
+                </StackPanel>
+            </TabViewItem>
+            <TabViewItem Header="Registro" HorizontalContentAlignment="Center" IsClosable="False">
+                <StackPanel>
+                    <TextBox Text="{Binding UserNameRegister}" PlaceholderText="Usuario" Margin="10"/>
+                    <PasswordBox Password="{Binding PasswordRegister}" PlaceholderText="Contraseña" Margin="10"/>
+                    <PasswordBox Password="{Binding PasswordRegisterConfirm}" PlaceholderText="Confirmar Contraseña" Margin="10"/>
+                    <Button Content="Registrar" Command="{Binding RegistrarCommand}" HorizontalAlignment="Center" Width="300"  Margin="10"/>
+                </StackPanel>
+            </TabViewItem>
+            <TabViewItem Header="Reestablecer" IsClosable="False" HorizontalContentAlignment="Center">
+                <StackPanel>
+                    <TextBox Text="{Binding UserNameRecuperar}" PlaceholderText="Usuario" Margin="10"/>
+                    <Button Content="Recuperar Contraseña" HorizontalAlignment="Center" Width="300" Command="{Binding RecuperarCommand}"  Margin="10"/>
+                </StackPanel>
+            </TabViewItem>
+        </TabView>
+        <TextBlock Text="{Binding Indice, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+    </Grid>
+</Page>
