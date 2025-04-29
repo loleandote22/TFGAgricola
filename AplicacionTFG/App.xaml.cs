@@ -62,12 +62,12 @@ public partial class App : Application
                 )
                 // Enable localization (see appsettings.json for supported languages)
                 .UseLocalization()
-                // Register Json serializers (ISerializer and ISerializer)
+                // Registro Json serializers (ISerializer and ISerializer)
                 .UseSerialization((context, services) => services
                     .AddContentSerializer(context)
                     .AddJsonTypeInfo(WeatherForecastContext.Default.IImmutableListWeatherForecast))
                 .UseHttp((context, services) => services
-                    // Register HttpClient
+                    // Registro HttpClient
 #if DEBUG
                     // DelegatingHandler will be automatically injected into Refit Client
                     .AddTransient<DelegatingHandler, DebugHttpHandler>()
@@ -76,10 +76,10 @@ public partial class App : Application
                     .AddRefitClient<IApiClient>(context))
                 .ConfigureServices((context, services) =>
                 {
-                    // TODO: Register your services
+                    // TODO: Registro your services
                     //services.AddSingleton<IMyService, MyService>();
                 })
-                .UseNavigation(RegisterRoutes)
+                .UseNavigation(RegistroRoutes)
             );
         MainWindow = builder.Window;
 
@@ -91,12 +91,13 @@ public partial class App : Application
         Host = await builder.NavigateAsync<Shell>();
     }
 
-    private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
+    private static void RegistroRoutes(IViewRegistry views, IRouteRegistry routes)
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<LoginPage, LoginViewModel>(),
-            new ViewMap<MainPage, MainViewModel>(),
+            //new ViewMap<MainPage, MainViewModel>(),
+            new DataViewMap<MainPage, MainViewModel, Usuario>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
 

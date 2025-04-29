@@ -8,9 +8,11 @@
     xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.DataContext>
+    <!--Usar únicamente cuando en el desarrollo o la navegación puede no funcionar-->
+    <!--<Page.DataContext>
         <local:LoginViewModel/>
-    </Page.DataContext>
+    </Page.DataContext>-->
+        
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
 
         <Grid.ColumnDefinitions>
@@ -19,7 +21,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <utu:ResponsiveView>
             <utu:ResponsiveView.NormalTemplate>
@@ -33,30 +34,58 @@
                 </DataTemplate>
             </utu:ResponsiveView.WideTemplate>
         </utu:ResponsiveView>
-        <TabView Grid.Column="1" x:Name="tabView" Margin="10" Width="450" IsAddTabButtonVisible="False" CanDrag="False" CanDragTabs="False"
+        <TabView Width="350" Grid.Column="1" x:Name="tabView" Margin="10" IsAddTabButtonVisible="False" CanDrag="False" CanDragTabs="False"
             CanReorderTabs="False" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TabViewItem Header="Iniciar Sesión" HorizontalContentAlignment="Center" IsClosable="False">
-                <StackPanel>
-                    <TextBox Text="{Binding UserNameLogin, Mode=TwoWay}" PlaceholderText="Usuario" Margin="10"/>
-                    <PasswordBox Password="{Binding PasswordLogin, Mode=TwoWay}" PlaceholderText="Contraseña" Margin="10"/>
-                    <Button Content="Iniciar Sesión" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300" Margin="10"/>
+                <StackPanel Margin="10" Spacing="10">
+                    <TextBox Text="{Binding NombeUsuarioLogin, Mode=TwoWay}" PlaceholderText="Usuario"/>
+                    <PasswordBox Password="{Binding ContraLogin, Mode=TwoWay}" PlaceholderText="Contraseña"/>
+                    <Button Content="Iniciar Sesión" IsEnabled="{Binding Funcional}" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
                 </StackPanel>
             </TabViewItem>
             <TabViewItem Header="Registro" HorizontalContentAlignment="Center" IsClosable="False">
-                <StackPanel>
-                    <TextBox Text="{Binding UserNameRegister}" PlaceholderText="Usuario" Margin="10"/>
-                    <PasswordBox Password="{Binding PasswordRegister}" PlaceholderText="Contraseña" Margin="10"/>
-                    <PasswordBox Password="{Binding PasswordRegisterConfirm}" PlaceholderText="Confirmar Contraseña" Margin="10"/>
-                    <Button Content="Registrar" Command="{Binding RegistrarCommand}" HorizontalAlignment="Center" Width="300"  Margin="10"/>
-                </StackPanel>
+                <Grid>
+                    <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRegistroUsuario}">
+                        <TextBox Text="{Binding NombeUsuarioRegistro, Mode=TwoWay}"  PlaceholderText="Usuario" />
+                        <PasswordBox Password="{Binding ContraRegistro, Mode=TwoWay}" PlaceholderText="Contraseña"/>
+                        <PasswordBox Password="{Binding ContraRegistroConfirm, Mode=TwoWay}" PlaceholderText="Confirmar Contraseña" />
+                        <ComboBox ItemsSource="{Binding RolesRegistro}" SelectedItem="{Binding RolRegistro, Mode=TwoWay}" PlaceholderText="Tipo de usuario" />
+                        <TextBox Text="{Binding PreguntaRegistro, Mode=TwoWay}" PlaceholderText="Pregunta de seguridad" />
+                        <TextBox Text="{Binding RespuestaRegistro, Mode=TwoWay}" PlaceholderText="Respuesta" />
+                        <Button Content="Registrar usuario" IsEnabled="{Binding Funcional}" Command="{Binding CambiarAEmpresaCommand}" HorizontalAlignment="Center" Width="300"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding VerRegistroEmpresa}" Margin="10" Spacing="10">
+                        <TextBox Text="{Binding NombreEmpresa, Mode=TwoWay}" PlaceholderText="Nombre"/>
+                        <PasswordBox Password="{Binding ContraEmpresa, Mode=TwoWay}" PlaceholderText="Contraseña"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Cambiar usuario" Command="{Binding CambiarAUsuarioCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="200"/>
+                            <Button Content="Registrarse" Command="{Binding RegistrarCommand}" IsEnabled="{Binding Funcional}" Grid.Column="1" HorizontalAlignment="Center" Width="200"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
             </TabViewItem>
             <TabViewItem Header="Reestablecer" IsClosable="False" HorizontalContentAlignment="Center">
-                <StackPanel>
-                    <TextBox Text="{Binding UserNameRecuperar}" PlaceholderText="Usuario" Margin="10"/>
-                    <Button Content="Recuperar Contraseña" HorizontalAlignment="Center" Width="300" Command="{Binding RecuperarCommand}"  Margin="10"/>
-                </StackPanel>
+                <Grid>
+                    <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionUsuario}">
+                        <TextBox Text="{Binding NombeUsuarioRecuperar, Mode=TwoWay}" PlaceholderText="Usuario"/>
+                        <Button Content="Recuperar Contraseña" Command="{Binding PreguntarCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                    </StackPanel>
+                    <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionPregunta}">
+                        <TextBlock Text="{Binding PreguntaRecuperar}" FontSize="20"/>
+                        <TextBox Text="{Binding RespuestaRecuperar, Mode=TwoWay}" PlaceholderText="Respuesta"/>
+                        <Button Content="Cambiar contraseña" Command="{Binding ResponderCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                    </StackPanel>
+                    <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionContraseña}">
+                        <PasswordBox Password="{Binding ContraRecuperar, Mode=TwoWay}" PlaceholderText="Nueva contraseña"/>
+                        <PasswordBox Password="{Binding ContraRecuperarConfirm, Mode=TwoWay}" PlaceholderText="Confirmar nueva contraseña"/>
+                        <Button Content="Cambiar contraseña" Command="{Binding CambiarContraCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                    </StackPanel>
+                </Grid>
             </TabViewItem>
         </TabView>
-        <TextBlock Text="{Binding Indice, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
     </Grid>
 </Page>

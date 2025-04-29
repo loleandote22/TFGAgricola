@@ -19,7 +19,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Spacing="16">
-        <TextBox Text="{Binding Name, Mode=TwoWay}"
+        <TextBox Text=""
             PlaceholderText="Enter your name:" />
         <Button Content="Go to Second Page"
             AutomationProperties.AutomationId="SecondPageButton"
