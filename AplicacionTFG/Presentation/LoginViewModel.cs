@@ -52,9 +52,11 @@ public class LoginViewModel: ViewModelBase
     private EmpresaApi _empresaApi = new EmpresaApi();
     private bool funcional = true;
 
-    public LoginViewModel(INavigator navigator)
+    public LoginViewModel(
+        IStringLocalizer localizer,
+        IOptions<AppConfig> appInfo, INavigator navigator)
     {
-        //HttpRequestException
+        Indice =0;
         _navigator = navigator;
         Funcional = true;
         CambiarAEmpresaCommand = new RelayCommand(ComprobarUsuario);
@@ -67,7 +69,7 @@ public class LoginViewModel: ViewModelBase
     }
 
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
-    public LoginViewModel() { }
+// public LoginViewModel() { }
 #pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
 
     private async void Preguntar()
@@ -164,7 +166,7 @@ public class LoginViewModel: ViewModelBase
         if (RolRegistro == "Dueño")
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación crea tu empresa.");
         else
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación unete a tu equipo.");
+            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación únete a tu equipo.");
         VerRegistroUsuario = Visibility.Collapsed;
         VerRegistroEmpresa = Visibility.Visible;
         OnPropertyChanged(nameof(VerRegistroUsuario));

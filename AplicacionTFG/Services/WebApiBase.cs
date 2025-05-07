@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AplicacionTFG.Services;
 public abstract class WebApiBase
 {
@@ -12,7 +6,7 @@ public abstract class WebApiBase
     {
         _client = new HttpClient()
         {
-            BaseAddress = new Uri("https://localhost:7141/"),
+            BaseAddress = new Uri("https://localhost:8081/"),
         };
 
     }

@@ -13,6 +13,9 @@ namespace AplicacionTFG.Models
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
         public string Nombre { get; set; }
+        [MinLength(8, ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres")]
+        [MaxLength(16, ErrorMessage = "La contraseña debe tener un máximo de 16 caracteres")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra y un número.")]
         [JsonPropertyName("password")]
         public string Contrasena { get; set; }
         [JsonPropertyName("rol")]
