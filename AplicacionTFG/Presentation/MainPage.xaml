@@ -7,24 +7,43 @@
       xmlns:um="using:Uno.Material"
       NavigationCacheMode="Required"
       Background="{ThemeResource BackgroundBrush}">
-  <ScrollViewer>
-    <Grid utu:SafeArea.Insets="VisibleBounds">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-      <utu:NavigationBar Content="{Binding Title}" />
+    <Grid uen:Region.Attached="True" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1">
+            <Grid uen:Region.Name="One" Visibility="Collapsed">
+                <TextBlock Text="One"
+             FontSize="24"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center" />
+            </Grid>
+            <Grid uen:Region.Name="Two" Visibility="Collapsed">
+                <TextBlock Text="Two"
+             FontSize="24"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center" />
+            </Grid>
+            <Grid uen:Region.Name="Three" Visibility="Collapsed">
+                <TextBlock Text="Three"
+             FontSize="24"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center" />
+            </Grid>
+        </Grid>
+        <utu:TabBar AllowDrop="True" uen:Region.Attached="True" Background="Green" Orientation="Vertical" Style="{StaticResource TopTabBarStyle}">
+            <utu:TabBar.Items>
+                <utu:TabBarItem uen:Region.Name="One" Content="Login"
+                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
+                <utu:TabBarItem uen:Region.Name="Two" Content="dos"
+                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
+                <utu:TabBarItem uen:Region.Name="Three" Content="tres"
+                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
+                <!--<utu:TabBarItem uen:Region.Name="SignUp" 
+                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />-->
+            </utu:TabBar.Items>
+        </utu:TabBar>
 
-      <StackPanel Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Spacing="16">
-        <TextBox Text=""
-            PlaceholderText="Enter your name:" />
-        <Button Content="Go to Second Page"
-            AutomationProperties.AutomationId="SecondPageButton"
-            Command="{Binding GoToSecond}" />
-      </StackPanel>
     </Grid>
-  </ScrollViewer>
 </Page>
