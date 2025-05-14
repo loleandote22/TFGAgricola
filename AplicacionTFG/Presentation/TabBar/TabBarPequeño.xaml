@@ -12,7 +12,7 @@
     xmlns:ut="using:Uno.Themes"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="350">
     <UserControl.Resources>
         <Storyboard x:Name="AbrirTabBar">
             <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.6" />
@@ -23,7 +23,7 @@
             <DoubleAnimation Storyboard.TargetName="SpinTransform" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.6" />
         </Storyboard>
     </UserControl.Resources>
-    <StackPanel Spacing="15" >
+    <Grid RowDefinitions="Auto,*"  RowSpacing="15" >
         <Button Padding="10" Width="40" x:Name="SpinButton" Click="Button_Click" RenderTransformOrigin="0.5,0.5">
             <Button.RenderTransform>
                 <RotateTransform x:Name="SpinTransform" Angle="0" CenterX="0.5" CenterY="0.5"/>
@@ -32,11 +32,11 @@
                 <FontIcon Glyph="&#xE700;" />
             </ut:ControlExtensions.Icon>
         </Button>
-        <Grid x:Name="MyRect" Width="390" RowDefinitions ="Auto, Auto,*" uen:Region.Attached="True" RenderTransformOrigin="0,0">
+        <Grid x:Name="MyRect" uen:Region.Attached="True" RenderTransformOrigin="0,0" Grid.Row="1">
             <Grid.RenderTransform>
                 <ScaleTransform x:Name="rectScale" ScaleX="0" />
             </Grid.RenderTransform>
             <tabbar:TabBarBase/>
         </Grid>
-    </StackPanel>
+    </Grid>
 </UserControl>

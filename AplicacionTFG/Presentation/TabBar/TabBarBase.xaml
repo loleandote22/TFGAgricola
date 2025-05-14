@@ -43,6 +43,6 @@
                 </utu:TabBarItem>
             </utu:TabBar.Items>
         </utu:TabBar>
-        <Button Width="200" VerticalAlignment="Bottom" Style="{StaticResource AlternateCloseButtonStyle}" Grid.Row="1" Content="Salir" uen:Navigation.Request="-"/>
+        <Button HorizontalAlignment="Stretch" Width="350" VerticalAlignment="Bottom" Style="{StaticResource AlternateCloseButtonStyle}" Grid.Row="1" Content="Salir" uen:Navigation.Request="-"/>
     </Grid>
 </UserControl>
