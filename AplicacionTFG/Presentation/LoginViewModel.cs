@@ -1,6 +1,6 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using AplicacionTFG.Services;
+using Windows.Networking.NetworkOperators;
 // TODO: Controlar excepción no API connectada
 namespace AplicacionTFG.Presentation;
 public class LoginViewModel: ViewModelBase
@@ -46,15 +46,13 @@ public class LoginViewModel: ViewModelBase
     #endregion
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
     public Usuario? Usuario { get; set; }
-    private UsuarioRegistroDto usuarioRegistro = null;
-    private Usuario usuario = null;
+    private UsuarioRegistroDto? usuarioRegistro = null;
+    private Usuario? usuario = null;
     private UsuarioApi _usuarioApi = new UsuarioApi();
     private EmpresaApi _empresaApi = new EmpresaApi();
     private bool funcional = true;
 
-    public LoginViewModel(
-        IStringLocalizer localizer,
-        IOptions<AppConfig> appInfo, INavigator navigator)
+    public LoginViewModel(IStringLocalizer localizer, IOptions<AppConfig> appInfo, INavigator navigator)
     {
         Indice =0;
         _navigator = navigator;
@@ -69,7 +67,7 @@ public class LoginViewModel: ViewModelBase
     }
 
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
-// public LoginViewModel() { }
+    public LoginViewModel() { }
 #pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
 
     private async void Preguntar()
@@ -143,6 +141,13 @@ public class LoginViewModel: ViewModelBase
             return;
         }
         Usuario usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+        if (usuarioDevuelto == null)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: "Recuperar contraseña", content: "Error al cambiar la contraseña");
+            Funcional = true;
+            return;
+        }
+        ResetearFormularios();
         await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
         Funcional = true;
     }
@@ -197,7 +202,7 @@ public class LoginViewModel: ViewModelBase
         string result;
         try
         {
-            if (usuarioRegistro.Tipo == "Dueño")
+            if (usuarioRegistro!.Tipo == "Dueño")
                 result = await _empresaApi.PostEmpresaAsync(empresa);
             else
                 result = await _empresaApi.Login(empresa);
@@ -218,6 +223,7 @@ public class LoginViewModel: ViewModelBase
             {
                 await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "Usuario registrado correctamente");
                 Usuario usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+                ResetearFormularios();
                 await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
             }
             else
@@ -257,6 +263,7 @@ public class LoginViewModel: ViewModelBase
                 if (result != null)
                 {
                     Usuario usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+                    ResetearFormularios();
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
                 }
                 else
@@ -283,6 +290,10 @@ public class LoginViewModel: ViewModelBase
         RespuestaRegistro = string.Empty;
         ContraRegistroConfirm = string.Empty;
         NombeUsuarioRecuperar = string.Empty;
+        VerRegistroUsuario = Visibility.Visible;
+        VerRegistroEmpresa = Visibility.Collapsed;
+        NombreEmpresa = string.Empty;
+        ContraEmpresa = string.Empty;
         OnPropertyChanged(nameof(NombeUsuarioLogin));
         OnPropertyChanged(nameof(ContraLogin));
         OnPropertyChanged(nameof(NombeUsuarioRegistro));
@@ -292,5 +303,15 @@ public class LoginViewModel: ViewModelBase
         OnPropertyChanged(nameof(RespuestaRegistro));
         OnPropertyChanged(nameof(ContraRegistroConfirm));
         OnPropertyChanged(nameof(NombeUsuarioRecuperar));
+        OnPropertyChanged(nameof(VerRegistroUsuario));
+        OnPropertyChanged(nameof(VerRegistroEmpresa));
+        OnPropertyChanged(nameof(NombreEmpresa));
+        OnPropertyChanged(nameof(ContraEmpresa));
     }  
+    
+    private void ResetearFormularios()
+    {
+        Indice = 0;
+        LimpiarCampos();
+    }
 }

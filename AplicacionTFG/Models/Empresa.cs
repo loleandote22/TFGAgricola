@@ -7,9 +7,9 @@ public class Empresa
     [JsonPropertyName("id")]
     public int Id { get; set; }
     [JsonPropertyName("nombre")]
-    public string Nombre { get; set; }
+    public required string Nombre { get; set; }
     [JsonPropertyName("password")]
-    public string Contrasena { get; set; }
+    public required string Contrasena { get; set; }
 }
 public class EmpresaDto
 {

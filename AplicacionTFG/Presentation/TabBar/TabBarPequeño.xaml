@@ -1,0 +1,42 @@
+﻿<UserControl
+    x:Class="AplicacionTFG.Presentation.TabBar.TabBarPequeño"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation"
+    xmlns:tabbar="using:AplicacionTFG.Presentation.TabBar"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uen="using:Uno.Extensions.Navigation.UI"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    xmlns:um="using:Uno.Material"
+    xmlns:ut="using:Uno.Themes"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Storyboard x:Name="AbrirTabBar">
+            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.6" />
+            <DoubleAnimation Storyboard.TargetName="SpinTransform" Storyboard.TargetProperty="Angle" To="-180" Duration="0:0:0.6" />
+        </Storyboard>
+        <Storyboard x:Name="CerrarTabBar">
+            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" To="0" Duration="0:0:0.6" />
+            <DoubleAnimation Storyboard.TargetName="SpinTransform" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.6" />
+        </Storyboard>
+    </UserControl.Resources>
+    <StackPanel Spacing="15" >
+        <Button Padding="10" Width="40" x:Name="SpinButton" Click="Button_Click" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <RotateTransform x:Name="SpinTransform" Angle="0" CenterX="0.5" CenterY="0.5"/>
+            </Button.RenderTransform>
+            <ut:ControlExtensions.Icon>
+                <FontIcon Glyph="&#xE700;" />
+            </ut:ControlExtensions.Icon>
+        </Button>
+        <Grid x:Name="MyRect" Width="390" RowDefinitions ="Auto, Auto,*" uen:Region.Attached="True" RenderTransformOrigin="0,0">
+            <Grid.RenderTransform>
+                <ScaleTransform x:Name="rectScale" ScaleX="0" />
+            </Grid.RenderTransform>
+            <tabbar:TabBarBase/>
+        </Grid>
+    </StackPanel>
+</UserControl>

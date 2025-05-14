@@ -1,49 +1,32 @@
-﻿<Page x:Class="AplicacionTFG.Presentation.MainPage"
+﻿<Page xmlns:ut="using:Uno.Themes" x:Class="AplicacionTFG.Presentation.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:local="using:AplicacionTFG.Presentation"
+      xmlns:local="using:AplicacionTFG.Presentation.TabBar"
       xmlns:uen="using:Uno.Extensions.Navigation.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:um="using:Uno.Material"
       NavigationCacheMode="Required"
       Background="{ThemeResource BackgroundBrush}">
-    <Grid uen:Region.Attached="True" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1">
-            <Grid uen:Region.Name="One" Visibility="Collapsed">
-                <TextBlock Text="One"
-             FontSize="24"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
-            </Grid>
-            <Grid uen:Region.Name="Two" Visibility="Collapsed">
-                <TextBlock Text="Two"
-             FontSize="24"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
-            </Grid>
-            <Grid uen:Region.Name="Three" Visibility="Collapsed">
-                <TextBlock Text="Three"
-             FontSize="24"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
-            </Grid>
+    <!--<Page.DataContext>
+        <local:MainViewModel/>
+    </Page.DataContext>-->
+    
+    <Grid ColumnDefinitions="Auto,*"  uen:Region.Attached="True" Margin="20,20,0,0">
+        <Grid uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1" >
+            
         </Grid>
-        <utu:TabBar AllowDrop="True" uen:Region.Attached="True" Background="Green" Orientation="Vertical" Style="{StaticResource TopTabBarStyle}">
-            <utu:TabBar.Items>
-                <utu:TabBarItem uen:Region.Name="One" Content="Login"
-                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
-                <utu:TabBarItem uen:Region.Name="Two" Content="dos"
-                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
-                <utu:TabBarItem uen:Region.Name="Three" Content="tres"
-                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />
-                <!--<utu:TabBarItem uen:Region.Name="SignUp" 
-                            Style="{StaticResource MaterialBottomTabBarItemStyle}" />-->
-            </utu:TabBar.Items>
-        </utu:TabBar>
-
+        <utu:ResponsiveView>
+            <utu:ResponsiveView.WideTemplate>
+                <DataTemplate>
+                    <local:TabBarGrande />
+                </DataTemplate>
+            </utu:ResponsiveView.WideTemplate>
+            <utu:ResponsiveView.NarrowTemplate>
+                <DataTemplate>
+                    <local:TabBarPequeño />
+                </DataTemplate>
+            </utu:ResponsiveView.NarrowTemplate>
+        </utu:ResponsiveView>
+        
     </Grid>
 </Page>

@@ -1,3 +1,4 @@
+using AplicacionTFG.Presentation.Inventario;
 using Uno.Resizetizer;
 
 namespace AplicacionTFG;
@@ -96,7 +97,7 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<LoginPage, LoginViewModel>(),
-            //new ViewMap<MainPage, MainViewModel>(),
+            new ViewMap<InventarioPage, InventarioViewModel>(),
             new DataViewMap<MainPage, MainViewModel, Usuario>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
@@ -106,7 +107,13 @@ public partial class App : Application
                 Nested:
                 [
                     new ("Login", View: views.FindByViewModel<LoginViewModel>(), IsDefault:true),
-                    new ("Main", View: views.FindByViewModel<MainViewModel>()),
+                    new ("Main", View: views.FindByViewModel<MainViewModel>()
+                    ,
+                    Nested: [
+                        new ("Inventario",View: views.FindByViewModel<InventarioViewModel>()),
+                    ]
+                    ),
+                    //new ("Inventario",View: views.FindByViewModel<InventarioViewModel>()),
                     new ("Second", View: views.FindByViewModel<SecondViewModel>()),
                 ]
             )
