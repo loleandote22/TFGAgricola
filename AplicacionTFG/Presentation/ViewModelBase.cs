@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AplicacionTFG.Presentation;
-public class ViewModelBase: ObservableObject
+public class ViewModelBase : ObservableObject
 {
     protected string _mensajeError = "Las contraseñas no coinciden";
     /// <summary>
@@ -33,4 +33,29 @@ public class ViewModelBase: ObservableObject
 
         return isValid;
     }
+    public List<Idioma> Idiomas { get; } = new ()
+    {
+        new Idioma("Español", "es"),
+        new Idioma("English","en"),
+        new Idioma("Français", "fr"),
+        new Idioma("Português", "pt"),
+    };
+    private Idioma idiomaSeleccionado;
+    
+
+    public Idioma IdiomaSeleccionado { get => idiomaSeleccionado; set { idiomaSeleccionado = value; OnPropertyChanged(nameof(IdiomaSeleccionado)); } }
 }
+public struct Idioma
+{
+    public string Lengua { get; set; }
+    public string Simbolo { get; set; } 
+    public string Bandera { get; set; }
+    public Idioma(string lengua, string simbolo)
+    {
+        Simbolo = simbolo;
+        Lengua = lengua;
+        Bandera = "/Assets/flags/" + simbolo.Replace("-","_") + ".svg";
+    }
+}
+
+
