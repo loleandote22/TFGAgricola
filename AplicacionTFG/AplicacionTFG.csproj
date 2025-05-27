@@ -48,6 +48,7 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Sdk.Compilers.Toolset" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
@@ -83,5 +84,34 @@
         <Generator>MSBuild:Compile</Generator>
       </Page>
     </ItemGroup>
-
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\EdicionElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\A%3badirElementoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AnadirElementoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AñadirElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AnadirElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug' or '$(IsUiAutomationMappingEnabled)'=='True'">
+    <IsUiAutomationMappingEnabled>True</IsUiAutomationMappingEnabled>
+    <DefineConstants>$(DefineConstants);USE_UITESTS</DefineConstants>
+  </PropertyGroup>
+  
 </Project>

@@ -1,33 +1,44 @@
 using System.Text.Json;
 using AplicacionTFG.Services;
-using System.Globalization;
-// TODO: Controlar excepción no API connectada
+using AplicacionTFG.Serialization;
 namespace AplicacionTFG.Presentation;
-public class LoginViewModel: ViewModelBase
+public partial class LoginViewModel: ViewModelBase
 {
     #region Auxiliares
-    private readonly INavigator _navigator;
-    private readonly IStringLocalizer _localizer;
-    private readonly ILocalizationService _localizationService;
     private int indice;
     public int Indice { get => indice; set { indice = value; LimpiarCampos(); OnPropertyChanged(nameof(Indice)); } }
     #endregion
     #region Localización
-    public string Usuario_Loc { get; set; }
-    public string Contraseña_Loc { get; set; }
-    public string Iniciar_Loc { get; set; }
-    public string ConfirmarContra_Loc { get; set; }
-    public string Tipo_Loc { get; set; }
-    public string Pregunta_Loc { get; set; }
-    public string Respuesta_Loc { get; set; }
-    public string NombreEmpresa_Loc { get; set; }
-    public string ContraseñaEmpresa_Loc { get; set; }
-    public string Registrar_Loc { get; set; }
-    public string Restablecer_Loc { get; set; }
-    public string NuevaContra_Loc { get; set; }
-    public string Recuperar_Loc { get; set; }
-    public string CambiarContra_Loc { get; set; }
-    public string CambiarUsuario_Loc { get; set; }
+    private string usuario_Loc = "";
+    private string contraseña_Loc = "";
+    private string iniciar_Loc = "";
+    private string confirmarContra_Loc = "";
+    private string tipo_Loc = "";
+    private string pregunta_Loc = "";
+    private string respuesta_Loc = "";
+    private string nombreEmpresa_Loc = "";
+    private string contraseñaEmpresa_Loc = "";
+    private string registrar_Loc = "";
+    private string restablecer_Loc = "";
+    private string nuevaContra_Loc = "";
+    private string recuperar_Loc = "";
+    private string cambiarContra_Loc = "";
+    private string cambiarUsuario_Loc = "";
+    public required string Usuario_Loc { get => usuario_Loc; set { usuario_Loc = value; OnPropertyChanged(nameof(Usuario_Loc)); } }
+    public required string Contraseña_Loc { get => contraseña_Loc; set { contraseña_Loc = value; OnPropertyChanged(nameof(Contraseña_Loc)); } }
+    public required string Iniciar_Loc { get => iniciar_Loc; set { iniciar_Loc = value; OnPropertyChanged(nameof(Iniciar_Loc)); } }
+    public required string ConfirmarContra_Loc { get => confirmarContra_Loc; set { confirmarContra_Loc = value; OnPropertyChanged(nameof(ConfirmarContra_Loc)); } }
+    public required string Tipo_Loc { get => tipo_Loc; set { tipo_Loc = value; OnPropertyChanged(nameof(Tipo_Loc)); } }
+    public required string Pregunta_Loc { get => pregunta_Loc; set { pregunta_Loc = value; OnPropertyChanged(nameof(Pregunta_Loc)); } }
+    public required string Respuesta_Loc { get => respuesta_Loc; set { respuesta_Loc = value; OnPropertyChanged(nameof(Respuesta_Loc)); } }
+    public required string NombreEmpresa_Loc { get => nombreEmpresa_Loc; set { nombreEmpresa_Loc = value; OnPropertyChanged(nameof(NombreEmpresa_Loc)); } }
+    public required string ContraseñaEmpresa_Loc { get => contraseñaEmpresa_Loc; set { contraseñaEmpresa_Loc = value; OnPropertyChanged(nameof(ContraseñaEmpresa_Loc)); } }
+    public required string Registrar_Loc { get => registrar_Loc; set { registrar_Loc = value; OnPropertyChanged(nameof(Registrar_Loc)); } }
+    public required string Restablecer_Loc { get => restablecer_Loc; set { restablecer_Loc = value; OnPropertyChanged(nameof(Restablecer_Loc)); } }
+    public required string NuevaContra_Loc { get => nuevaContra_Loc; set { nuevaContra_Loc = value; OnPropertyChanged(nameof(NuevaContra_Loc)); } }
+    public required string Recuperar_Loc { get => recuperar_Loc; set { recuperar_Loc = value; OnPropertyChanged(nameof(Recuperar_Loc)); } }
+    public required string CambiarContra_Loc { get => cambiarContra_Loc; set { cambiarContra_Loc = value; OnPropertyChanged(nameof(CambiarContra_Loc)); } }
+    public required string CambiarUsuario_Loc { get => cambiarUsuario_Loc; set { cambiarUsuario_Loc = value; OnPropertyChanged(nameof(CambiarUsuario_Loc)); } }
 
     #endregion
     #region Commandos
@@ -66,36 +77,18 @@ public class LoginViewModel: ViewModelBase
     #endregion
    
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
-    public Usuario? Usuario { get; set; }
     private UsuarioRegistroDto? usuarioRegistro = null;
     private Usuario? usuario = null;
-    private readonly UsuarioApi _usuarioApi = new();
-    private readonly EmpresaApi _empresaApi = new();
+    private readonly UsuarioApi _usuarioApi;
+    private readonly EmpresaApi _empresaApi;
     private bool funcional = true;
 
-    public LoginViewModel(IStringLocalizer localizer,ILocalizationService localizationService, IOptions<AppConfig> appInfo, INavigator navigator)
+    public LoginViewModel(IStringLocalizer localizer,ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo) : base(localizer, navigator,appInfo, localizationService)
     {
         Indice =0;
-        _localizer = localizer;
-        _localizationService = localizationService;
-        IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name);
-        //_localizationService.SetCurrentCultureAsync(new CultureInfo("fr-FR"));
-        Usuario_Loc = _localizer["Usuario"];
-        Contraseña_Loc = _localizer["Contraseña"];
-        Iniciar_Loc = _localizer["IniciarSesion"];
-        ConfirmarContra_Loc = _localizer["ConfirmarContraseña"];
-        Tipo_Loc = _localizer["Tipo"];
-        Pregunta_Loc = _localizer["Pregunta"];
-        Respuesta_Loc = _localizer["Respuesta"];
-        NombreEmpresa_Loc = _localizer["NombreEmpresa"];
-        ContraseñaEmpresa_Loc = _localizer["ContraseñaEmpresa"];
-        Registrar_Loc = _localizer["Registrar"];
-        Restablecer_Loc = _localizer["Restablecer"];
-        NuevaContra_Loc = _localizer["Nueva"]+ " " + Contraseña_Loc;
-        CambiarContra_Loc = _localizer["Cambiar"] + " " + Contraseña_Loc;
-        Recuperar_Loc = _localizer["RecuperarContraseña"];
-        CambiarUsuario_Loc = _localizer["CambiarUsuario"];
-        _navigator = navigator;
+        IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
+        _usuarioApi = new(Apiurl);
+        _empresaApi = new(Apiurl);
         Funcional = true;
         CambiarAEmpresaCommand = new RelayCommand(ComprobarUsuario);
         CambiarAUsuarioCommand = new RelayCommand(CambiarAUsuario);
@@ -123,7 +116,6 @@ public class LoginViewModel: ViewModelBase
                 Funcional = true;
                 return;
             }
-            
             PreguntaRecuperar ="¿" + pregunta + "?";
             OnPropertyChanged(nameof(PreguntaRecuperar));
             VerRecuperacionUsuario = Visibility.Collapsed;
@@ -156,7 +148,7 @@ public class LoginViewModel: ViewModelBase
             Funcional = true;
             return;
         }
-        usuario = JsonSerializer.Deserialize<Usuario>(result);
+        usuario = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
         VerRecuperacionPregunta = Visibility.Collapsed;
         VerRecuperacionContraseña = Visibility.Visible;
         OnPropertyChanged(nameof(VerRecuperacionPregunta));
@@ -181,7 +173,7 @@ public class LoginViewModel: ViewModelBase
             Funcional = true;
             return;
         }
-        Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+        Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
         if (usuarioDevuelto == null)
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Error al cambiar la contraseña");
@@ -189,6 +181,7 @@ public class LoginViewModel: ViewModelBase
             return;
         }
         ResetearFormularios();
+        localSettings.Values["Usuario"] = result;
         await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
         Funcional = true;
     }
@@ -235,7 +228,7 @@ public class LoginViewModel: ViewModelBase
             Nombre = NombreEmpresa,
             Contrasena = ContraEmpresa
         };
-        if(ValidarModelo(empresa) == false)
+        if(!ValidarModelo(empresa) )
         {
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar empresa", content: _mensajeError);
             return;
@@ -253,13 +246,14 @@ public class LoginViewModel: ViewModelBase
                 await _navigator.ShowMessageDialogAsync(this, title: "Registrar empresa", content: "Error al registrar la empresa");
                 return;
             }
-            Empresa? empresaDevuelta = JsonSerializer.Deserialize<Empresa>(result);
+            Empresa? empresaDevuelta = JsonSerializer.Deserialize<Empresa>(result, EmpresaContext.Default.Empresa);
             usuarioRegistro.EmpresaId = empresaDevuelta!.Id;
             result = await _usuarioApi.PostUsuarioAsync(usuarioRegistro);
             if (result is not null)
             {
                 await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "Usuario registrado correctamente");
-                Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+                Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
+                localSettings.Values["Usuario"] = result;
                 ResetearFormularios();
                 await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
             }
@@ -298,8 +292,9 @@ public class LoginViewModel: ViewModelBase
                 var result = await _usuarioApi.Login(usuario);
                 if (result is not null)
                 {
-                    Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result);
+                    Usuario usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario)!;
                     ResetearFormularios();
+                    localSettings.Values["Usuario"] = result;
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
                 }
                 else
@@ -314,7 +309,26 @@ public class LoginViewModel: ViewModelBase
         }
         Funcional = true;
     }
-    
+
+    protected override void CargarPalabras()
+    {
+        Usuario_Loc = _localizer["Usuario"];
+        Contraseña_Loc = _localizer["Contraseña"];
+        Iniciar_Loc = _localizer["IniciarSesion"];
+        ConfirmarContra_Loc = _localizer["ConfirmarContraseña"];
+        Tipo_Loc = _localizer["Tipo"];
+        Pregunta_Loc = _localizer["Pregunta"];
+        Respuesta_Loc = _localizer["Respuesta"];
+        NombreEmpresa_Loc = _localizer["NombreEmpresa"];
+        ContraseñaEmpresa_Loc = _localizer["ContraseñaEmpresa"];
+        Registrar_Loc = _localizer["Registrar"];
+        Restablecer_Loc = _localizer["Restablecer"];
+        NuevaContra_Loc = _localizer["Nueva"] + " " + Contraseña_Loc;
+        CambiarContra_Loc = _localizer["Cambiar"] + " " + Contraseña_Loc;
+        Recuperar_Loc = _localizer["RecuperarContraseña"];
+        CambiarUsuario_Loc = _localizer["CambiarUsuario"];
+    }
+
     private void LimpiarCampos()
     {
         NombeUsuarioLogin = string.Empty;

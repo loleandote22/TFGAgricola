@@ -135,14 +135,35 @@
   <data name="ContraseñaEmpresa" xml:space="preserve">
     <value>Senha da empresa</value>
   </data>
+  <data name="Editar" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Eliminar" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Guardar" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
   <data name="IniciarSesion" xml:space="preserve">
     <value>Entrar</value>
+  </data>
+  <data name="Inventario" xml:space="preserve">
+    <value>Inventário</value>
+  </data>
+  <data name="NoElementos" xml:space="preserve">
+    <value>Não há nada</value>
+  </data>
+  <data name="Nombre" xml:space="preserve">
+    <value>Nome</value>
   </data>
   <data name="NombreEmpresa" xml:space="preserve">
     <value>Nome da empresa</value>
   </data>
   <data name="Nueva" xml:space="preserve">
     <value>Nova</value>
+  </data>
+  <data name="Personal" xml:space="preserve">
+    <value>Pessoal</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
     <value>Pregunta </value>

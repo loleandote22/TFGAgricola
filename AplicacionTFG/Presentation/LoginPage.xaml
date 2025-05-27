@@ -15,77 +15,80 @@
     <!--<Page.DataContext>
         <local:LoginViewModel/>
     </Page.DataContext>-->
-    <Grid uen:Region.Attached="True" VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="auto,*" ColumnDefinitions="auto,*">
-        <utu:ResponsiveView Grid.RowSpan="2">
-            <utu:ResponsiveView.NormalTemplate>
-                <DataTemplate>
-                </DataTemplate>
-            </utu:ResponsiveView.NormalTemplate>
-            <utu:ResponsiveView.WideTemplate>
-                <DataTemplate>
-                    <Image Source="/Assets/Images/granja_logo.png" Width="500"  HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                </DataTemplate>
-            </utu:ResponsiveView.WideTemplate>
-        </utu:ResponsiveView>
-        <Grid MaxWidth="350" uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1" Grid.Row="1">
-            <Grid uen:Region.Name="Login" Visibility="Visible" RowSpacing="10" Margin="10" RowDefinitions="auto,auto,auto">
-                <TextBox Text="{Binding NombeUsuarioLogin, Mode=TwoWay}"  PlaceholderText="{Binding Usuario_Loc}"/>
-                <PasswordBox Password="{Binding ContraLogin, Mode=TwoWay}" Grid.Row="1" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc}"/>
-                <Button Content="{Binding Iniciar_Loc}" IsEnabled="{Binding Funcional}" Grid.Row="2" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
-            </Grid>
-            <Grid uen:Region.Name="Registro">
-                <Grid Margin="10" RowSpacing="10" Visibility="{Binding VerRegistroUsuario}" RowDefinitions="auto,auto,auto,auto,auto,auto,auto">
-                    <TextBox Text="{Binding NombeUsuarioRegistro, Mode=TwoWay}"  PlaceholderText="{Binding Usuario_Loc}" />
-                    <PasswordBox Password="{Binding ContraRegistro, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc}" Grid.Row="1"/>
-                    <PasswordBox Password="{Binding ContraRegistroConfirm, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContra_Loc}" Grid.Row="2"/>
-                    <ComboBox ItemsSource="{Binding RolesRegistro}" SelectedItem="{Binding RolRegistro, Mode=TwoWay}" PlaceholderText="{Binding Tipo_Loc}" Grid.Row="3"/>
-                    <TextBox Text="{Binding PreguntaRegistro, Mode=TwoWay}" PlaceholderText="{Binding Pregunta_Loc}" Grid.Row="4"/>
-                    <TextBox Text="{Binding RespuestaRegistro, Mode=TwoWay}" PlaceholderText="{Binding Respuesta_Loc}" Grid.Row="5"/>
-                    <Button Content="{Binding Registrar_Loc}" IsEnabled="{Binding Funcional}" Command="{Binding CambiarAEmpresaCommand}" HorizontalAlignment="Center" Width="300" Grid.Row="6"/>
-                </Grid>
-                <StackPanel Visibility="{Binding VerRegistroEmpresa}" Margin="10" Spacing="10">
-                    <TextBox Text="{Binding NombreEmpresa, Mode=TwoWay}" PlaceholderText="{Binding NombreEmpresa_Loc}"/>
-                    <PasswordBox Password="{Binding ContraEmpresa, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ContraseñaEmpresa_Loc}"/>
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Button Content="{Binding CambiarUsuario_Loc}" Command="{Binding CambiarAUsuarioCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="150"/>
-                        <Button Content="{Binding Registrar_Loc}" Command="{Binding RegistrarCommand}" IsEnabled="{Binding Funcional}" Grid.Column="1" HorizontalAlignment="Center" Width="150"/>
+    <ScrollView VerticalScrollBarVisibility="Auto">
+        <Grid RowDefinitions="Auto, *" Margin="0,20,0,0">
+            <ComboBox HorizontalAlignment="Right" Margin="10" Width="200"  VerticalAlignment="Top" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Bandera}"  Stretch="UniformToFill" Width="15" Height="15"  Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Lengua}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Grid uen:Region.Attached="True" VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="auto,*" ColumnDefinitions="auto,*" Grid.Row="1">
+                <utu:ResponsiveView Grid.RowSpan="2">
+                    <utu:ResponsiveView.NormalTemplate>
+                        <DataTemplate>
+                        </DataTemplate>
+                    </utu:ResponsiveView.NormalTemplate>
+                    <utu:ResponsiveView.WideTemplate>
+                        <DataTemplate>
+                            <Image Source="/Assets/Images/granja_logo.png" Width="500"  HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </DataTemplate>
+                    </utu:ResponsiveView.WideTemplate>
+                </utu:ResponsiveView>
+                <Grid MaxWidth="350" uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1" Grid.Row="1">
+                    <Grid uen:Region.Name="Login" Visibility="Visible" RowSpacing="10" Margin="10" RowDefinitions="auto,auto,auto">
+                        <TextBox AutomationProperties.AutomationId="LoginName" Text="{Binding NombeUsuarioLogin, Mode=TwoWay}"  Header="{Binding Usuario_Loc, UpdateSourceTrigger= PropertyChanged}"/>
+                        <PasswordBox AutomationProperties.AutomationId="LoginPassw" Password="{Binding ContraLogin, Mode=TwoWay}" Grid.Row="1" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button AutomationProperties.AutomationId="LoginButton" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Grid.Row="2" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
                     </Grid>
-                </StackPanel>
-            </Grid>
-            <Grid uen:Region.Name="Restablecer" Visibility="Collapsed">
-                <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionUsuario}">
-                    <TextBox Text="{Binding NombeUsuarioRecuperar, Mode=TwoWay}" PlaceholderText="{Binding Usuario_Loc}"/>
-                    <Button Content="{Binding Recuperar_Loc}" Command="{Binding PreguntarCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
-                </StackPanel>
-                <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionPregunta}">
-                    <TextBlock Text="{Binding PreguntaRecuperar}" FontSize="20"/>
-                    <TextBox Text="{Binding RespuestaRecuperar, Mode=TwoWay}" PlaceholderText="{Binding Respuesta_Loc}"/>
-                    <Button Content="{Binding CambiarContra_Loc}" Command="{Binding ResponderCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
-                </StackPanel>
-                <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionContraseña}">
-                    <PasswordBox Password="{Binding ContraRecuperar, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding NuevaContra_Loc}"/>
-                    <PasswordBox Password="{Binding ContraRecuperarConfirm, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContra_Loc}"/>
-                    <Button Content="{Binding CambiarContra_Loc}" Command="{Binding CambiarContraCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
-                </StackPanel>
+                    <Grid uen:Region.Name="Registro">
+                        <Grid Margin="10" RowSpacing="10" Visibility="{Binding VerRegistroUsuario}" RowDefinitions="auto,auto,auto,auto,auto,auto,auto">
+                            <TextBox Text="{Binding NombreUsuarioRegistro, Mode=TwoWay}" Header="{Binding Usuario_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <PasswordBox Password="{Binding ContraRegistro, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+                            <PasswordBox Password="{Binding ContraRegistroConfirm, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContra_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2"/>
+                            <ComboBox ItemsSource="{Binding RolesRegistro}" SelectedItem="{Binding RolRegistro, Mode=TwoWay}" PlaceholderText="{Binding Tipo_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3"/>
+                            <TextBox Text="{Binding PreguntaRegistro, Mode=TwoWay}" Header="{Binding Pregunta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4"/>
+                            <TextBox Text="{Binding RespuestaRegistro, Mode=TwoWay}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5"/>
+                            <Button Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Command="{Binding CambiarAEmpresaCommand}" HorizontalAlignment="Center" Width="300" Grid.Row="6"/>
+                        </Grid>
+                        <StackPanel Visibility="{Binding VerRegistroEmpresa}" Margin="10" Spacing="10">
+                            <TextBox Text="{Binding NombreEmpresa, Mode=TwoWay}" Header="{Binding NombreEmpresa_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <PasswordBox Password="{Binding ContraEmpresa, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ContraseñaEmpresa_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <Button Content="{Binding CambiarUsuario_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CambiarAUsuarioCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="150"/>
+                                <Button Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding RegistrarCommand}" IsEnabled="{Binding Funcional}" Grid.Column="1" HorizontalAlignment="Center" Width="150"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Grid uen:Region.Name="Restablecer" Visibility="Collapsed">
+                        <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionUsuario}">
+                            <TextBox Text="{Binding NombeUsuarioRecuperar, Mode=TwoWay}" Header="{Binding Usuario_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="{Binding Recuperar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding PreguntarCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                        </StackPanel>
+                        <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionPregunta}">
+                            <TextBlock Text="{Binding PreguntaRecuperar, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
+                            <TextBox Text="{Binding RespuestaRecuperar, Mode=TwoWay}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="{Binding CambiarContra_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ResponderCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                        </StackPanel>
+                        <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionContraseña}">
+                            <PasswordBox Password="{Binding ContraRecuperar, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding NuevaContra_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <PasswordBox Password="{Binding ContraRecuperarConfirm, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContra_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="{Binding CambiarContra_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CambiarContraCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <utu:TabBar MaxWidth="350" Grid.Column="1" uen:Region.Attached="True" VerticalAlignment="Top" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
+                    <utu:TabBar.Items>
+                        <utu:TabBarItem uen:Region.Name="Login" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                        <utu:TabBarItem uen:Region.Name="Registro" Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                        <utu:TabBarItem uen:Region.Name="Restablecer" Content="{Binding Restablecer_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                    </utu:TabBar.Items>
+                </utu:TabBar>
             </Grid>
         </Grid>
-        <utu:TabBar MaxWidth="350" Grid.Column="1" uen:Region.Attached="True" VerticalAlignment="Top" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
-            <utu:TabBar.Items>
-                <utu:TabBarItem uen:Region.Name="Login"  Content="{Binding Iniciar_Loc}"/>
-                <utu:TabBarItem uen:Region.Name="Registro" Content="{Binding Registrar_Loc}" />
-                <utu:TabBarItem uen:Region.Name="Restablecer" Content="{Binding Restablecer_Loc}" />
-            </utu:TabBar.Items>
-        </utu:TabBar>
-        <ComboBox Grid.Column="1" Margin="10" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Path=Bandera}" Width="10" Height="10" Margin="0,0,5,0"/>
-                        <TextBlock Text="{Binding Path=Nombre}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-    </Grid>
-
+    </ScrollView>
 </Page>

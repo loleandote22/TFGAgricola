@@ -64,21 +64,26 @@ public partial class App : Application
                 )
                 // Enable localization (see appsettings.json for supported languages)
                 .UseLocalization()
-                // Registro Json serializers (ISerializer and ISerializer)
+                // Register Json serializers (ISerializer and ISerializer)
                 .UseSerialization((context, services) => services
                     .AddContentSerializer(context)
                     .AddJsonTypeInfo(WeatherForecastContext.Default.IImmutableListWeatherForecast))
-                .UseHttp((context, services) => services
-                    // Registro HttpClient
+                .UseHttp((context, services) =>
+                {
 #if DEBUG
-                    // DelegatingHandler will be automatically injected into Refit Client
-                    .AddTransient<DelegatingHandler, DebugHttpHandler>()
+                    // DelegatingHandler will be automatically injected
+                    services.AddTransient<DelegatingHandler, DebugHttpHandler>();
 #endif
-                    .AddSingleton<IWeatherCache, WeatherCache>()
-                    .AddRefitClient<IApiClient>(context))
+                    services.AddSingleton<IWeatherCache, WeatherCache>();
+                    //services.AddKiotaClient<WeatherServiceClient>(
+                    //context,
+                    //options: new EndpointOptions { Url = context.Configuration["ApiClient:Url"]! }
+                    //);
+
+                })
                 .ConfigureServices((context, services) =>
                 {
-                    // TODO: Registro your services
+                    // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
                 })
                 .UseNavigation(RegistroRoutes)
@@ -98,11 +103,13 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<LoginPage, LoginViewModel>(),
+            new ViewMap<MainPage, MainViewModel>(),
             new ViewMap<InicioPage, InicioViewModel>(),
-            new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<PersonalPage, PersonalViewModel>(),
-            new DataViewMap<ElementoPage, ElementoViewModel, Inventario>(),
-            new DataViewMap<MainPage, MainViewModel, Usuario>(),
+            new ViewMap<InventarioPage, InventarioViewModel>(),
+            new ViewMap<AnadirElementoPage, AnadirElementoViewModel >(),
+            new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
+            new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, Inventario>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
 
@@ -115,9 +122,12 @@ public partial class App : Application
                     Nested: [
                         new ("Inicio", View: views.FindByViewModel<InicioViewModel>()),
                         new ("Inventario",View: views.FindByViewModel<InventarioViewModel>(),
-                        Nested: [
-                                new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
+                        Nested:[
+                            new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
+                            new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
+                            new ("AnadirElemento",View: views.FindByViewModel<AnadirElementoViewModel>()),
                             ]),
+                        
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
                     ]
                     ),

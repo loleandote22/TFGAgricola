@@ -8,8 +8,12 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid RowDefinitions="Auto, *" >
-        <TextBlock Text="{Binding Elemento.Nombre}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"/>
-        <Button Content="Volver" Command="{Binding VolverCommand}"/>
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="16" >
+        <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}"/>
+        <Button Content="{Binding Eliminar_Loc}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
+        <TextBlock Text="{Binding Elemento.Nombre}" FontSize="40" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBlock Text="{Binding Elemento.Cantidad}" FontSize="20" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <TextBlock Text="{Binding Elemento.Descripcion}" MinWidth="300" Height="150" FontSize="20" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <TextBlock Text="{Binding Elemento.Tipo}" HorizontalAlignment="Center" Grid.Row="3" />
     </Grid>
 </Page>

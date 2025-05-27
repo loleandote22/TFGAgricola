@@ -12,20 +12,28 @@ namespace AplicacionTFG.Models;
 
     public class Inventario
     {
-
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
+        [Required(ErrorMessage = "El nombre es obligatorio")]
         [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
         [MaxLength(50)]
+        [Required(ErrorMessage = "El tipo es obligatorio")]
+        [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
+        [Required(ErrorMessage = "La descripción es obligatoria")]
+        [JsonPropertyName("descripcion")]
         [MaxLength(200, ErrorMessage = "La descripción no puede tener más de 200 caracteres")]
         public required string Descripcion { get; set; }
+        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        [JsonPropertyName("cantidad")]
         public required int Cantidad { get; set; }
+        [JsonPropertyName("empresaId")]
         public required int EmpresaId { get; set; }
-        public Empresa? Empresa { get; set; }
+        [JsonPropertyName("inventarioEventos")]
         public List<InventarioEvento>? InventarioEventos { get; set; }
+        [JsonPropertyName("inventarioChats")]
         public List<InventarioChat>? InventarioChats { get; set; }
     }
 
@@ -33,14 +41,17 @@ namespace AplicacionTFG.Models;
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
+        [JsonPropertyName("tipo")]
         [MaxLength(50, ErrorMessage = "El tipo no puede tener más de 50 caracteres")]
         public required string Tipo { get; set; }
+        [JsonPropertyName("fecha")]
         public required DateTime Fecha { get; set; }
+        [JsonPropertyName("cantidad")]
         public required int Cantidad { get; set; }
+        [JsonPropertyName("inventarioId")]
         public required int InventarioId { get; set; }
-        public required Inventario Inventario { get; set; }
+        [JsonPropertyName("usuarioId")]
         public int? UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
     }
 
     public class InventarioChat
@@ -48,27 +59,51 @@ namespace AplicacionTFG.Models;
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [MaxLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
+        [JsonPropertyName("mensaje")]
         public required string Mensaje { get; set; }
+        [JsonPropertyName("fecha")]
         public required DateTime Fecha { get; set; }
+        [JsonPropertyName("inventarioId")]
         public required int InventarioId { get; set; }
-        public Inventario? Inventario { get; set; }
+        [JsonPropertyName("usuarioId")]
         public int? UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
     }
 
-    #endregion
-
-    #region Consulta
-
-    public class InventarioConsulta
+public class InventarioConsulta
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+    [JsonPropertyName("nombre")]
+    public required string Nombre { get; set; }
+    [JsonPropertyName("descripcion")]
+    public required string Descripcion { get; set; }
+    [JsonIgnore]
+    private string? _descripcionCorta;
+    [JsonIgnore]
+    public string DescripcionCorta
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-        [JsonPropertyName("nombre")]
-        public required string Nombre { get; set; }
-        public required string Tipo { get; set; }
-        public required int Cantidad { get; set; }
+        get
+        {
+            if (!string.IsNullOrEmpty(_descripcionCorta))
+                return _descripcionCorta;
+            if (Descripcion == null)
+                return string.Empty;
+            if (Descripcion.Length > 75)
+                _descripcionCorta = Descripcion.Substring(0, 75);
+            return Descripcion.Length > 75 ? _descripcionCorta!.Substring(0,_descripcionCorta.LastIndexOf(" "))+"..." : Descripcion;
+        }
+        set
+        {
+            _descripcionCorta = value;
+        }
     }
+    [JsonPropertyName("tipo")]
+    public required string Tipo { get; set; }
+    [JsonPropertyName("cantidad")]
+    public required int Cantidad { get; set; }
+    [JsonPropertyName("empresaId")]
+    public required int EmpresaId { get; set; }
+}
 
     public class InventarioConsultaCompleto
     {
@@ -80,8 +115,8 @@ namespace AplicacionTFG.Models;
         public required string Descripcion { get; set; }
         public required int Cantidad { get; set; }
         public required int EmpresaId { get; set; }
-        public List<InventarioEventoConsulta>? InventarioEventos { get; set; } = new List<InventarioEventoConsulta>();
-        public List<InventarioChatConsulta>? InventarioChats { get; set; } = new List<InventarioChatConsulta>();
+        public List<InventarioEventoConsulta>? InventarioEventos { get; set; } = new();
+        public List<InventarioChatConsulta>? InventarioChats { get; set; } = new();
     }
 
     public class InventarioEventoConsulta
@@ -124,16 +159,25 @@ namespace AplicacionTFG.Models;
 
     public class InventarioActualizaDto
     {
+        
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
-        [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [Required(ErrorMessage = "El nombre es obligatorio")]
+    [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
         [MaxLength(50)]
+    [Required(ErrorMessage = "El tipo es obligatorio")]
+    [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
+    [Required(ErrorMessage = "La descripción es obligatoria")]
+    [JsonPropertyName("descripcion")]
         [MaxLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
-        public required string Descripcion { get; set; }
-        public required int Cantidad { get; set; }
+            public required string Descripcion { get; set; }
+        [JsonPropertyName("cantidad")]
+    [Required(ErrorMessage = "La cantidad es obligatoria")]
+    public required int Cantidad { get; set; }
+        [JsonPropertyName("usuarioId")]
         public required int UsuarioId { get; set; }
     }
 
@@ -144,4 +188,5 @@ namespace AplicacionTFG.Models;
         public required int InventarioId { get; set; }
         public int? UsuarioId { get; set; }
     }
-    #endregion
+
+#endregion

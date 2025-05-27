@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 
 namespace AplicacionTFG.Services;
-public class EmpresaApi: WebApiBase
+public class EmpresaApi(string url) : WebApiBase(url)
 {
     private string urlbase = "api/Empresas/";
     public async Task<string?> GetEmpresaAsync(int id)

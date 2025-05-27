@@ -1,12 +1,13 @@
 namespace AplicacionTFG.Services;
 public abstract class WebApiBase
 {
-    private static readonly HttpClient _client;
-    static WebApiBase()
+    private readonly HttpClient _client;
+    public WebApiBase(string url)
     {
         _client = new HttpClient()
         {
-            BaseAddress = new Uri("https://localhost:8081/"),
+            BaseAddress = new Uri("https://280d-93-187-135-67.ngrok-free.app"),
+            //BaseAddress = new Uri("https://localhost:7266/"), // Cambia esto a la URL de tu API
         };
 
     }
@@ -25,7 +26,7 @@ public abstract class WebApiBase
     protected async Task<string?> GetAsync(string url, Dictionary<string, string>? headers = null)
     {
         using var request = CreateRequestMessage(HttpMethod.Get, url, headers!);
-        using var response = await _client.SendAsync(request);
+        var response = await _client.SendAsync(request);
         if (response.IsSuccessStatusCode)
             return await response.Content.ReadAsStringAsync();
         return null;

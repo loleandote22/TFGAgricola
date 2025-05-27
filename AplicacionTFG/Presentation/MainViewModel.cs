@@ -1,24 +1,41 @@
-using Uno.Extensions.Navigation.Regions;
-namespace AplicacionTFG.Presentation;
+namespace AplicacionTFG.Presentation; 
+using System.Text;
+using System.Text.Json;
 
 public partial class MainViewModel : ViewModelBase
 {
-    private readonly INavigator _navigator;
-    private readonly Usuario _usuario;
-
+    private Usuario usuarioLocal;
+    #region Localización
+    private string inicio_Loc;
+    private string inventario_Loc;
+    private string personal_Loc;
+    public string Inicio_Loc { get => inicio_Loc; set { inicio_Loc = value; OnPropertyChanged(nameof(Inicio_Loc)); }}
+    public string Inventario_Loc { get => inventario_Loc; set {inventario_Loc = value; OnPropertyChanged(nameof(Inventario_Loc));}}
+    public string Personal_Loc { get => personal_Loc; set {personal_Loc = value; OnPropertyChanged(nameof(Personal_Loc));}}
+    #endregion
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public MainViewModel() { }
 #pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
-    public MainViewModel(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo, Usuario usuario)
+    public MainViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo): base(localizer, navigator, appInfo, localizationService)
     {
-        _usuario = usuario;
-        _navigator = navigator;
+        
         Title = localizer["ApplicationName"];
-        Console.WriteLine($"Usuario: {_usuario.Nombre}");
+        Console.WriteLine($"Usuario: {Usuario.Nombre}");
         Console.WriteLine($"Titulo: {Title}");
+        //CargarPalabras();
         //GoToSecond = new AsyncRelayCommand(GoToSecondView);
     }
     public string? Title { get; }
+    public Usuario UsuarioLocal { get => usuarioLocal; set => usuarioLocal = value; }
+
+    protected override void CargarPalabras()
+    {
+        // Cargar palabras en el idioma seleccionado
+        // Ejemplo: _localizationService.SetCurrentCultureAsync(new CultureInfo(IdiomaSeleccionado.Simbolo));
+        Inicio_Loc = _localizer["Inicio"];
+        Inventario_Loc = _localizer["Inventario"];
+        Personal_Loc = _localizer["Personal"];
+    }
 
     private async Task GoToSecondView()
     {
