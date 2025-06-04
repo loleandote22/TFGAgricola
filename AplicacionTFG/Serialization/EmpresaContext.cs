@@ -10,3 +10,9 @@ namespace AplicacionTFG.Serialization;
 public partial class EmpresaContext : JsonSerializerContext
 {
 }
+
+[JsonSerializable(typeof(EmpresaDto))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class EmpresaDtoContext : JsonSerializerContext
+{
+}

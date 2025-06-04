@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using AplicacionTFG.Serialization;
 
 namespace AplicacionTFG.Services;
 
@@ -20,14 +21,14 @@ public class InventarioApi(string url) : WebApiBase(url)
 
     public Task<string?> PostInventarioAsync(Inventario inventario)
     {;
-        var content = new StringContent(JsonSerializer.Serialize<Inventario>(inventario), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(inventario, InventarioContext.Default.Inventario), Encoding.UTF8, "application/json");
         return PostAsync(urlbase, content);
     }
 
     public Task<string?> PutInventarioAsync(InventarioActualizaDto inventario)
     {
         var url = urlbase + inventario.Id;
-        var content = new StringContent(JsonSerializer.Serialize<InventarioActualizaDto>(inventario), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(inventario, InventarioActualizaContext.Default.InventarioActualizaDto), Encoding.UTF8, "application/json");
         return PutAsync(url, content);
     }
 
@@ -40,7 +41,7 @@ public class InventarioApi(string url) : WebApiBase(url)
     public Task<string?> PostComentarioInventario(InventarioChat inventarioChat)
     {
         var url = urlbase + "comentario";
-        var content = new StringContent(JsonSerializer.Serialize<InventarioChat>(inventarioChat), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(inventarioChat, InventarioChatContext.Default.InventarioChat), Encoding.UTF8, "application/json");
         return PostAsync(url, content);
     }
 }

@@ -6,7 +6,7 @@ public abstract class WebApiBase
     {
         _client = new HttpClient()
         {
-            BaseAddress = new Uri("https://280d-93-187-135-67.ngrok-free.app"),
+            BaseAddress = new Uri("https://localhost:8081"),
             //BaseAddress = new Uri("https://localhost:7266/"), // Cambia esto a la URL de tu API
         };
 

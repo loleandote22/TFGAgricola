@@ -11,7 +11,7 @@
         <TextBox Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc}"/>
         <TextBox InputScope="Number" Style="{StaticResource Microsoft.UI.Xaml.Controls.NumberBox}" Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Header="{Binding Cantidad_Loc}"/>
         <TextBox Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AutomationProperties.AutomationId="TextBox_MultiLine_Material" AcceptsReturn="True" Grid.Row="1" Header="{Binding Descripcion_Loc}"/>
-        <ComboBox SelectedItem="{Binding Tipo}" Header="{Binding Tipo_Loc}" Grid.Row="3"/>
+        <ComboBox ItemsSource="{Binding Tipos}" SelectedItem="{Binding Tipo}" Header="{Binding Tipo_Loc}" Grid.Row="3"/>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Spacing="30">
             <Button Content="Guardar" Command="{Binding GuardarCommand}" />
             <Button Content="Eliminar" Command="{Binding EliminarCommand}" />

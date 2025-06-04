@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 
@@ -30,8 +31,8 @@ public class InventarioViewModel : ViewModelBase
         {
             if (value is null) return; // No hay cambio
             inventarioSeleccionado = value;
+            OnPropertyChanged(nameof(InventarioSeleccionado));
             Navegar();
-            OnPropertyChanged(nameof(InventarioSeleccionado)); 
         } 
     }
 
@@ -57,9 +58,9 @@ public class InventarioViewModel : ViewModelBase
         CargarInventario();
     }
 
-    private void CargarInventario()
+    private async Task CargarInventario()
     {
-        var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault()).Result;
+        var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault());
         if (string.IsNullOrEmpty(result))
         {
             Inventarios = new();

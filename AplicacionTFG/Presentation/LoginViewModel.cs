@@ -6,7 +6,15 @@ public partial class LoginViewModel: ViewModelBase
 {
     #region Auxiliares
     private int indice;
-    public int Indice { get => indice; set { indice = value; LimpiarCampos(); OnPropertyChanged(nameof(Indice)); } }
+    public int Indice { get => indice; set 
+        {
+            
+            indice = value; 
+            VerAcceso = indice == 0 ? Visibility.Visible : Visibility.Collapsed;
+            VerRegistro = indice == 1 ? Visibility.Visible : Visibility.Collapsed;
+            VerRecuperacion = indice == 2 ? Visibility.Visible : Visibility.Collapsed;
+            LimpiarCampos(); 
+            OnPropertyChanged(nameof(Indice)); } }
     #endregion
     #region Localización
     private string usuario_Loc = "";
@@ -56,6 +64,14 @@ public partial class LoginViewModel: ViewModelBase
     public Visibility VerRecuperacionUsuario { get; set; } = Visibility.Visible;
     public Visibility VerRecuperacionPregunta { get; set; } = Visibility.Collapsed;
     public Visibility VerRecuperacionContraseña { get; set; } = Visibility.Collapsed;
+    public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
+
+    private Visibility verAcceso;
+    private Visibility verRegistro;
+    private Visibility verRecuperacion;
+    public Visibility VerAcceso { get => verAcceso; set { verAcceso = value; OnPropertyChanged(nameof(VerAcceso)); }}
+    public Visibility VerRegistro { get => verRegistro; set { verRegistro = value; OnPropertyChanged(nameof(VerRegistro)); }}
+    public Visibility VerRecuperacion { get => verRecuperacion; set { verRecuperacion = value; OnPropertyChanged(nameof(VerRecuperacion)); }}
     #endregion
     #region Strings
     public string NombeUsuarioLogin { get; set; } = string.Empty;
@@ -76,7 +92,8 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRecuperarConfirm { get; set; } = string.Empty;
     #endregion
    
-    public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
+
+
     private UsuarioRegistroDto? usuarioRegistro = null;
     private Usuario? usuario = null;
     private readonly UsuarioApi _usuarioApi;
@@ -97,6 +114,9 @@ public partial class LoginViewModel: ViewModelBase
         CambiarContraCommand = new RelayCommand(CambiarContra);
         RegistrarCommand = new RelayCommand(Registrar);
         LoginCommand = new RelayCommand(Login);
+        VerAcceso = Visibility.Visible;
+        VerRegistro = Visibility.Collapsed;
+        VerRecuperacion = Visibility.Collapsed;
     }
 
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.

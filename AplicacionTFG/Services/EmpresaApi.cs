@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using AplicacionTFG.Serialization;
 
 namespace AplicacionTFG.Services;
 public class EmpresaApi(string url) : WebApiBase(url)
@@ -10,16 +11,16 @@ public class EmpresaApi(string url) : WebApiBase(url)
         var url = urlbase + id;
         return await GetAsync(url);
     }
-    public async Task<string> PostEmpresaAsync(EmpresaDto empresa)
+    public async Task<string?> PostEmpresaAsync(EmpresaDto empresa)
     {
         var url = urlbase + "register";
-        var content = new StringContent(JsonSerializer.Serialize<EmpresaDto>(empresa), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize<EmpresaDto>(empresa, EmpresaDtoContext.Default.EmpresaDto), Encoding.UTF8, "application/json");
         return await PostAsync(url, content);
     }
     public async Task<string?> Login(EmpresaDto empresa)
     {
         var url = urlbase + "login";
-        return await PostAsync(url, new StringContent(JsonSerializer.Serialize<EmpresaDto>(empresa), Encoding.UTF8, "application/json"));
+        return await PostAsync(url, new StringContent(JsonSerializer.Serialize<EmpresaDto>(empresa, EmpresaDtoContext.Default.EmpresaDto), Encoding.UTF8, "application/json"));
     }
 }
 

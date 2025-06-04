@@ -27,7 +27,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Grid uen:Region.Attached="True" VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="auto,*" ColumnDefinitions="auto,*" Grid.Row="1">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="auto,*" ColumnDefinitions="auto,*" Grid.Row="1">
                 <utu:ResponsiveView Grid.RowSpan="2">
                     <utu:ResponsiveView.NormalTemplate>
                         <DataTemplate>
@@ -39,13 +39,13 @@
                         </DataTemplate>
                     </utu:ResponsiveView.WideTemplate>
                 </utu:ResponsiveView>
-                <Grid MaxWidth="350" uen:Region.Attached="True" uen:Region.Navigator="Visibility" Grid.Column="1" Grid.Row="1">
-                    <Grid uen:Region.Name="Login" Visibility="Visible" RowSpacing="10" Margin="10" RowDefinitions="auto,auto,auto">
+                <Grid MaxWidth="350" Grid.Column="1" Grid.Row="1">
+                    <Grid Visibility="{Binding VerAcceso,UpdateSourceTrigger=PropertyChanged}" RowSpacing="10" Margin="10" RowDefinitions="auto,auto,auto">
                         <TextBox AutomationProperties.AutomationId="LoginName" Text="{Binding NombeUsuarioLogin, Mode=TwoWay}"  Header="{Binding Usuario_Loc, UpdateSourceTrigger= PropertyChanged}"/>
                         <PasswordBox AutomationProperties.AutomationId="LoginPassw" Password="{Binding ContraLogin, Mode=TwoWay}" Grid.Row="1" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}"/>
                         <Button AutomationProperties.AutomationId="LoginButton" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Grid.Row="2" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
                     </Grid>
-                    <Grid uen:Region.Name="Registro">
+                    <Grid Visibility="{Binding VerRegistro,UpdateSourceTrigger=PropertyChanged}">
                         <Grid Margin="10" RowSpacing="10" Visibility="{Binding VerRegistroUsuario}" RowDefinitions="auto,auto,auto,auto,auto,auto,auto">
                             <TextBox Text="{Binding NombreUsuarioRegistro, Mode=TwoWay}" Header="{Binding Usuario_Loc, UpdateSourceTrigger=PropertyChanged}"/>
                             <PasswordBox Password="{Binding ContraRegistro, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
@@ -64,7 +64,7 @@
                             </Grid>
                         </StackPanel>
                     </Grid>
-                    <Grid uen:Region.Name="Restablecer" Visibility="Collapsed">
+                    <Grid Visibility="{Binding VerRecuperacion,UpdateSourceTrigger=PropertyChanged}">
                         <StackPanel Margin="10" Spacing="10" Visibility="{Binding VerRecuperacionUsuario}">
                             <TextBox Text="{Binding NombeUsuarioRecuperar, Mode=TwoWay}" Header="{Binding Usuario_Loc, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Content="{Binding Recuperar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding PreguntarCommand}" IsEnabled="{Binding Funcional}" HorizontalAlignment="Center" Width="300"/>
@@ -81,11 +81,11 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-                <utu:TabBar MaxWidth="350" Grid.Column="1" uen:Region.Attached="True" VerticalAlignment="Top" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
+                <utu:TabBar MaxWidth="350" Grid.Column="1" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
                     <utu:TabBar.Items>
-                        <utu:TabBarItem uen:Region.Name="Login" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}"/>
-                        <utu:TabBarItem uen:Region.Name="Registro" Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" />
-                        <utu:TabBarItem uen:Region.Name="Restablecer" Content="{Binding Restablecer_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                        <utu:TabBarItem IsSelected="True" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                        <utu:TabBarItem Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                        <utu:TabBarItem Content="{Binding Restablecer_Loc, UpdateSourceTrigger=PropertyChanged}" />
                     </utu:TabBar.Items>
                 </utu:TabBar>
             </Grid>

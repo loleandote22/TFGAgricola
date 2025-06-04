@@ -1,5 +1,5 @@
 using System.Text.Json;
-using System.Threading.Tasks;
+using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 
 namespace AplicacionTFG.Presentation.Inventario;
@@ -10,7 +10,7 @@ public class ElementoViewModel : ViewModelBase
     public required string Eliminar_Loc { get; set; }
     #endregion
     
-    public Models.Inventario? Elemento { get; set; }
+    public Models.Inventario Elemento { get; set; }
 
     #region Comandos
     public ICommand EditarCommand => new RelayCommand(Editar);
@@ -20,15 +20,30 @@ public class ElementoViewModel : ViewModelBase
     private readonly InventarioApi _inventarioApi;
     public ElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber elemento) : base(localizer, navigator, appInfo)
     {
+       
         _inventarioApi = new InventarioApi(Apiurl);
-        string resutlado = _inventarioApi.GetInventarioAsync(elemento.number).Result!;
-        if (resutlado is not null)
-            Elemento = JsonSerializer.Deserialize<Models.Inventario>(resutlado);
+        CargarElemento(elemento.number);
+    }
+    private async void CargarElemento(int id)
+    {
+        try {
+            var resutlado = await _inventarioApi.GetInventarioAsync(id);
+            if (resutlado is not null)
+                Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
+            if (Elemento is null)
+                await _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
+            OnPropertyChanged(nameof(Elemento));
+        }
+        catch(Exception ex)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title:"Fallo", content: ex.Message);
+        }
+       
     }
 
-    private void Editar()
+    private async void Editar()
     {
-        _navigator.NavigateViewModelAsync<EdicionElementoViewModel>(this, data: Elemento);
+        await _navigator.NavigateViewModelAsync<EdicionElementoViewModel>(this, data: Elemento);
     }
 
     protected override void CargarPalabras()
@@ -51,11 +66,12 @@ public class EdicionElementoViewModel : ViewModelBase
     public required string Descripcion_Loc { get; set; }
     public required string Cantidad_Loc { get; set; }
     public required string Tipo_Loc { get; set; }
+    public List<string> Tipos { get; set; } = new() { "Material", "Herramienta", "Equipo" };
     #endregion
-    
+
     #region Campos
-    public string Nombre { get => Elemento.Nombre; set { Elemento.Nombre = value.Length>0?value: null; OnPropertyChanged(nameof(Nombre)); } }
-    public string? Descripcion { get => Elemento?.Descripcion; set { Elemento.Descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
+    public string Nombre { get => Elemento.Nombre; set { Elemento.Nombre = value; OnPropertyChanged(nameof(Nombre)); } }
+    public string? Descripcion { get => Elemento?.Descripcion; set { Elemento.Descripcion = value!; OnPropertyChanged(nameof(Descripcion)); } }
     public int Cantidad { get => Elemento.Cantidad; set { Elemento.Cantidad = value; OnPropertyChanged(nameof(Cantidad)); } }
     public string Tipo { get => Elemento.Tipo; set { Elemento.Tipo = value; OnPropertyChanged(nameof(Tipo)); } }
     #endregion

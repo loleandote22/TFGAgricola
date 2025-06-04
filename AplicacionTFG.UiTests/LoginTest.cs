@@ -18,32 +18,18 @@ public class LoginTest: TestBase
     }
 
     [Test]
-    public void LoginTest_InvalidCredentials2()
+    public void LoginTest_InvalidCredentials()
     {
         App.WaitForElement("LoginButton");
         App.EnterText("LoginName", "wronguser");
         App.EnterText("LoginPassw", "wrongpassword");
         Query loginButtonQuery = q => q.Marked("LoginButton");
-        App.Tap(loginButtonQuery);
+        App.Tap("LoginButton");
+       // App.Tap(loginButtonQuery);
         App.WaitForElement("Content");
         Query contentQuery = q => q.Marked("Content");
         Assert.That(App.Query(q => contentQuery(q).GetDependencyPropertyValue("Content").Value<string>()).First().Equals("Error en el login")); // Check if the login button is disabled after failed login
-
-        Query queryButton = q => q.Marked("ContentPresenter");
-        App.Tap(queryButton);
-        Assert.That(App.Query(q => loginButtonQuery(q).GetDependencyPropertyValue("IsEnabled").Value<bool>()).First()); // Check if still on login page 
-    }
-    [Test]
-    public async Task LoginTest_InvalidCredentials()
-    {
-        App.WaitForElement("LoginButton");
-        App.EnterText("LoginName", "wronguser");
-        App.EnterText("LoginPassw", "wrongpassword");
-        Query loginButtonQuery = q => q.Marked("LoginButton");
-        App.Tap(loginButtonQuery);
-        App.WaitForElement("Content");
-        Query contentQuery = q => q.Marked("Content");
-        Assert.That(App.Query(q => contentQuery(q).GetDependencyPropertyValue("Content").Value<string>()).First().Equals("Error en el login")); // Check if the login button is disabled after failed login
+        App.PressEnter();
         Assert.That(App.Query(q => loginButtonQuery(q).GetDependencyPropertyValue("IsEnabled").Value<bool>()).First()); // Check if still on login page 
     }
     [Test]
@@ -52,6 +38,7 @@ public class LoginTest: TestBase
         App.WaitForElement("LoginButton");
         App.Tap("LoginButton"); // Attempt to login without entering credentials
         // Optionally, you can check for an error message or validation feedback
-        Assert.That(App.Query("ErrorMessage").Any(), Is.True); // Assuming there's an error message element
+        Query contentQuery = q => q.Marked("Content");
+        Assert.That(App.Query(q => contentQuery(q).GetDependencyPropertyValue("Content").Value<string>()).First().Equals("Error en el login")); // Assuming there's an error message element
     }
 }

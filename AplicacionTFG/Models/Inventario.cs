@@ -16,15 +16,15 @@ namespace AplicacionTFG.Models;
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
         [Required(ErrorMessage = "El nombre es obligatorio")]
-        [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
-        [MaxLength(50)]
+        [StringLength(50)]
         [Required(ErrorMessage = "El tipo es obligatorio")]
         [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
         [Required(ErrorMessage = "La descripción es obligatoria")]
         [JsonPropertyName("descripcion")]
-        [MaxLength(200, ErrorMessage = "La descripción no puede tener más de 200 caracteres")]
+        [StringLength(200, ErrorMessage = "La descripción no puede tener más de 200 caracteres")]
         public required string Descripcion { get; set; }
         [Required(ErrorMessage = "La cantidad es obligatoria")]
         [JsonPropertyName("cantidad")]
@@ -42,7 +42,7 @@ namespace AplicacionTFG.Models;
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("tipo")]
-        [MaxLength(50, ErrorMessage = "El tipo no puede tener más de 50 caracteres")]
+        [StringLength(50, ErrorMessage = "El tipo no puede tener más de 50 caracteres")]
         public required string Tipo { get; set; }
         [JsonPropertyName("fecha")]
         public required DateTime Fecha { get; set; }
@@ -50,15 +50,15 @@ namespace AplicacionTFG.Models;
         public required int Cantidad { get; set; }
         [JsonPropertyName("inventarioId")]
         public required int InventarioId { get; set; }
-        [JsonPropertyName("usuarioId")]
-        public int? UsuarioId { get; set; }
+        [JsonPropertyName("usuarioNombre")]
+        public string UsuarioNombre { get; set; }
     }
 
     public class InventarioChat
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-        [MaxLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
+        [StringLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
         [JsonPropertyName("mensaje")]
         public required string Mensaje { get; set; }
         [JsonPropertyName("fecha")]
@@ -147,11 +147,11 @@ public class InventarioConsulta
     public class InventarioDto
     {
         [JsonPropertyName("nombre")]
-        [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
-        [MaxLength(50)]
+        [StringLength(50)]
         public required string Tipo { get; set; }
-        [MaxLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
+        [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
         public required string Descripcion { get; set; }
         public required int Cantidad { get; set; }
         public required int EmpresaId { get; set; }
@@ -159,20 +159,19 @@ public class InventarioConsulta
 
     public class InventarioActualizaDto
     {
-        
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
     [Required(ErrorMessage = "El nombre es obligatorio")]
-    [MaxLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
-        [MaxLength(50)]
+        [StringLength(50)]
     [Required(ErrorMessage = "El tipo es obligatorio")]
     [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
     [Required(ErrorMessage = "La descripción es obligatoria")]
     [JsonPropertyName("descripcion")]
-        [MaxLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
+        [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
             public required string Descripcion { get; set; }
         [JsonPropertyName("cantidad")]
     [Required(ErrorMessage = "La cantidad es obligatoria")]
@@ -183,7 +182,7 @@ public class InventarioConsulta
 
     public class InventarioChatDto
     {
-        [MaxLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
+        [StringLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
         public required string Mensaje { get; set; }
         public required int InventarioId { get; set; }
         public int? UsuarioId { get; set; }

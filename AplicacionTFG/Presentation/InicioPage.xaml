@@ -9,6 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Image Source="{Binding ImagenFondo, UpdateSourceTrigger=PropertyChanged}" Stretch="Fill" />
+        <Rectangle Fill="#80000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.25"/>
         <TextBlock Text="Inicio" FontSize="40" VerticalAlignment="Top"/>
     </Grid>
 </Page>

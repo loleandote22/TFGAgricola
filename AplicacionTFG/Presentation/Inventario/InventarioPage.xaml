@@ -28,7 +28,7 @@
                                 <SymbolIcon Symbol="Add" />
                             </ut:ControlExtensions.Icon>
                         </Button>
-                        <local:AnadirElementoControl x:Name="AddInventarioControl" Visibility="{Binding VerAnadir, UpdateSourceTrigger=PropertyChanged}" />
+                        <local:AnadirElementoControl Visibility="{Binding VerAnadir, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </DataTemplate>
             </utu:ResponsiveView.NormalTemplate>
@@ -47,7 +47,7 @@
                                 <SymbolIcon Symbol="Add" />
                             </ut:ControlExtensions.Icon>
                         </Button>
-                        <local:AnadirElementoControl x:Name="AddInventarioControl" Visibility="{Binding VerAnadir, UpdateSourceTrigger=PropertyChanged}" Width="300" Grid.Column="1"/>
+                        <local:AnadirElementoControl  Visibility="{Binding VerAnadir, UpdateSourceTrigger=PropertyChanged}" Width="300" Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>
             </utu:ResponsiveView.WideTemplate>
