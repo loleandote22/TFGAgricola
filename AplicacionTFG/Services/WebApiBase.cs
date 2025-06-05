@@ -6,8 +6,7 @@ public abstract class WebApiBase
     {
         _client = new HttpClient()
         {
-            BaseAddress = new Uri("https://localhost:8081"),
-            //BaseAddress = new Uri("https://localhost:7266/"), // Cambia esto a la URL de tu API
+            BaseAddress = new Uri(url),
         };
 
     }
@@ -25,6 +24,11 @@ public abstract class WebApiBase
 
     protected async Task<string?> GetAsync(string url, Dictionary<string, string>? headers = null)
     {
+        var headersBase = new Dictionary<string, string>
+        {
+            { "ngrok-skip-browser-warning", "true" }
+        };
+        headers = headers is null ? headers = headersBase : headers = headers.Concat(headersBase).ToDictionary(x => x.Key, x => x.Value);
         using var request = CreateRequestMessage(HttpMethod.Get, url, headers!);
         var response = await _client.SendAsync(request);
         if (response.IsSuccessStatusCode)

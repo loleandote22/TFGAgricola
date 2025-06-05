@@ -9,8 +9,8 @@ public class ElementoViewModel : ViewModelBase
     public required string Editar_Loc { get; set; }
     public required string Eliminar_Loc { get; set; }
     #endregion
-    
-    public Models.Inventario Elemento { get; set; }
+
+    public Models.Inventario Elemento { get => elemento; set { elemento = value; OnPropertyChanged(nameof(Elemento)); }}
 
     #region Comandos
     public ICommand EditarCommand => new RelayCommand(Editar);
@@ -18,24 +18,39 @@ public class ElementoViewModel : ViewModelBase
     #endregion
 
     private readonly InventarioApi _inventarioApi;
+    private Models.Inventario elemento;
+#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public ElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber elemento) : base(localizer, navigator, appInfo)
     {
        
         _inventarioApi = new InventarioApi(Apiurl);
+#if __WASM__
         CargarElemento(elemento.number);
+#else
+       var resutlado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
+        if (resutlado is not null)
+            Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
+        else
+            _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
+#endif
     }
+#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+
+
+
     private async void CargarElemento(int id)
     {
         try {
             var resutlado = await _inventarioApi.GetInventarioAsync(id);
             if (resutlado is not null)
-                Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
-            if (Elemento is null)
+                 Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
+            else
                 await _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
-            OnPropertyChanged(nameof(Elemento));
+            
         }
         catch(Exception ex)
         {
+            Console.WriteLine(ex.Message);
             await _navigator.ShowMessageDialogAsync(this, title:"Fallo", content: ex.Message);
         }
        
@@ -146,11 +161,12 @@ public class AnadirElementoViewModel : ViewModelBase
 
     public ICommand GuardarCommand => new RelayCommand(Guardar);
 
-
+#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public AnadirElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _inventarioApi = new InventarioApi(Apiurl);
     }
+#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
 
     private async void Guardar()
     {

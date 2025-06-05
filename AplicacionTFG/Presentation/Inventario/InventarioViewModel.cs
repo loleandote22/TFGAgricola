@@ -29,7 +29,7 @@ public class InventarioViewModel : ViewModelBase
         get => inventarioSeleccionado; 
         set 
         {
-            if (value is null) return; // No hay cambio
+            if (value is null) return;
             inventarioSeleccionado = value;
             OnPropertyChanged(nameof(InventarioSeleccionado));
             Navegar();
@@ -58,22 +58,37 @@ public class InventarioViewModel : ViewModelBase
         CargarInventario();
     }
 
-    private async Task CargarInventario()
+#if __WASM__
+    private async void CargarInventario()
     {
         var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault());
         if (string.IsNullOrEmpty(result))
         {
-            Inventarios = new();
+            VerNoHay = Visibility.Visible;
             return;
         }
 
         var deserializedResult = JsonSerializer.Deserialize(result, InventarioConsultaContext.Default.ListInventarioConsulta);
-        Inventarios = deserializedResult ?? new();
+        Inventarios = deserializedResult!;
         OnPropertyChanged(nameof(Inventarios));
         VerNoHay = Inventarios.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
+#else
+    private void CargarInventario()
+    {
+        var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault()).GetAwaiter().GetResult();
+        if (string.IsNullOrEmpty(result))
+        {
+            VerNoHay = Visibility.Visible;
+            return;
+        }
+        var deserializedResult = JsonSerializer.Deserialize(result, InventarioConsultaContext.Default.ListInventarioConsulta);
+        Inventarios = deserializedResult!;
+        OnPropertyChanged(nameof(Inventarios));
+        VerNoHay = Inventarios.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+#endif
 
-    
     private void Navegar()
     {
         _navigator.NavigateViewModelAsync<ElementoViewModel>(this, qualifier: Qualifiers.ClearBackStack, data: new EntityNumber(InventarioSeleccionado!.Id));

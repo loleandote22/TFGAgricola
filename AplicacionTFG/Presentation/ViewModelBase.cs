@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
+using AplicacionTFG.Serialization;
 
 namespace AplicacionTFG.Presentation;
 public abstract class ViewModelBase : ObservableObject
@@ -18,18 +19,11 @@ public abstract class ViewModelBase : ObservableObject
     public bool ValidarModelo(object modelo)
     {
         List<ValidationResult> validationResults = new ();
+#pragma warning disable IL2026 // Se usa para evitar el error de "El tipo 'ValidationContext' no se puede usar como un tipo de parámetro genérico porque no tiene un constructor sin parámetros público o protegido".
         var context = new ValidationContext(modelo);
         bool isValid = Validator.TryValidateObject(modelo, context, validationResults, true);
-
-        // Limpiar errores previos
-        _mensajeError = validationResults.Count > 0 ? validationResults[0].ErrorMessage : string.Empty;
-
-        // Agregar nuevos errores si los hay
-        //foreach (var validationResult in validationResults)
-        //{
-        //    Errores.Add(validationResult.ErrorMessage);
-        //}
-
+#pragma warning restore IL2026 // Se usa para evitar el error de "El tipo 'ValidationContext' no se puede usar como un tipo de parámetro genérico porque no tiene un constructor sin parámetros público o protegido".
+        _mensajeError = validationResults.Count > 0 ? validationResults[0].ErrorMessage! : string.Empty;
         return isValid;
     }
     #endregion
@@ -71,7 +65,6 @@ public abstract class ViewModelBase : ObservableObject
     private Usuario _usuario;
     public Usuario Usuario { get => _usuario; set => _usuario = value; }
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
-
     public ViewModelBase() { }
 
     public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo)
@@ -80,7 +73,7 @@ public abstract class ViewModelBase : ObservableObject
         _navigator = navigator;
         string usuario = (string)localSettings.Values["Usuario"];
         if (usuario is not null)
-            Usuario = JsonSerializer.Deserialize<Usuario>(usuario);
+            Usuario = JsonSerializer.Deserialize(usuario, UsuarioContext.Default.Usuario)!;
         Apiurl = appInfo.Value.ApiUrl ?? throw new ArgumentNullException(nameof(appInfo.Value.ApiUrl), "La URL de la API no puede ser nula.");
         CargarPalabras();
     }

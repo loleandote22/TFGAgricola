@@ -74,9 +74,9 @@ public partial class LoginViewModel: ViewModelBase
     public Visibility VerRecuperacion { get => verRecuperacion; set { verRecuperacion = value; OnPropertyChanged(nameof(VerRecuperacion)); }}
     #endregion
     #region Strings
-    public string NombeUsuarioLogin { get; set; } = string.Empty;
+    public string NombreUsuarioLogin { get; set; } = string.Empty;
     public string ContraLogin { get; set ; } = string.Empty;
-    public string NombeUsuarioRegistro { get; set; } = string.Empty;
+    public string NombreUsuarioRegistro { get; set; } = string.Empty;
     public string ContraRegistro { get; set; } = string.Empty;
     public string ContraRegistroConfirm { get; set; } = string.Empty;
     public string PreguntaRegistro { get; set; } = string.Empty;
@@ -210,7 +210,7 @@ public partial class LoginViewModel: ViewModelBase
     {
         usuarioRegistro = new UsuarioRegistroDto()
         {
-            Nombre = NombeUsuarioRegistro,
+            Nombre = NombreUsuarioRegistro,
             Contrasena = ContraRegistro,
             Pregunta = PreguntaRegistro,
             Respuesta = RespuestaRegistro,
@@ -298,13 +298,13 @@ public partial class LoginViewModel: ViewModelBase
     private async void Login()
     {
         Funcional = false;
-        if (string.IsNullOrEmpty(NombeUsuarioLogin) || string.IsNullOrEmpty(ContraLogin))
+        if (string.IsNullOrEmpty(NombreUsuarioLogin) || string.IsNullOrEmpty(ContraLogin))
             await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Por favor, introduce un nombre de usuario y una contraseña.");
         else
         {
             UsuarioDto usuario = new()
             {
-                Nombre = NombeUsuarioLogin,
+                Nombre = NombreUsuarioLogin,
                 Contrasena = ContraLogin
             };
             try
@@ -312,7 +312,7 @@ public partial class LoginViewModel: ViewModelBase
                 var result = await _usuarioApi.Login(usuario);
                 if (result is not null)
                 {
-                    Usuario usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario)!;
+                    Usuario usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
                     ResetearFormularios();
                     localSettings.Values["Usuario"] = result;
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
@@ -351,9 +351,9 @@ public partial class LoginViewModel: ViewModelBase
 
     private void LimpiarCampos()
     {
-        NombeUsuarioLogin = string.Empty;
+        NombreUsuarioLogin = string.Empty;
         ContraLogin = string.Empty;
-        NombeUsuarioRegistro = string.Empty;
+        NombreUsuarioRegistro = string.Empty;
         ContraRegistro = string.Empty;
         RolRegistro = string.Empty;
         PreguntaRegistro = string.Empty;
@@ -364,9 +364,9 @@ public partial class LoginViewModel: ViewModelBase
         VerRegistroEmpresa = Visibility.Collapsed;
         NombreEmpresa = string.Empty;
         ContraEmpresa = string.Empty;
-        OnPropertyChanged(nameof(NombeUsuarioLogin));
+        OnPropertyChanged(nameof(NombreUsuarioLogin));
         OnPropertyChanged(nameof(ContraLogin));
-        OnPropertyChanged(nameof(NombeUsuarioRegistro));
+        OnPropertyChanged(nameof(NombreUsuarioRegistro));
         OnPropertyChanged(nameof(ContraRegistro));
         OnPropertyChanged(nameof(RolRegistro));
         OnPropertyChanged(nameof(PreguntaRegistro));

@@ -15,31 +15,20 @@ public partial class MainViewModel : ViewModelBase
     #endregion
 #pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public MainViewModel() { }
-#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public MainViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo): base(localizer, navigator, appInfo, localizationService)
     {
-        
         Title = localizer["ApplicationName"];
         Console.WriteLine($"Usuario: {Usuario.Nombre}");
         Console.WriteLine($"Titulo: {Title}");
-        //CargarPalabras();
-        //GoToSecond = new AsyncRelayCommand(GoToSecondView);
     }
+#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
     public string? Title { get; }
     public Usuario UsuarioLocal { get => usuarioLocal; set => usuarioLocal = value; }
 
     protected override void CargarPalabras()
     {
-        // Cargar palabras en el idioma seleccionado
-        // Ejemplo: _localizationService.SetCurrentCultureAsync(new CultureInfo(IdiomaSeleccionado.Simbolo));
         Inicio_Loc = _localizer["Inicio"];
         Inventario_Loc = _localizer["Inventario"];
         Personal_Loc = _localizer["Personal"];
-    }
-
-    private async Task GoToSecondView()
-    {
-       // await _navigator.NavigateBackAsync(this);
-        await _navigator.NavigateViewModelAsync<SecondViewModel>(this, data: new Entity(Title!));
     }
 }

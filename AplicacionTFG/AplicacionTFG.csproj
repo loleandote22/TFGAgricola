@@ -95,6 +95,11 @@
             ThemeService;
         </UnoFeatures>
     </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Presentation\Horario\**" />
+      <EmbeddedResource Remove="Presentation\Horario\**" />
+      <None Remove="Presentation\Horario\**" />
+    </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Net.Sdk.Compilers.Toolset" />
     <PackageReference Include="System.Text.Json" />
@@ -104,9 +109,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Presentation\Horario\" />
-    </ItemGroup>
     <ItemGroup>
         <Page Update="Presentation\Inventario\InventarioPage.xaml">
             <Generator>MSBuild:Compile</Generator>
@@ -161,5 +163,20 @@
     <IsUiAutomationMappingEnabled>True</IsUiAutomationMappingEnabled>
     <DefineConstants>$(DefineConstants);USE_UITESTS</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <AndroidResource Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Remove="Presentation\Horario\**" />
+  </ItemGroup>
   
 </Project>

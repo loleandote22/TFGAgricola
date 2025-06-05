@@ -16,10 +16,10 @@
             <utu:ResponsiveView.NormalTemplate>
                 <DataTemplate>
                     <Grid>
-                        <ListView ItemsSource="{Binding Inventarios}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView ItemsSource="{Binding Inventarios}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <utu:Card HeaderContent="{Binding Nombre}" SubHeaderContent="{Binding DescripcionCorta}" AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}" Width="300" HorizontalAlignment="Left"/>
+                                    <utu:Card HeaderContent="{Binding Nombre}" SubHeaderContent="{Binding DescripcionCorta}" AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -35,7 +35,7 @@
             <utu:ResponsiveView.WideTemplate>
                 <DataTemplate>
                     <Grid ColumnDefinitions="*, Auto">
-                        <GridView ItemsSource="{Binding Inventarios}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <GridView ItemsSource="{Binding Inventarios, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <utu:Card HeaderContent="{Binding Nombre}" SubHeaderContent="{Binding DescripcionCorta}" AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}" Width="300" Height="300"/>
