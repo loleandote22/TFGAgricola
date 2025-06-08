@@ -51,7 +51,7 @@ namespace AplicacionTFG.Models;
         [JsonPropertyName("inventarioId")]
         public required int InventarioId { get; set; }
         [JsonPropertyName("usuarioNombre")]
-        public string UsuarioNombre { get; set; }
+        public required string UsuarioNombre { get; set; }
     }
 
     public class InventarioChat
@@ -105,39 +105,21 @@ public class InventarioConsulta
     public required int EmpresaId { get; set; }
 }
 
-    public class InventarioConsultaCompleto
-    {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-        [JsonPropertyName("nombre")]
-        public required string Nombre { get; set; }
-        public required string Tipo { get; set; }
-        public required string Descripcion { get; set; }
-        public required int Cantidad { get; set; }
-        public required int EmpresaId { get; set; }
-        public List<InventarioEventoConsulta>? InventarioEventos { get; set; } = new();
-        public List<InventarioChatConsulta>? InventarioChats { get; set; } = new();
-    }
 
     public class InventarioEventoConsulta
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
         public required string Tipo { get; set; }
         public required DateTime Fecha { get; set; }
         public required int Cantidad { get; set; }
-        public required int InventarioId { get; set; }
-        public int? UsuarioId { get; set; }
+        [JsonPropertyName("usuarioNombre")]
+        public string? UsuarioNombre { get; set; }
     }
 
     public class InventarioChatConsulta
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
         public required string Mensaje { get; set; }
         public required DateTime Fecha { get; set; }
-        public required int InventarioId { get; set; }
-        public int? UsuarioId { get; set; }
+        public string? UsuarioNombre { get; set; }
     }
 
     #endregion
@@ -162,20 +144,20 @@ public class InventarioConsulta
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
-    [Required(ErrorMessage = "El nombre es obligatorio")]
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
         [StringLength(50)]
-    [Required(ErrorMessage = "El tipo es obligatorio")]
-    [JsonPropertyName("tipo")]
+        [Required(ErrorMessage = "El tipo es obligatorio")]
+        [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
-    [Required(ErrorMessage = "La descripción es obligatoria")]
-    [JsonPropertyName("descripcion")]
+        [Required(ErrorMessage = "La descripción es obligatoria")]
+        [JsonPropertyName("descripcion")]
         [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
             public required string Descripcion { get; set; }
         [JsonPropertyName("cantidad")]
-    [Required(ErrorMessage = "La cantidad es obligatoria")]
-    public required int Cantidad { get; set; }
+        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        public required int Cantidad { get; set; }
         [JsonPropertyName("usuarioId")]
         public required int UsuarioId { get; set; }
     }

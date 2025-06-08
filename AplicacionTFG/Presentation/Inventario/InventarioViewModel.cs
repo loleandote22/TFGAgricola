@@ -17,30 +17,40 @@ public class InventarioViewModel : ViewModelBase
     public required string Tipo_Loc { get; set; }
     #endregion
 
+    #region Elementos
     private InventarioConsulta? inventarioSeleccionado;
     public required List<InventarioConsulta> Inventarios { get; set; }
-    private readonly InventarioApi _inventarioApi ;
-    private readonly UsuarioApi _usuarioApi;
-    private Visibility verNoHay;
-    private Visibility verAnadir;
-
-    public InventarioConsulta? InventarioSeleccionado 
-    { 
-        get => inventarioSeleccionado; 
-        set 
+    public InventarioConsulta? InventarioSeleccionado
+    {
+        get => inventarioSeleccionado;
+        set
         {
             if (value is null) return;
             inventarioSeleccionado = value;
             OnPropertyChanged(nameof(InventarioSeleccionado));
             Navegar();
-        } 
+        }
     }
+    #endregion
+
+    private readonly InventarioApi _inventarioApi ;
+
+    #region Visibilidad
+    private Visibility verNoHay;
+    private Visibility verAnadir;
+    private Visibility verInventario;
+    public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
+    public Visibility VerAnadir { get => verAnadir; set {
+            VerInventario = value != Visibility.Visible ?  Visibility.Visible : Visibility.Collapsed;
+            verAnadir = value; OnPropertyChanged(nameof(VerAnadir)); } }
+    public Visibility VerInventario { get => verInventario; set { verInventario = value; OnPropertyChanged(nameof(VerInventario)); } }
+    #endregion
+
+    
 
     public ICommand AddInventarioCommand => new RelayCommand(Añadir);
     public ICommand GuardarCommand => new RelayCommand(Guardar);
     public ICommand AddInventarioPequeñoCommand => new RelayCommand(AñadirPequeño);
-    public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
-    public Visibility VerAnadir { get => verAnadir; set { verAnadir = value; OnPropertyChanged(nameof(VerAnadir)); }}
     public string Nombre { get; set; } = string.Empty;
     public string Descripcion { get; set; }
     public int Cantidad { get; set; }
@@ -48,47 +58,41 @@ public class InventarioViewModel : ViewModelBase
     private string tipo;
     public List<string> Tipos { get; set; } = new() { "Material", "Herramienta", "Equipo" };
     public string Tipo { get => tipo; set  { tipo = value; OnPropertyChanged(nameof(Tipo)); }}
-
+#pragma warning disable CS8618
     public InventarioViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo) 
     {
         VerAnadir = Visibility.Collapsed;
         VerNoHay = Visibility.Collapsed;
         _inventarioApi = new(Apiurl);
-        _usuarioApi = new UsuarioApi(Apiurl);
         CargarInventario();
     }
+#pragma warning restore CS8618 
 
 #if __WASM__
     private async void CargarInventario()
     {
         var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault());
-        if (string.IsNullOrEmpty(result))
-        {
-            VerNoHay = Visibility.Visible;
-            return;
-        }
-
-        var deserializedResult = JsonSerializer.Deserialize(result, InventarioConsultaContext.Default.ListInventarioConsulta);
-        Inventarios = deserializedResult!;
-        OnPropertyChanged(nameof(Inventarios));
-        VerNoHay = Inventarios.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        TerminarCarga(result);
     }
 #else
     private void CargarInventario()
     {
         var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault()).GetAwaiter().GetResult();
-        if (string.IsNullOrEmpty(result))
+        TerminarCarga(result);
+    }
+#endif
+    private void TerminarCarga(string? resultado)
+    {
+        if (string.IsNullOrEmpty(resultado))
         {
             VerNoHay = Visibility.Visible;
             return;
         }
-        var deserializedResult = JsonSerializer.Deserialize(result, InventarioConsultaContext.Default.ListInventarioConsulta);
+        var deserializedResult = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.ListInventarioConsulta);
         Inventarios = deserializedResult!;
         OnPropertyChanged(nameof(Inventarios));
         VerNoHay = Inventarios.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
-#endif
-
     private void Navegar()
     {
         _navigator.NavigateViewModelAsync<ElementoViewModel>(this, qualifier: Qualifiers.ClearBackStack, data: new EntityNumber(InventarioSeleccionado!.Id));
@@ -100,7 +104,12 @@ public class InventarioViewModel : ViewModelBase
         Descripcion = string.Empty;
         Cantidad = 0;
         Tipo = string.Empty;
+        OnPropertyChanged(nameof(Nombre));
+        OnPropertyChanged(nameof(Descripcion));
+        OnPropertyChanged(nameof(Cantidad));
+        OnPropertyChanged(nameof(Tipo));
         VerAnadir = Visibility.Visible;
+        
     }
 
     private void AñadirPequeño()
@@ -115,7 +124,7 @@ public class InventarioViewModel : ViewModelBase
             await _navigator.ShowMessageDialogAsync(this, title: Titulo_Loc, content:_mensajeError);
             return;
         }
-        verAnadir = Visibility.Collapsed;
+        VerAnadir = Visibility.Collapsed;
         var resultado = await _inventarioApi.PostInventarioAsync(inventario);
         var elemento = JsonSerializer.Deserialize<Models.InventarioConsulta>(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
         var inventarios = Inventarios.ToList();

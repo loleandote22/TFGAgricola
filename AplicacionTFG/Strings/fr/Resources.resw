@@ -126,6 +126,9 @@
   <data name="CambiarUsuario" xml:space="preserve">
     <value>Changer usager</value>
   </data>
+  <data name="Mas" xml:space="preserve">
+    <value>Plus</value>
+  </data>
   <data name="ConfirmarContraseña" xml:space="preserve">
     <value>Confirmer mot de passe</value>
   </data>
@@ -141,6 +144,9 @@
   <data name="Eliminar" xml:space="preserve">
     <value>Éliminer</value>
   </data>
+  <data name="Eventos" xml:space="preserve">
+    <value>Événements</value>
+  </data>
   <data name="Guardar" xml:space="preserve">
     <value>Garder</value>
   </data>
@@ -149,6 +155,9 @@
   </data>
   <data name="Inventario" xml:space="preserve">
     <value>Inventaire</value>
+  </data>
+  <data name="Mensajes" xml:space="preserve">
+    <value>Messages</value>
   </data>
   <data name="NoElementos" xml:space="preserve">
     <value>Il n'y a rien</value>
@@ -185,5 +194,8 @@
   </data>
   <data name="Usuario" xml:space="preserve">
     <value>Usager</value>
+  </data>
+  <data name="Mensaje" xml:space="preserve">
+    <value>Message</value>
   </data>
 </root>

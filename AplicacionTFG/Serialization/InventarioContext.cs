@@ -37,4 +37,14 @@ public partial class InventarioActualizaContext : JsonSerializerContext
 public partial class InventarioChatContext : JsonSerializerContext
 {
 }
+[JsonSerializable(typeof(List<InventarioChatConsulta>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class InventarioChatConsultaContext : JsonSerializerContext
+{
+}
+[JsonSerializable(typeof(List<InventarioEventoConsulta>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class InventarioEventoConsultaContext : JsonSerializerContext
+{
+}
 

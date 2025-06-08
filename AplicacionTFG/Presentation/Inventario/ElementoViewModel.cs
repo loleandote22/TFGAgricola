@@ -8,42 +8,102 @@ public class ElementoViewModel : ViewModelBase
     #region Localización
     public required string Editar_Loc { get; set; }
     public required string Eliminar_Loc { get; set; }
+    public required string Eventos_Loc { get; set; }
+    public required string Mensajes_Loc { get; set; }
+    public required string Mensaje_Loc { get; set; }
+    public required string Mas_Loc { get; set; }
     #endregion
 
-    public Models.Inventario Elemento { get => elemento; set { elemento = value; OnPropertyChanged(nameof(Elemento)); }}
+    #region Visiblidad
+    private Visibility verMensajes;
+    private Visibility verEventos;
+    public Visibility VerMensajes { get => verMensajes; set  { verMensajes = value;  OnPropertyChanged(nameof(VerMensajes)); }}
+    public Visibility VerEventos { get => verEventos; set { verEventos = value; OnPropertyChanged(nameof(VerEventos)); }}
+    private Visibility verNoHay;
+    public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
+    private Visibility verMasEventos;
+    private Visibility verMasMensajes;
+    public Visibility VerMasEventos { get => verMasEventos; set { verMasEventos = value; OnPropertyChanged(nameof(VerMasEventos)); }}
+    public Visibility VerMasMensajes { get => verMasMensajes; set { verMasMensajes = value; OnPropertyChanged(nameof(VerMasMensajes)); }}
+
+    #endregion
+    
+    
+    private int indice;
+    public int Indice
+    {
+        get => indice; set
+        {
+            indice = value;
+            VerEventos = indice == 0 ? Visibility.Visible : Visibility.Collapsed;
+            VerMensajes = indice == 1 ? Visibility.Visible : Visibility.Collapsed;
+            OnPropertyChanged(nameof(Indice));
+        }
+    }
+
+    private int _PaginaEventos = 0;
+    private int _PaginaMensajes = 0;
+
+
+    private bool hayMensaje;
+    public bool HayMensaje { get => hayMensaje; set { hayMensaje = value; OnPropertyChanged(nameof(HayMensaje)); } }
+    public string Mensaje { get => mensaje; set { 
+            HayMensaje =value.Length > 0; 
+            mensaje = value; OnPropertyChanged(nameof(Mensaje)); }}
+
+    public InventarioConsulta Elemento { get => elemento; set { elemento = value; OnPropertyChanged(nameof(Elemento)); }}
+    private List<InventarioChatConsulta> mensajes = new();
+    private List<InventarioEventoConsulta> eventos = new();
+    public List<InventarioEventoConsulta> Eventos { get => eventos; set { eventos = value; OnPropertyChanged(nameof(Eventos)); } }
+    public List<InventarioChatConsulta> Mensajes { get => mensajes; set { mensajes = value; OnPropertyChanged(nameof(Mensajes)); }}
 
     #region Comandos
     public ICommand EditarCommand => new RelayCommand(Editar);
     public ICommand EliminarCommand => new RelayCommand(Eliminar);
+
+    public ICommand CargarMasMensajesCommand;
+    public ICommand CargarMasEventosCommand => new RelayCommand(CargarMasEventos);
+    public ICommand EnviarMensajeCommand => new RelayCommand(EnviarMensaje);
+
+
+
     #endregion
 
     private readonly InventarioApi _inventarioApi;
-    private Models.Inventario elemento;
-#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+    private InventarioConsulta elemento;
+    private string mensaje;
+#pragma warning disable CS8618
     public ElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber elemento) : base(localizer, navigator, appInfo)
     {
-       
-        _inventarioApi = new InventarioApi(Apiurl);
+        VerMensajes = Visibility.Collapsed;
+       _inventarioApi = new InventarioApi(Apiurl);
 #if __WASM__
         CargarElemento(elemento.number);
+
 #else
-       var resutlado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
-        if (resutlado is not null)
-            Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
+       var resultado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
+        if (resultado is not null)
+        {
+            Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
+            CargarMasEventos();
+            CargarMasMensajes();
+        }
         else
             _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
 #endif
     }
-#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
-
-
-
+#pragma warning restore CS8618 
     private async void CargarElemento(int id)
     {
-        try {
-            var resutlado = await _inventarioApi.GetInventarioAsync(id);
-            if (resutlado is not null)
-                 Elemento = JsonSerializer.Deserialize(resutlado, InventarioContext.Default.Inventario)!;
+        try
+        {
+            var resultado = await _inventarioApi.GetInventarioAsync(id);
+            if (resultado is not null) 
+            { 
+                Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
+                CargarMasEventos();
+                CargarMasMensajes();
+            }
             else
                 await _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
             
@@ -56,6 +116,70 @@ public class ElementoViewModel : ViewModelBase
        
     }
 
+#if __WASM__
+    private void CargarMasEventos()
+    {
+        _PaginaEventos++;
+        Console.WriteLine(_PaginaEventos);
+        _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos).ContinueWith(t =>
+        {
+            if (t.Result is not null)
+            {
+                var eventosNuevos = JsonSerializer.Deserialize(t.Result, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
+                if (eventosNuevos.Count < 20)
+                {
+                    VerMasEventos = Visibility.Collapsed;
+                }
+                Eventos = Eventos.Union(eventosNuevos).ToList();
+            }
+        });
+    }
+    private void CargarMasMensajes()
+    {
+        _PaginaMensajes++;
+        _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes).ContinueWith(t =>
+        {
+            if (t.Result is not null)
+            {
+                var mensajesNuevos = JsonSerializer.Deserialize(t.Result, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
+                if (mensajes.Count < 20)
+                    VerMasMensajes = Visibility.Collapsed;
+                Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+            }
+        });
+    }
+#else
+    private async void CargarMasEventos()
+    {
+        _PaginaEventos++;
+        var resultado = await _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos);
+       if (resultado is not null)
+        {
+            var eventosNuevos = JsonSerializer.Deserialize(resultado, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
+            if (eventosNuevos.Count < 20)
+            {
+                VerMasEventos = Visibility.Collapsed;
+            }
+            Eventos = Eventos.Union(eventosNuevos).ToList();
+        }
+
+    }
+
+    private async void CargarMasMensajes()
+    {
+        _PaginaMensajes++;
+        var resultado = await _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes);
+        if (resultado is not null)
+        {
+            var mensajesNuevos = JsonSerializer.Deserialize(resultado, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
+            if (mensajesNuevos.Count < 20)
+                VerMasMensajes = Visibility.Collapsed;
+            Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+        }
+    }
+#endif
+
+
     private async void Editar()
     {
         await _navigator.NavigateViewModelAsync<EdicionElementoViewModel>(this, data: Elemento);
@@ -65,12 +189,41 @@ public class ElementoViewModel : ViewModelBase
     {
         Editar_Loc = _localizer["Editar"];
         Eliminar_Loc = _localizer["Eliminar"];
+        Eventos_Loc = _localizer["Eventos"];
+        Mensajes_Loc = _localizer["Mensajes"];
+        Mensaje_Loc = _localizer["Mensaje"];
+        Mas_Loc = _localizer["Mas"];
     }
+
 
     private async void Eliminar()
     {
         await _inventarioApi.DeleteInventarioAsync(Elemento!.Id);
         await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+    }
+
+    private async void EnviarMensaje()
+    {
+        InventarioChat inventarioChat = new ()
+        {
+            Mensaje = Mensaje,
+            InventarioId = Elemento.Id,
+            UsuarioId = Usuario.Id,
+            Fecha = DateTime.Now
+        };
+        InventarioChatConsulta inventarioChatConsulta = new()
+        {
+            Fecha = inventarioChat.Fecha,
+            Mensaje = Mensaje,
+            UsuarioNombre = Usuario.Nombre
+        };
+        await _inventarioApi.PostComentarioInventario(inventarioChat);
+        Mensaje = string.Empty;
+        if (Mensajes is null)
+            Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta };
+        else
+            Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta }.Union(Mensajes).ToList();
+
     }
 }
 
@@ -85,21 +238,30 @@ public class EdicionElementoViewModel : ViewModelBase
     #endregion
 
     #region Campos
-    public string Nombre { get => Elemento.Nombre; set { Elemento.Nombre = value; OnPropertyChanged(nameof(Nombre)); } }
-    public string? Descripcion { get => Elemento?.Descripcion; set { Elemento.Descripcion = value!; OnPropertyChanged(nameof(Descripcion)); } }
-    public int Cantidad { get => Elemento.Cantidad; set { Elemento.Cantidad = value; OnPropertyChanged(nameof(Cantidad)); } }
-    public string Tipo { get => Elemento.Tipo; set { Elemento.Tipo = value; OnPropertyChanged(nameof(Tipo)); } }
+    private string nombre= null!;
+    private string descripcion = null!;
+    private int cantidad;
+    private string tipo = null!;
+
+    public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
+    public required string Descripcion { get => descripcion; set { descripcion = value!; OnPropertyChanged(nameof(Descripcion)); } }
+    public int Cantidad { get => cantidad;  set { cantidad = value; OnPropertyChanged(nameof(Cantidad)); } }
+    public string Tipo { get => tipo; set { tipo= value; OnPropertyChanged(nameof(Tipo)); } }
     #endregion
 
     #region Comandos
     public ICommand GuardarCommand => new RelayCommand(Guardar);
     public ICommand EliminarCommand => new RelayCommand(Eliminar);
     #endregion
-    public Models.Inventario Elemento { get; set; }
     private readonly InventarioApi _inventarioApi;
-    public EdicionElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, Models.Inventario elemento) : base(localizer, navigator, appInfo)
+    private int id;
+    public EdicionElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, InventarioConsulta elemento) : base(localizer, navigator, appInfo)
     {
-        Elemento = elemento;
+        id = elemento.Id;
+        Nombre = elemento.Nombre;
+        Descripcion = elemento.Descripcion;
+        Cantidad = elemento.Cantidad;
+        Tipo = elemento.Tipo;
         _inventarioApi = new InventarioApi(Apiurl);
     }
 
@@ -113,27 +275,27 @@ public class EdicionElementoViewModel : ViewModelBase
 
     private async void Guardar()
     {
-        if (!ValidarModelo(Elemento))
+        InventarioActualizaDto inventario = new InventarioActualizaDto()
+        {
+            Id = id,
+            Nombre = Nombre,
+            Tipo = Tipo,
+            Descripcion = Descripcion,
+            Cantidad = Cantidad,
+            UsuarioId = Usuario.Id
+        };
+        if (!ValidarModelo(inventario))
         {
             await _navigator.ShowMessageDialogAsync(this, title:"Error al guardar", content: _mensajeError);
             return;
         }
-        InventarioActualizaDto inventario = new InventarioActualizaDto()
-        {
-            Id = Elemento!.Id,
-            Nombre = Elemento.Nombre,
-            Tipo = Elemento.Tipo,
-            Descripcion = Elemento.Descripcion,
-            Cantidad = Elemento.Cantidad,
-            UsuarioId = Usuario.Id
-        };
         await _inventarioApi.PutInventarioAsync(inventario);
         await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
     }
 
     private async void Eliminar()
     {
-        await _inventarioApi.DeleteInventarioAsync(Elemento.Id);
+        await _inventarioApi.DeleteInventarioAsync(id);
         await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
     }
 }
@@ -161,12 +323,12 @@ public class AnadirElementoViewModel : ViewModelBase
 
     public ICommand GuardarCommand => new RelayCommand(Guardar);
 
-#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning disable CS8618
     public AnadirElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _inventarioApi = new InventarioApi(Apiurl);
     }
-#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning restore CS8618
 
     private async void Guardar()
     {

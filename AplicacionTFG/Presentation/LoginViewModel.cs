@@ -50,13 +50,13 @@ public partial class LoginViewModel: ViewModelBase
 
     #endregion
     #region Commandos
-    public ICommand CambiarAEmpresaCommand { get; }
-    public ICommand CambiarAUsuarioCommand { get; }
-    public ICommand PreguntarCommand { get; }
-    public ICommand ResponderCommand { get; }
-    public ICommand CambiarContraCommand { get; }
-    public ICommand RegistrarCommand { get; }
-    public ICommand LoginCommand { get; }
+    public ICommand CambiarAEmpresaCommand => new RelayCommand(ComprobarUsuario);
+    public ICommand CambiarAUsuarioCommand => new RelayCommand(CambiarAUsuario);
+    public ICommand PreguntarCommand => new RelayCommand(Preguntar);
+    public ICommand ResponderCommand => new RelayCommand(Responder);
+    public ICommand CambiarContraCommand => new RelayCommand(CambiarContra);
+    public ICommand RegistrarCommand => new RelayCommand(Registrar);
+    public ICommand LoginCommand => new RelayCommand(Login);
     #endregion
     #region Visibilidades
     public Visibility VerRegistroUsuario { get; set; } = Visibility.Visible;
@@ -66,9 +66,9 @@ public partial class LoginViewModel: ViewModelBase
     public Visibility VerRecuperacionContraseña { get; set; } = Visibility.Collapsed;
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
 
-    private Visibility verAcceso;
-    private Visibility verRegistro;
-    private Visibility verRecuperacion;
+    private Visibility verAcceso= Visibility.Visible;
+    private Visibility verRegistro = Visibility.Collapsed;
+    private Visibility verRecuperacion = Visibility.Collapsed;
     public Visibility VerAcceso { get => verAcceso; set { verAcceso = value; OnPropertyChanged(nameof(VerAcceso)); }}
     public Visibility VerRegistro { get => verRegistro; set { verRegistro = value; OnPropertyChanged(nameof(VerRegistro)); }}
     public Visibility VerRecuperacion { get => verRecuperacion; set { verRecuperacion = value; OnPropertyChanged(nameof(VerRecuperacion)); }}
@@ -81,7 +81,7 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRegistroConfirm { get; set; } = string.Empty;
     public string PreguntaRegistro { get; set; } = string.Empty;
     public string RespuestaRegistro { get; set; } = string.Empty;
-    public List<string> RolesRegistro { get; set; } = [ "Dueño", "Administrador", "Empleado" ]; // Cambiar a un array de strings
+    public List<string> RolesRegistro { get; set; } = [ "Dueño", "Administrador", "Empleado" ]; 
     public string RolRegistro { get; set; } = string.Empty;
     public string NombreEmpresa { get; set; } = string.Empty;
     public string ContraEmpresa { get; set; } = string.Empty;
@@ -91,7 +91,6 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRecuperar { get; set; } = string.Empty;
     public string ContraRecuperarConfirm { get; set; } = string.Empty;
     #endregion
-   
 
 
     private UsuarioRegistroDto? usuarioRegistro = null;
@@ -106,30 +105,18 @@ public partial class LoginViewModel: ViewModelBase
         IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
         _usuarioApi = new(Apiurl);
         _empresaApi = new(Apiurl);
-        Funcional = true;
-        CambiarAEmpresaCommand = new RelayCommand(ComprobarUsuario);
-        CambiarAUsuarioCommand = new RelayCommand(CambiarAUsuario);
-        PreguntarCommand = new RelayCommand(Preguntar);
-        ResponderCommand = new RelayCommand(Responder);
-        CambiarContraCommand = new RelayCommand(CambiarContra);
-        RegistrarCommand = new RelayCommand(Registrar);
-        LoginCommand = new RelayCommand(Login);
-        VerAcceso = Visibility.Visible;
-        VerRegistro = Visibility.Collapsed;
-        VerRecuperacion = Visibility.Collapsed;
     }
 
-#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning disable CS8618 
     public LoginViewModel() { }
-#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning restore CS8618 
 
     private async void Preguntar()
     {
         Funcional = false;
-        //await _navigator.ShowMessageDialogAsync(this,title:"Recuperar contraseña", content:"Fase 1 no implementada");
         try
         {
-            var pregunta = await _usuarioApi.Preguntar(NombeUsuarioRecuperar);
+            var pregunta = await _usuarioApi.GetPregunta(NombeUsuarioRecuperar);
             if (pregunta == null)
             {
                 await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "El usuario no existe");
@@ -161,7 +148,7 @@ public partial class LoginViewModel: ViewModelBase
             Nombre = NombeUsuarioRecuperar,
             Respuesta = RespuestaRecuperar
         };
-        var result = await _usuarioApi.Responder(usuarioRespuestaDto);
+        var result = await _usuarioApi.PostRespuesta(usuarioRespuestaDto);
         if (result == null)
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "La respuesta es incorrecta");
@@ -309,7 +296,7 @@ public partial class LoginViewModel: ViewModelBase
             };
             try
             {
-                var result = await _usuarioApi.Login(usuario);
+                var result = await _usuarioApi.PostLogin(usuario);
                 if (result is not null)
                 {
                     Usuario usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;

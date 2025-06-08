@@ -109,7 +109,7 @@ public partial class App : Application
             new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<AnadirElementoPage, AnadirElementoViewModel >(),
             new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
-            new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, Inventario>(),
+            new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
 

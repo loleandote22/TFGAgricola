@@ -6,11 +6,16 @@ namespace AplicacionTFG.Services;
 public class EmpresaApi(string url) : WebApiBase(url)
 {
     private string urlbase = "api/Empresas/";
+
+    #region Gets
     public async Task<string?> GetEmpresaAsync(int id)
     {
         var url = urlbase + id;
         return await GetAsync(url);
     }
+    #endregion
+
+    #region Posts
     public async Task<string?> PostEmpresaAsync(EmpresaDto empresa)
     {
         var url = urlbase + "register";
@@ -22,5 +27,5 @@ public class EmpresaApi(string url) : WebApiBase(url)
         var url = urlbase + "login";
         return await PostAsync(url, new StringContent(JsonSerializer.Serialize<EmpresaDto>(empresa, EmpresaDtoContext.Default.EmpresaDto), Encoding.UTF8, "application/json"));
     }
+    #endregion
 }
-
