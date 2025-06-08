@@ -1,12 +1,12 @@
 namespace AplicacionTFG.Services;
 public abstract class WebApiBase
 {
-    private static readonly HttpClient _client;
-    static WebApiBase()
+    private readonly HttpClient _client;
+    public WebApiBase(string url)
     {
         _client = new HttpClient()
         {
-            BaseAddress = new Uri("https://localhost:8081/"),
+            BaseAddress = new Uri(url),
         };
 
     }
@@ -24,8 +24,13 @@ public abstract class WebApiBase
 
     protected async Task<string?> GetAsync(string url, Dictionary<string, string>? headers = null)
     {
+        var headersBase = new Dictionary<string, string>
+        {
+            { "ngrok-skip-browser-warning", "true" }
+        };
+        headers = headers is null ? headers = headersBase : headers = headers.Concat(headersBase).ToDictionary(x => x.Key, x => x.Value);
         using var request = CreateRequestMessage(HttpMethod.Get, url, headers!);
-        using var response = await _client.SendAsync(request);
+        var response = await _client.SendAsync(request);
         if (response.IsSuccessStatusCode)
             return await response.Content.ReadAsStringAsync();
         return null;

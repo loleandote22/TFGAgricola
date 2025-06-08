@@ -13,8 +13,7 @@ public class Usuario
     public int Id { get; set; }
     [JsonPropertyName("nombre")]
     public required string Nombre { get; set; }
-    [MinLength(8, ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres")]
-    [StringLength(16, ErrorMessage = "La contraseña debe tener un máximo de 16 caracteres")]
+    [StringLength(16,MinimumLength =8, ErrorMessage = "La contraseña debe tener emtre 8 y 16 caracteres")]
     [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra y un número.")]
     [JsonPropertyName("password")]
     public required string Contrasena { get; set; }
@@ -34,8 +33,7 @@ public class UsuarioRegistroDto
     [JsonPropertyName("nombre")]
     public required string Nombre { get; set; }
     [Required(ErrorMessage = "La contraseña es obligatoria")]
-    [MinLength(8, ErrorMessage = "La contraseña debe tener un mínimo de 8 caracteres")]
-    [StringLength(16, ErrorMessage = "La contraseña debe tener un máximo de 16 caracteres")]
+    [StringLength(16, MinimumLength = 8, ErrorMessage = "La contraseña debe tener emtre 8 y 16 caracteres")]
     [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra y un número.")]
     [JsonPropertyName("password")]
     public required string Contrasena { get; set; }

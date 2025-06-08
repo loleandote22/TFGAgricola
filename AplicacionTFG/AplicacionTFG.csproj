@@ -33,21 +33,28 @@
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>
-      Material;
-      Dsp;
-      Hosting;
-      Toolkit;
-      Logging;
-      Mvvm;
-      Configuration;
-      Http;
-      Serialization;
-      Localization;
-      Navigation;
-      ThemeService;
+        Material;
+        Dsp;
+        Hosting;
+        Toolkit;
+        Logging;
+        Mvvm;
+        Configuration;
+        Http;
+        Serialization;
+        Localization;
+        Navigation;
+        ThemeService;
+         <!--Si no web SkiaRenderer; Add SkiaRendering feature for SkiaSharp support -->
     </UnoFeatures>
   </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Presentation\Horario\**" />
+      <EmbeddedResource Remove="Presentation\Horario\**" />
+      <None Remove="Presentation\Horario\**" />
+    </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Sdk.Compilers.Toolset" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
@@ -55,29 +62,74 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Page Update="Presentation\TabBar\TabBarBase.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-    <ItemGroup>
-        <Page Update="Presentation\TabBar\TabBarGrande.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Page Update="Presentation\TabBar\TabBarPequeño.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Presentation\Horario\" />
-        <Folder Include="Presentation\Personal\" />
-    </ItemGroup>
     <ItemGroup>
         <Page Update="Presentation\Inventario\InventarioPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>
-
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\ElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Personal\PersonalPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\InicioPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\ElementoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\EdicionElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\A%3badirElementoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AnadirElementoControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AñadirElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Presentation\Inventario\AnadirElementoPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug' or '$(IsUiAutomationMappingEnabled)'=='True'">
+    <IsUiAutomationMappingEnabled>True</IsUiAutomationMappingEnabled>
+    <DefineConstants>$(DefineConstants);USE_UITESTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <AndroidResource Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  
 </Project>
