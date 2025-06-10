@@ -22,12 +22,12 @@
         <NavigationView PaneToggleButtonStyle="{StaticResource Customizado}" PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="{Binding Inicio_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="Home" uen:Region.Name="Inicio" IsSelected="True"/>
-                <NavigationViewItem x:Name="InventarioPage" Content="{Binding Inventario_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="Help" uen:Region.Name="Inventario"  uen:Navigation.Request="-/Inventario" uen:Navigation.Data="{Binding UsuarioLocal}" />
+                <NavigationViewItem x:Name="InventarioPage" Content="{Binding Inventario_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="Help" uen:Region.Name="Inventario"  uen:Navigation.Request="-/Inventario"/>
                 <NavigationViewItem x:Name="ElementoPage" Content="{Binding Personal_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="Home" uen:Region.Name="Personal" uen:Navigation.Request="-/Personal"/>
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Usuario" Icon="Contact2"/>
-                <!--<NavigationViewItem x:Name="ConfiguracionPage" Content="Configuración" Icon="Setting" uen:Region.Name="Configuracion" />-->
+                <NavigationViewItem Content="{Binding Perfil_Loc}" Icon="Contact" uen:Region.Name="Perfil" uen:Navigation.Request="-/Perfil"/>
+                <NavigationViewItem Content="{Binding Salir_Loc}" uen:Navigation.Request="-" Icon="Help"/>
             </NavigationView.FooterMenuItems>
             <ContentControl uen:Region.Attached="True" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
         </NavigationView>

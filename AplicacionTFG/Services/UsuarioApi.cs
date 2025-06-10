@@ -36,12 +36,19 @@ public class UsuarioApi(string url) : WebApiBase(url)
         var url = urlbase + "responder";
         return await PostAsync(url, new StringContent(JsonSerializer.Serialize<UsuarioRespuestaDto>(usuario, UsuarioRespuestaDtoContext.Default.UsuarioRespuestaDto), Encoding.UTF8, "application/json"));
     }
+    public async Task<string?> PutUsuarioAsync(int id,UsuarioAcutliazarDto usuario)
+    {
+        var url = urlbase + id;
+        var content = new StringContent(JsonSerializer.Serialize<UsuarioAcutliazarDto>(usuario, UsuarioActualizarDtoContext.Default.UsuarioAcutliazarDto), Encoding.UTF8, "application/json");
+        return await PutAsync(url, content);
+    }
     public async Task<string?> PutUsuarioAsync(Usuario usuario)
     {
         var url = urlbase + usuario.Id;
         var content = new StringContent(JsonSerializer.Serialize<Usuario>(usuario, UsuarioContext.Default.Usuario), Encoding.UTF8, "application/json");
         return await PutAsync(url, content);
     }
+
     public async Task<string?> DeleteUsuarioAsync(int id)
     {
         var url = urlbase + id;

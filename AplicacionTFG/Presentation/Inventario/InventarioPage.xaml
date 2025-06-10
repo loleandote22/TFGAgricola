@@ -13,9 +13,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid RowDefinitions="Auto,*">
         <TextBlock Text="{Binding Titulo_Loc}" FontSize="40"  VerticalAlignment="Top" Margin="0,10,0,0"/>
-
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-            
             <Grid >
                 <GridView ItemsSource="{Binding Inventarios, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <GridView.ItemTemplate>

@@ -198,4 +198,31 @@
   <data name="Mensaje" xml:space="preserve">
     <value>Mensagem</value>
   </data>
+  <data name="Salir" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Perfil" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Cancelar" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Aceptar" xml:space="preserve">
+    <value>Aceitar</value>
+  </data>
+  <data name="ZonaPeligrosa" xml:space="preserve">
+    <value>Zona perigosa</value>
+  </data>
+  <data name="ImagenActualizada" xml:space="preserve">
+    <value>Imagem atualizada</value>
+  </data>
+  <data name="NoOlvidesGuardar" xml:space="preserve">
+    <value>Não se esqueça de guardar</value>
+  </data>
+  <data name="EliminarIrreversible" xml:space="preserve">
+    <value>Esta ação é irreversível, tem a certeza?</value>
+  </data>
+  <data name="ExitoGuardado" xml:space="preserve">
+    <value>Salvo com êxito</value>
+  </data>
 </root>

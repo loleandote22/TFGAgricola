@@ -102,7 +102,6 @@ public partial class LoginViewModel: ViewModelBase
     public LoginViewModel(IStringLocalizer localizer,ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo) : base(localizer, navigator,appInfo, localizationService)
     {
         Indice =0;
-        IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
         _usuarioApi = new(Apiurl);
         _empresaApi = new(Apiurl);
     }
