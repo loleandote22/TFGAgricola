@@ -43,7 +43,7 @@
                     <Grid Visibility="{Binding VerAcceso,UpdateSourceTrigger=PropertyChanged}" RowSpacing="10" Margin="10" RowDefinitions="auto,auto,auto">
                         <TextBox AutomationProperties.AutomationId="LoginName" Text="{Binding NombreUsuarioLogin, Mode=TwoWay}"  Header="{Binding Usuario_Loc, UpdateSourceTrigger= PropertyChanged}"/>
                         <PasswordBox AutomationProperties.AutomationId="LoginPassw" Password="{Binding ContraLogin, Mode=TwoWay}" Grid.Row="1" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button AutomationProperties.AutomationId="LoginButton" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Grid.Row="2" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
+                        <Button  AutomationProperties.AutomationId="LoginButton" Content="{Binding Iniciar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Grid.Row="2" Command="{Binding LoginCommand}" HorizontalAlignment="Center" Width="300"/>
                     </Grid>
                     <Grid Visibility="{Binding VerRegistro,UpdateSourceTrigger=PropertyChanged}">
                         <Grid Margin="10" RowSpacing="10" Visibility="{Binding VerRegistroUsuario}" RowDefinitions="auto,auto,auto,auto,auto,auto,auto">

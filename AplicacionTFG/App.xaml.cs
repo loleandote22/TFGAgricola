@@ -1,4 +1,5 @@
 using AplicacionTFG.Presentation.Inventario;
+using AplicacionTFG.Presentation.Perfil;
 using AplicacionTFG.Presentation.Personal;
 using Uno.Resizetizer;
 
@@ -107,7 +108,8 @@ public partial class App : Application
             new ViewMap<InicioPage, InicioViewModel>(),
             new ViewMap<PersonalPage, PersonalViewModel>(),
             new ViewMap<InventarioPage, InventarioViewModel>(),
-            new ViewMap<AnadirElementoPage, AnadirElementoViewModel >(),
+            new ViewMap<AnadirElementoPage, AnadirElementoViewModel>(),
+            new ViewMap<PerfilPage, PerfilViewModel>(),
             new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
@@ -127,8 +129,8 @@ public partial class App : Application
                             new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
                             new ("AnadirElemento",View: views.FindByViewModel<AnadirElementoViewModel>()),
                             ]),
-                        
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
+                        new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
                     ]
                     ),
                     new ("Second", View: views.FindByViewModel<SecondViewModel>()),

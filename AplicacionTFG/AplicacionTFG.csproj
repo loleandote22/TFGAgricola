@@ -45,7 +45,7 @@
         Localization;
         Navigation;
         ThemeService;
-         <!--Si no web SkiaRenderer; Add SkiaRendering feature for SkiaSharp support -->
+        SkiaRenderer;<!--Si no web SkiaRenderer; Add SkiaRendering feature for SkiaSharp support -->
     </UnoFeatures>
   </PropertyGroup>
     <ItemGroup>
@@ -130,6 +130,16 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Remove="Presentation\Horario\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Perfil\PerfilPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Perfil\ImagenesContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   
 </Project>

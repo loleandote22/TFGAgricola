@@ -64,7 +64,7 @@ public abstract class ViewModelBase : ObservableObject
     protected readonly INavigator _navigator;
     private Usuario _usuario;
     public Usuario Usuario { get => _usuario; set => _usuario = value; }
-#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning disable CS8618
     public ViewModelBase() { }
 
     public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo)
@@ -78,13 +78,13 @@ public abstract class ViewModelBase : ObservableObject
         CargarPalabras();
     }
 
-    //public ViewModelBase() { }
-#pragma warning restore CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required" o declararlo como un valor que acepta valores NULL.
+#pragma warning restore CS8618
 
     public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo, ILocalizationService? localizationService = null) :this(localizer, navigator, appInfo) 
     {
         if (localizationService is not null)
             _localizationService = localizationService;
+        IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
     }
 }
 
@@ -101,5 +101,3 @@ public struct Idioma
         Bandera = "/Assets/flags/" + simbolo.Replace("-", "_").Replace("en", "gb") + ".png";
     }
 }
-
-

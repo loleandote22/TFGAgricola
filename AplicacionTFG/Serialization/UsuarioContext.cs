@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Windows.Devices.PointOfService;
 
 namespace AplicacionTFG.Serialization;
 [JsonSerializable(typeof(Usuario))]
@@ -30,7 +31,6 @@ public partial class UsuarioDtoContext : JsonSerializerContext
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class UsuarioRegistroDtoContext : JsonSerializerContext
 {
-    
 }
 
 [JsonSerializable(typeof(UsuarioRespuestaDto))]
@@ -41,5 +41,12 @@ public partial class UsuarioRegistroDtoContext : JsonSerializerContext
 [JsonSerializable(typeof(List<UsuarioRespuestaDto>))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class UsuarioRespuestaDtoContext : JsonSerializerContext
+{
+}
+
+
+[JsonSerializable(typeof(UsuarioAcutliazarDto))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class UsuarioActualizarDtoContext : JsonSerializerContext
 {
 }
