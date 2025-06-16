@@ -138,7 +138,6 @@ public class PerfilViewModel: ViewModelBase
             return;
         }
         var result = await _usuarioApi.PutUsuarioAsync(Usuario.Id, usuarioActualizado);
-        Console.WriteLine(result);
         await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"],content: _localizer["ExitoGuardado"]);
         Funcional = false;
     }

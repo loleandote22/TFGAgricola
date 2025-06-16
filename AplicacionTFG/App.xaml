@@ -19,6 +19,7 @@
             </ResourceDictionary>
           </utum:MaterialToolkitTheme.FontOverrideDictionary> -->
                 </utum:MaterialToolkitTheme>
+                
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="EliminarButton" TargetType="Button">
                 <Setter Property="Background" Value="Red"/>
@@ -27,7 +28,6 @@
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="Padding" Value="16,0"/>
                 <Setter Property="FontWeight" Value="Medium"/>
-                <Setter Property="FontFamily" Value="ms-appx:///Uno.Fonts.Roboto/Fonts/Roboto-Medium.ttf#Roboto"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -39,7 +39,6 @@
                 </Setter>
             </Style>
             <!-- Add resources here -->
-
     </ResourceDictionary>
   </Application.Resources>
 

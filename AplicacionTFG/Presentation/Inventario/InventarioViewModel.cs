@@ -37,7 +37,7 @@ public class InventarioViewModel : ViewModelBase
 
     #region Visibilidad
     private Visibility verNoHay;
-    private Visibility verAnadir;
+    private Visibility verAnadir= Visibility.Collapsed;
     private Visibility verInventario;
     public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
     public Visibility VerAnadir { get => verAnadir; set {

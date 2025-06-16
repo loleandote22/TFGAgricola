@@ -4,11 +4,36 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AplicacionTFG.Presentation.Personal"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:utu="using:Uno.Toolkit.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <TextBlock Text="Personal" FontSize="40"/>
+    <Grid RowDefinitions="Auto,*">
+        <TextBlock Text="{Binding Titulo_Loc}" FontSize="40"/>
+        <GridView Grid.Row="1" ItemsSource="{Binding Usuarios}" SelectedItem="{Binding UsuarioSeleccionado,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <utu:Card
+                        HeaderContent="{Binding Nombre}"
+                        SubHeaderContent="{Binding Tipo}"
+                        MediaContent="{Binding Imagen}"
+                        AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}" Width="150">
+                        <utu:Card.HeaderContentTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="15" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </utu:Card.HeaderContentTemplate>
+                        <utu:Card.MediaContentTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}"
+                Stretch="Uniform"
+                MaxHeight="194" />
+                            </DataTemplate>
+                        </utu:Card.MediaContentTemplate>
+                    </utu:Card>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>

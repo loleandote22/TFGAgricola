@@ -50,3 +50,9 @@ public partial class UsuarioRespuestaDtoContext : JsonSerializerContext
 public partial class UsuarioActualizarDtoContext : JsonSerializerContext
 {
 }
+
+[JsonSerializable(typeof(List<UsuarioEmpresa>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class UsuarioEmpresaContext : JsonSerializerContext
+{
+}

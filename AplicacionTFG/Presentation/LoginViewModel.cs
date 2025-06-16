@@ -1,6 +1,8 @@
 using System.Text.Json;
-using AplicacionTFG.Services;
 using AplicacionTFG.Serialization;
+using AplicacionTFG.Services;
+using Microsoft.UI.Xaml.Input;
+using Windows.UI.ViewManagement;
 namespace AplicacionTFG.Presentation;
 public partial class LoginViewModel: ViewModelBase
 {
@@ -113,6 +115,7 @@ public partial class LoginViewModel: ViewModelBase
     private async void Preguntar()
     {
         Funcional = false;
+        InputPane.GetForCurrentView().TryHide();
         try
         {
             var pregunta = await _usuarioApi.GetPregunta(NombeUsuarioRecuperar);
@@ -142,6 +145,7 @@ public partial class LoginViewModel: ViewModelBase
     private async void Responder()
     {
         Funcional = false;
+        InputPane.GetForCurrentView().TryHide();
         UsuarioRespuestaDto usuarioRespuestaDto = new()
         {
             Nombre = NombeUsuarioRecuperar,
@@ -165,6 +169,7 @@ public partial class LoginViewModel: ViewModelBase
     private async void CambiarContra()
     {
         Funcional = false;
+        InputPane.GetForCurrentView().TryHide();
         if (ContraRecuperar != ContraRecuperarConfirm)
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Las contraseñas no coinciden");
@@ -229,6 +234,7 @@ public partial class LoginViewModel: ViewModelBase
     private async void Registrar()
     {
         Funcional = false;
+        InputPane.GetForCurrentView().TryHide();
         EmpresaDto empresa = new()
         {
             Nombre = NombreEmpresa,
@@ -284,6 +290,8 @@ public partial class LoginViewModel: ViewModelBase
     private async void Login()
     {
         Funcional = false;
+        InputPane.GetForCurrentView().TryHide();
+
         if (string.IsNullOrEmpty(NombreUsuarioLogin) || string.IsNullOrEmpty(ContraLogin))
             await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Por favor, introduce un nombre de usuario y una contraseña.");
         else

@@ -93,3 +93,13 @@ public class UsuarioRespuestaDto
     [JsonPropertyName("respuesta")]
     public required string Respuesta { get; set; }
 }
+
+
+public class  UsuarioEmpresa
+{
+    public int id { get; set; }
+    public required string Nombre { get; set; }
+    [JsonPropertyName("rol")]
+    public required string Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required string Imagen { get; set; }
+}
