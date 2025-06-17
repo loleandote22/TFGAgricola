@@ -10,13 +10,20 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="30,30,30,0">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,30,15,0">
         <Rectangle Grid.RowSpan="6" Grid.ColumnSpan="2"/>
         <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
         <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
         <TextBlock Text="{Binding Elemento.Nombre}" FontSize="40" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBlock Text="{Binding Elemento.Cantidad}" FontSize="20" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" />
-        <TextBlock Text="{Binding Elemento.Descripcion}" MinHeight="150" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" VerticalAlignment="Top" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock FontSize="20"  HorizontalAlignment="Center" >
+               <Run Text="{Binding Elemento.Cantidad}"/>
+               <Run Text=" "/>
+               <Run Text="{Binding Elemento.Unidad}" FontSize="15"/>
+            </TextBlock>
+            <!--<TextBlock Text="{Binding Elemento.Unidad}" FontSize="15" VerticalAlignment="Bottom"/>-->
+        </StackPanel>
+        <TextBlock Text="{Binding Elemento.Descripcion}" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" VerticalAlignment="Top" />
         <TextBlock Text="{Binding Elemento.Tipo}" HorizontalAlignment="Center" Grid.Row="3" />
         <utu:TabBar MaxWidth="350" Grid.ColumnSpan="2" Grid.Row="4" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
             <utu:TabBar.Items>
@@ -27,23 +34,22 @@
         <Grid Grid.Row="5" Grid.ColumnSpan="2">
             <Grid RowDefinitions="Auto,*,Auto" RowSpacing="20" Visibility="{Binding VerMensajes, UpdateSourceTrigger=PropertyChanged}">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                    <TextBox PlaceholderText="{Binding Mensaje_Loc}"  Text="{Binding Mensaje, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox PlaceholderText="{Binding Mensaje_Loc}" TextWrapping="Wrap" MaxHeight="150" Text="{Binding Mensaje, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     <Button IsEnabled="{Binding HayMensaje, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialSmallFabStyle}" ToolTipService.ToolTip="Enviar" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding EnviarMensajeCommand}" Grid.Column="1">
                         <ut:ControlExtensions.Icon>
                             <SymbolIcon Symbol="Send" />
                         </ut:ControlExtensions.Icon>
                     </Button>
                 </Grid>
-                <TextBlock Visibility="{Binding VerNoHayMensajes, UpdateSourceTrigger=PropertyChanged}" Text="{Binding NoElementos_Loc}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
-                <ScrollView  Grid.Row="1">
-                    <ListView  ItemsSource="{Binding Mensajes, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Top" >
+                <ScrollView Grid.Row="1">
+                    <ListView ItemsSource="{Binding Mensajes, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Top" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="5" Orientation="Horizontal" Spacing="5">
+                                <Grid Margin="5" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto"  RowSpacing="10" ColumnSpacing="5">
                                     <TextBlock Text="{Binding Fecha}" />
-                                    <TextBlock Text="{Binding UsuarioNombre}" />
-                                    <TextBlock Text="{Binding Mensaje}" />
-                                </StackPanel>
+                                    <TextBlock Text="{Binding UsuarioNombre}" Grid.Column="1" />
+                                    <TextBlock Text="{Binding Mensaje}" Grid.ColumnSpan="2" Grid.Row="1"/>
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -64,7 +70,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button Content="{Binding Mas_Loc}" Command="{Binding CargarMasEventosCommand}" Visibility="{Binding VerMasEventos, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" HorizontalAlignment="Center"/>
+                <Button Content="{Binding Mas_Loc}" Command="{Binding CargarMasEventosCommand}" Visibility="{Binding VerMasEventos, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" HorizontalAlignment="Center"/>
             </Grid>
         </Grid>
     </Grid>

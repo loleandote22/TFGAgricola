@@ -22,6 +22,12 @@ public partial class InventarioConsultaContext : JsonSerializerContext
 {
 }
 
+[JsonSerializable(typeof(InventarioDto))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class InventarioDtoContext : JsonSerializerContext
+{
+}
+
 [JsonSerializable(typeof(InventarioActualizaDto))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class InventarioActualizaContext : JsonSerializerContext

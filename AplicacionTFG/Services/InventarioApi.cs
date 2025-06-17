@@ -36,9 +36,9 @@ public class InventarioApi(string url) : WebApiBase(url)
 
     #region Posts
 
-    public Task<string?> PostInventarioAsync(Inventario inventario)
+    public Task<string?> PostInventarioAsync(InventarioDto inventario)
     {;
-        var content = new StringContent(JsonSerializer.Serialize(inventario, InventarioContext.Default.Inventario), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(inventario, InventarioDtoContext.Default.InventarioDto), Encoding.UTF8, "application/json");
         return PostAsync(urlbase, content);
     }
     public Task<string?> PostComentarioInventario(InventarioChat inventarioChat)

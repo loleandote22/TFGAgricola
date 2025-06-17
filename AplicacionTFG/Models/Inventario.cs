@@ -103,6 +103,8 @@ public class InventarioConsulta
     public required int Cantidad { get; set; }
     [JsonPropertyName("empresaId")]
     public required int EmpresaId { get; set; }
+    [JsonPropertyName("unidad")]
+    public required string Unidad { get; set; }
 }
 
 
@@ -137,7 +139,11 @@ public class InventarioConsulta
         public required string Descripcion { get; set; }
         public required int Cantidad { get; set; }
         public required int EmpresaId { get; set; }
-    }
+        [JsonPropertyName("unidad")]
+        [Required(ErrorMessage = "La unidad es obligatoria")]
+        [StringLength(50, ErrorMessage = "La unidad no puede tener más de 50 caracteres")]
+        public required string Unidad { get; set; }
+}
 
     public class InventarioActualizaDto
     {
@@ -160,6 +166,9 @@ public class InventarioConsulta
         public required int Cantidad { get; set; }
         [JsonPropertyName("usuarioId")]
         public required int UsuarioId { get; set; }
+
+        [JsonPropertyName("unidad")]
+        public required string Unidad { get; set; }
     }
 
     public class InventarioChatDto
