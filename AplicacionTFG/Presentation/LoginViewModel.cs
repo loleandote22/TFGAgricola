@@ -1,7 +1,6 @@
 using System.Text.Json;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
-using Microsoft.UI.Xaml.Input;
 using Windows.UI.ViewManagement;
 namespace AplicacionTFG.Presentation;
 public partial class LoginViewModel: ViewModelBase
@@ -211,6 +210,19 @@ public partial class LoginViewModel: ViewModelBase
         if (ContraRegistro != ContraRegistroConfirm || ValidarModelo(usuarioRegistro) == false)
         {
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: _mensajeError);
+            return;
+        }
+
+        var opciones = new JsonSerializerOptions
+        {
+          
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
+        var resultado = Convert.ToBoolean(await _usuarioApi.GetUsuarioNombreAsync(NombreUsuarioRegistro));
+        if (resultado )
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "El nombre de usuario ya existe");
             return;
         }
         if (RolRegistro == "Dueño")
