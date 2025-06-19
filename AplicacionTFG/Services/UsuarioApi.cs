@@ -19,7 +19,15 @@ public class UsuarioApi(string url) : WebApiBase(url)
         var url = urlbase + "pregunta/" + nombre;
         return await GetAsync(url);
     }
+
+    public async Task<string?> GetUsuariosEmpresa(int idEmpresa)
+    {
+        var url = urlbase + "empresa/" + idEmpresa;
+        return await GetAsync(url);
+    }
     #endregion
+    
+    #region Posts
     public async Task<string?> PostUsuarioAsync(UsuarioRegistroDto usuario)
     {
         var url = urlbase + "register";
@@ -36,25 +44,28 @@ public class UsuarioApi(string url) : WebApiBase(url)
         var url = urlbase + "responder";
         return await PostAsync(url, new StringContent(JsonSerializer.Serialize<UsuarioRespuestaDto>(usuario, UsuarioRespuestaDtoContext.Default.UsuarioRespuestaDto), Encoding.UTF8, "application/json"));
     }
-    public async Task<string?> PutUsuarioAsync(int id,UsuarioAcutliazarDto usuario)
+    public async Task<string?> PutUsuarioAsync(int id, UsuarioAcutliazarDto usuario)
     {
         var url = urlbase + id;
         var content = new StringContent(JsonSerializer.Serialize<UsuarioAcutliazarDto>(usuario, UsuarioActualizarDtoContext.Default.UsuarioAcutliazarDto), Encoding.UTF8, "application/json");
         return await PutAsync(url, content);
     }
+    #endregion
+
+    #region Puts
     public async Task<string?> PutUsuarioAsync(Usuario usuario)
     {
         var url = urlbase + usuario.Id;
         var content = new StringContent(JsonSerializer.Serialize<Usuario>(usuario, UsuarioContext.Default.Usuario), Encoding.UTF8, "application/json");
         return await PutAsync(url, content);
     }
+    #endregion
 
+    #region Deletes
     public async Task<string?> DeleteUsuarioAsync(int id)
     {
         var url = urlbase + id;
         return await DeleteAsync(url);
     }
-    
-   
-    
+    #endregion
 }

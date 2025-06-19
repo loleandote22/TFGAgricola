@@ -225,4 +225,7 @@
   <data name="ExitoGuardado" xml:space="preserve">
     <value>Salvo com êxito</value>
   </data>
+  <data name="Medida" xml:space="preserve">
+    <value>Medir</value>
+  </data>
 </root>

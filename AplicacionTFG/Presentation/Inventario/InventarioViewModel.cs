@@ -13,6 +13,7 @@ public class InventarioViewModel : ViewModelBase
     public required string NoElementos_Loc { get; set; }
     public required string Nombre_Loc { get; set; }
     public required string Cantidad_Loc { get; set; }
+    public required string Medicion_Loc { get; set; }
     public required string Descripcion_Loc { get; set; }
     public required string Tipo_Loc { get; set; }
     #endregion
@@ -37,12 +38,14 @@ public class InventarioViewModel : ViewModelBase
 
     #region Visibilidad
     private Visibility verNoHay;
-    private Visibility verAnadir;
+    private Visibility verAnadir= Visibility.Collapsed;
     private Visibility verInventario;
     public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
     public Visibility VerAnadir { get => verAnadir; set {
-            VerInventario = value != Visibility.Visible ?  Visibility.Visible : Visibility.Collapsed;
-            verAnadir = value; OnPropertyChanged(nameof(VerAnadir)); } }
+           
+            verAnadir = value; OnPropertyChanged(nameof(VerAnadir));
+            VerInventario = value != Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
+        } }
     public Visibility VerInventario { get => verInventario; set { verInventario = value; OnPropertyChanged(nameof(VerInventario)); } }
     #endregion
 
@@ -50,10 +53,10 @@ public class InventarioViewModel : ViewModelBase
 
     public ICommand AddInventarioCommand => new RelayCommand(Añadir);
     public ICommand GuardarCommand => new RelayCommand(Guardar);
-    public ICommand AddInventarioPequeñoCommand => new RelayCommand(AñadirPequeño);
     public string Nombre { get; set; } = string.Empty;
     public string Descripcion { get; set; }
     public int Cantidad { get; set; }
+    public string Unidad { get; set; } = "Unidades";
 
     private string tipo;
     public List<string> Tipos { get; set; } = new() { "Material", "Herramienta", "Equipo" };
@@ -112,13 +115,9 @@ public class InventarioViewModel : ViewModelBase
         
     }
 
-    private void AñadirPequeño()
-    {
-        _navigator.NavigateViewModelAsync<AnadirElementoViewModel>(this);
-    }
     private async void Guardar()
     {
-        Models.Inventario inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo, EmpresaId = Usuario.EmpresaId.GetValueOrDefault() };
+        InventarioDto inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo,Unidad = Unidad, EmpresaId = Usuario.EmpresaId.GetValueOrDefault() };
         if (!ValidarModelo(inventario))
         {
             await _navigator.ShowMessageDialogAsync(this, title: Titulo_Loc, content:_mensajeError);
@@ -149,6 +148,7 @@ public class InventarioViewModel : ViewModelBase
         NoElementos_Loc = _localizer["NoElementos"];
         Nombre_Loc = _localizer["Nombre"];
         Cantidad_Loc = _localizer["Cantidad"];
+        Medicion_Loc = _localizer["Medida"];
         Descripcion_Loc = _localizer["Descripcion"];
         Tipo_Loc = _localizer["Tipo"];
     }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AplicacionTFG.Presentation.Personal;
 using AplicacionTFG.Services;
 using Microsoft.Extensions.Options;
+using Windows.ApplicationModel;
 
 namespace AplicacionTFG.Presentation.Perfil;
 public class PerfilViewModel: ViewModelBase
@@ -16,10 +18,16 @@ public class PerfilViewModel: ViewModelBase
     public List<string> Imagenes { get => imagenes; set => imagenes = value; }
     private bool funcional;
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); }}
+    private Visibility verRoles= Visibility.Collapsed;
+    public Visibility VerRoles { get => verRoles; set => verRoles = value; }
+
+    private Visibility verIdiomas;
+    public Visibility VerIdiomas { get => verIdiomas; set => verIdiomas = value; }
     #endregion
 
     #region Localización
     private string nombre_Loc = "";
+    private string tipo_Loc = "";
     private string contraseña_Loc = "";
     private string confirmarContraseña_Loc = "";
     private string guardar_Loc = "";
@@ -31,6 +39,8 @@ public class PerfilViewModel: ViewModelBase
 
     private string eliminar_Loc = "";
     public string Nombre_Loc { get => nombre_Loc; set { nombre_Loc = value; OnPropertyChanged(nameof(Nombre_Loc)); } }
+    public string Tipo_Loc { get => tipo_Loc; set { tipo_Loc = value; OnPropertyChanged(nameof(Tipo_Loc)); } }
+
     public string Contraseña_Loc { get => contraseña_Loc; set { contraseña_Loc = value; OnPropertyChanged(nameof(Contraseña_Loc)); }}
     public string ConfirmarContraseña_Loc { get => confirmarContraseña_Loc; set { confirmarContraseña_Loc = value; OnPropertyChanged(nameof(ConfirmarContraseña_Loc)); }}
     public string Guardar_Loc { get => guardar_Loc; set { guardar_Loc = value; OnPropertyChanged(nameof(Guardar_Loc)); }}
@@ -51,6 +61,8 @@ public class PerfilViewModel: ViewModelBase
     private string imagenSeleccionada = "";
     private string imagenPerfil = "";
 
+    public List<string> Roles { get; set; } = ["Dueño", "Administrador", "Empleado"];
+    public string RolSeleccionado { get; set; } = string.Empty;
     public string Nombre { get => nombre; set { Funcional = true; nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Contraseña { get => contraseña; set { Funcional = true; contraseña = value; OnPropertyChanged(nameof(Contraseña)); } }
     public string ConfirmarContraseña { get => confirmarContraseña; set { confirmarContraseña = value; OnPropertyChanged(nameof(ConfirmarContraseña)); } }
@@ -97,22 +109,35 @@ public class PerfilViewModel: ViewModelBase
             await _navigator.NavigateBackAsync(this);
         }
     });
+
+
     #endregion
-
-
 
     private readonly UsuarioApi _usuarioApi;
 
     public PerfilViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
     {
-        ImagenPerfil = directorioImagenes + Usuario.Imagen;
-        ImagenSeleccionada = ImagenPerfil;
-        Imagenes = appInfo.Value.Icons!;
-        Nombre = Usuario.Nombre;
-        Pregunta = Usuario.Pregunta;
-        Funcional = false;
+        if (_localizationService is not null)
+        {
+            CargarCampos();
+            VerIdiomas = Visibility.Visible;
+        }
+        else
+            VerIdiomas = Visibility.Collapsed;
         _usuarioApi = new UsuarioApi(Apiurl);
         GuardarCommand = new RelayCommand(Guardar);
+    }
+
+    public void CargarCampos()
+    {
+        ImagenPerfil = directorioImagenes + Usuario.Imagen;
+        ImagenSeleccionada = ImagenPerfil;
+        Imagenes = _appInfo.Value.Icons!;
+        Nombre = Usuario.Nombre;
+        RolSeleccionado = Usuario.Tipo;
+        VerRoles = RolSeleccionado == "Dueño" || RolSeleccionado == "Administrador" ? Visibility.Visible : Visibility.Collapsed;
+        Pregunta = Usuario.Pregunta;
+        Funcional = false;
     }
 
     private async  void Guardar()
@@ -120,7 +145,7 @@ public class PerfilViewModel: ViewModelBase
         UsuarioAcutliazarDto usuarioActualizado = new UsuarioAcutliazarDto
         {
             Nombre = Nombre,
-            Tipo = Usuario.Tipo,
+            Tipo = RolSeleccionado,
             Imagen =ImagenPerfil.Substring(ImagenPerfil.LastIndexOf('/')+1),
             Contrasena = Contraseña.Length>0 ? Contraseña: "default123",
             Pregunta = Pregunta.Length>0 ? Pregunta : Usuario.Pregunta,
@@ -138,14 +163,17 @@ public class PerfilViewModel: ViewModelBase
             return;
         }
         var result = await _usuarioApi.PutUsuarioAsync(Usuario.Id, usuarioActualizado);
-        Console.WriteLine(result);
         await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"],content: _localizer["ExitoGuardado"]);
-        Funcional = false;
+        if (_localizationService is not null)
+            Funcional = false;
+        else
+            await _navigator.NavigateViewModelAsync<PersonalViewModel>(this);
     }
 
     protected override void CargarPalabras()
     {
         Nombre_Loc = _localizer["Nombre"];
+        Tipo_Loc = _localizer["Tipo"];
         Contraseña_Loc = _localizer["Contraseña"];
         ConfirmarContraseña_Loc = _localizer["ConfirmarContraseña"];
         Guardar_Loc = _localizer["Guardar"];

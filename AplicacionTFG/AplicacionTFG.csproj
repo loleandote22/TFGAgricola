@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.26100;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+    <TargetFrameworks>
+        net9.0-android;
+        net9.0-ios;
+        net9.0-maccatalyst;
+        net9.0-windows10.0.26100;
+        net9.0-browserwasm;
+        net9.0-desktop
+</TargetFrameworks>
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
@@ -138,6 +145,19 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Presentation\Perfil\ImagenesContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Icons\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Presentation\Tareas\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Personal\PersonaPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

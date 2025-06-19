@@ -108,9 +108,9 @@ public partial class App : Application
             new ViewMap<InicioPage, InicioViewModel>(),
             new ViewMap<PersonalPage, PersonalViewModel>(),
             new ViewMap<InventarioPage, InventarioViewModel>(),
-            new ViewMap<AnadirElementoPage, AnadirElementoViewModel>(),
             new ViewMap<PerfilPage, PerfilViewModel>(),
             new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
+            new DataViewMap<PersonaPage, PersonaViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
@@ -127,9 +127,9 @@ public partial class App : Application
                         Nested:[
                             new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
                             new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
-                            new ("AnadirElemento",View: views.FindByViewModel<AnadirElementoViewModel>()),
                             ]),
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
+                        new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
                         new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
                     ]
                     ),
