@@ -3,12 +3,21 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AplicacionTFG.Presentation.Personal"
+    xmlns:perfil="using:AplicacionTFG.Presentation.Perfil"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
+    <Grid RowDefinitions="Auto,*">
+        <perfil:PerfilPage DataContext="{Binding PerfilViewModel}" Grid.Row="1"/>
+            <utu:TabBar MaxWidth="350" Grid.Column="1" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
+            <utu:TabBar.Items>
+                <utu:TabBarItem IsSelected="True" Content="{Binding Perfil_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                <utu:TabBarItem Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                <utu:TabBarItem Content="{Binding Restablecer_Loc, UpdateSourceTrigger=PropertyChanged}" />
+            </utu:TabBar.Items>
+        </utu:TabBar>
     </Grid>
 </Page>

@@ -18,7 +18,7 @@ public class PersonalViewModel: ViewModelBase
     #endregion
 
     public List<UsuarioEmpresa> Usuarios { get; set; }
-    public UsuarioEmpresa? UsuarioSeleccionado { get => usuarioSeleccionado; set { VerUsuario(value); usuarioSeleccionado = value; }}
+    public UsuarioEmpresa? UsuarioSeleccionado { get => usuarioSeleccionado; set { VerUsuario(value!); usuarioSeleccionado = value; }}
     private readonly UsuarioApi _usuarioApi;
     private UsuarioEmpresa? usuarioSeleccionado;
 
@@ -54,8 +54,9 @@ public class PersonalViewModel: ViewModelBase
 
     public void VerUsuario(UsuarioEmpresa usuario)
     {
-        Console.WriteLine(usuario.id);
-       // _navigator.NavigateViewModelAsync
+       _navigator.NavigateViewModelAsync<PersonaViewModel>(this, qualifier: Qualifiers.ClearBackStack,new EntityNumber(usuario.Id));
+        
+        // _navigator.NavigateViewModelAsync
     }
     protected override void CargarPalabras()
     {

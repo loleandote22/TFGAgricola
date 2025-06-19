@@ -110,6 +110,7 @@ public partial class App : Application
             new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<PerfilPage, PerfilViewModel>(),
             new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
+            new DataViewMap<PersonaPage, PersonaViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
@@ -128,6 +129,7 @@ public partial class App : Application
                             new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
                             ]),
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
+                        new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
                         new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
                     ]
                     ),

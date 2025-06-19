@@ -97,7 +97,7 @@ public class UsuarioRespuestaDto
 
 public class  UsuarioEmpresa
 {
-    public int id { get; set; }
+    public int Id { get; set; }
     public required string Nombre { get; set; }
     [JsonPropertyName("rol")]
     public required string Tipo { get; set; } // Dueño, Administrador, Empleado

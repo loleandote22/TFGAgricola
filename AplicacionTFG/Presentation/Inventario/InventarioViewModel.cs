@@ -42,8 +42,10 @@ public class InventarioViewModel : ViewModelBase
     private Visibility verInventario;
     public Visibility VerNoHay { get => verNoHay; set { verNoHay = value; OnPropertyChanged(nameof(VerNoHay)); } }
     public Visibility VerAnadir { get => verAnadir; set {
-            VerInventario = value != Visibility.Visible ?  Visibility.Visible : Visibility.Collapsed;
-            verAnadir = value; OnPropertyChanged(nameof(VerAnadir)); } }
+           
+            verAnadir = value; OnPropertyChanged(nameof(VerAnadir));
+            VerInventario = value != Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
+        } }
     public Visibility VerInventario { get => verInventario; set { verInventario = value; OnPropertyChanged(nameof(VerInventario)); } }
     #endregion
 

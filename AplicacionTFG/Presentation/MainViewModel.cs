@@ -4,6 +4,8 @@ using System.Text.Json;
 
 public partial class MainViewModel : ViewModelBase
 {
+
+    public Visibility VerPersonal { get; set; } = Visibility.Collapsed;
     #region Localización
     private string inicio_Loc;
     private string inventario_Loc;
@@ -22,6 +24,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo): base(localizer, navigator, appInfo, localizationService)
     {
         Title = localizer["ApplicationName"];
+        VerPersonal = Usuario.Tipo == "Dueño" || Usuario.Tipo == "Administrador" ? Visibility.Visible : Visibility.Collapsed;
         Console.WriteLine($"Usuario: {Usuario.Nombre}");
         Console.WriteLine($"Titulo: {Title}");
     }

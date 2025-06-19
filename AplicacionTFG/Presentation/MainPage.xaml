@@ -23,8 +23,7 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="{Binding Inicio_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource Home}" uen:Region.Name="Inicio" IsSelected="True"/>
                 <NavigationViewItem x:Name="InventarioPage" Content="{Binding Inventario_Loc, UpdateSourceTrigger=PropertyChanged}" uen:Region.Name="Inventario"  uen:Navigation.Request="-/Inventario" Icon="{StaticResource Inventory}"/>
-
-                <NavigationViewItem x:Name="ElementoPage" Content="{Binding Personal_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource People}" uen:Region.Name="Personal" uen:Navigation.Request="-/Personal"/>
+                <NavigationViewItem Visibility="{Binding VerPersonal}" Content="{Binding Personal_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource People}" uen:Region.Name="Personal" uen:Navigation.Request="-/Personal"/>
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="{Binding Perfil_Loc}" Icon="{StaticResource Person}" uen:Region.Name="Perfil" uen:Navigation.Request="-/Perfil"/>

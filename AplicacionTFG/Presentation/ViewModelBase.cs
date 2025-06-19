@@ -62,6 +62,7 @@ public abstract class ViewModelBase : ObservableObject
     #endregion  
     protected string Apiurl;
     protected readonly INavigator _navigator;
+    protected readonly IOptions<AppConfig> _appInfo;
     private Usuario _usuario;
     public Usuario Usuario { get => _usuario; set => _usuario = value; }
 #pragma warning disable CS8618
@@ -71,6 +72,7 @@ public abstract class ViewModelBase : ObservableObject
     {
         _localizer = localizer;
         _navigator = navigator;
+        _appInfo = appInfo;
         string usuario = (string)localSettings.Values["Usuario"];
         if (usuario is not null)
             Usuario = JsonSerializer.Deserialize(usuario, UsuarioContext.Default.Usuario)!;
@@ -83,8 +85,10 @@ public abstract class ViewModelBase : ObservableObject
     public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo, ILocalizationService? localizationService = null) :this(localizer, navigator, appInfo) 
     {
         if (localizationService is not null)
+        {
             _localizationService = localizationService;
-        IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
+            IdiomaSeleccionado = Idiomas.FirstOrDefault(x => x.Simbolo == _localizationService.CurrentCulture.Name[..2]);
+        }
     }
 }
 
