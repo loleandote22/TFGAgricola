@@ -12,7 +12,7 @@
         <ScrollView VerticalScrollBarVisibility="Auto">
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="15,0,0,0"  RowSpacing="10" Grid.Row="1">
                 <!--<Rectangle Grid.RowSpan="12"/>-->
-                <ComboBox HorizontalAlignment="Right" Margin="10" Width="200"  Grid.Row="1" Visibility="{Binding VerIdiomas}" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                <ComboBox HorizontalAlignment="Right" Margin="10" Width="200"  Grid.Row="1" Visibility="{Binding VerIdiomas}" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaPerfil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

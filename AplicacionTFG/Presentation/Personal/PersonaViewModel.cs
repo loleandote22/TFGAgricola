@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AplicacionTFG.Presentation.Perfil;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AplicacionTFG.Presentation.Personal;
 public class PersonaViewModel : ViewModelBase
@@ -28,13 +29,13 @@ public class PersonaViewModel : ViewModelBase
             OnPropertyChanged(nameof(Usuario));
         }
     }
-    public PersonaViewModel(INavigator navigator, IStringLocalizer localizer,  IOptions<AppConfig> appInfo, EntityNumber elemento)
+    public PersonaViewModel(IMessenger messenger, INavigator navigator, IStringLocalizer localizer,  IOptions<AppConfig> appInfo, EntityNumber elemento)
         : base(localizer, navigator, appInfo)
     {
         _usuarioApi = new UsuarioApi(Apiurl);
         
         CargarUsuario(elemento.number);
-        PerfilViewModel = new PerfilViewModel(localizer,_localizationService, navigator, appInfo) { Usuario = Usuario};
+        PerfilViewModel = new PerfilViewModel(messenger, localizer,_localizationService, navigator, appInfo) { Usuario = Usuario};
         PerfilViewModel.CargarCampos();
     }
 

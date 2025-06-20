@@ -16,14 +16,17 @@
         <Style x:Key="Customizado" TargetType="Button" BasedOn="{StaticResource PaneToggleButtonStyle}">
             <Setter Property="Padding" Value="20,0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,-20,0,0"/>
+            <Setter Property="Background" Value="Green"/>
         </Style>
     </Page.Resources>
     <Grid utu:SafeArea.Insets="VisibleBounds"  uen:Region.Attached="True" >
-        <NavigationView PaneToggleButtonStyle="{StaticResource Customizado}" PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
+        <NavigationView  PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="{Binding Inicio_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource Home}" uen:Region.Name="Inicio" IsSelected="True"/>
                 <NavigationViewItem x:Name="InventarioPage" Content="{Binding Inventario_Loc, UpdateSourceTrigger=PropertyChanged}" uen:Region.Name="Inventario"  uen:Navigation.Request="-/Inventario" Icon="{StaticResource Inventory}"/>
                 <NavigationViewItem Visibility="{Binding VerPersonal}" Content="{Binding Personal_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource People}" uen:Region.Name="Personal" uen:Navigation.Request="-/Personal"/>
+                <NavigationViewItem Content="{Binding Calendario_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource Calendar}" uen:Region.Name="EventosMes" uen:Navigation.Request="-/EventosMes"/>
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="{Binding Perfil_Loc}" Icon="{StaticResource Person}" uen:Region.Name="Perfil" uen:Navigation.Request="-/Perfil"/>

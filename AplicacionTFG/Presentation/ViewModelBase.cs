@@ -46,7 +46,8 @@ public abstract class ViewModelBase : ObservableObject
         set
         {
             idiomaSeleccionado = value;
-            _localizationService.SetCurrentCultureAsync(new CultureInfo(value.Simbolo + "-" + value.Simbolo.ToUpper().Replace("PT", "BR")));
+            if(_localizationService is not null && value.Simbolo is not null)
+                _localizationService.SetCurrentCultureAsync(new CultureInfo(value.Simbolo + "-" + value.Simbolo.ToUpper().Replace("PT", "BR")));
             CargarPalabras();
             OnPropertyChanged(nameof(IdiomaSeleccionado));
         }

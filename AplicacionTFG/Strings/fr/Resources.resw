@@ -228,4 +228,7 @@
   <data name="Medida" xml:space="preserve">
     <value>Mesure</value>
   </data>
+  <data name="Calendario" xml:space="preserve">
+    <value>Calendrier</value>
+  </data>
 </root>

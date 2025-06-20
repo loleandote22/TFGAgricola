@@ -154,10 +154,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Presentation\Tareas\" />
+    <Page Update="Presentation\Personal\PersonaPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Presentation\Personal\PersonaPage.xaml">
+    <Page Update="Presentation\Eventos\EventosMesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Eventos\DiaControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Presentation\Eventos\EventosDiaPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

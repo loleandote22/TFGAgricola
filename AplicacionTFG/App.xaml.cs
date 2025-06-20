@@ -1,6 +1,8 @@
+using AplicacionTFG.Presentation.Eventos;
 using AplicacionTFG.Presentation.Inventario;
 using AplicacionTFG.Presentation.Perfil;
 using AplicacionTFG.Presentation.Personal;
+using CommunityToolkit.Mvvm.Messaging;
 using Uno.Resizetizer;
 
 namespace AplicacionTFG;
@@ -86,6 +88,8 @@ public partial class App : Application
                 {
                     // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
+                    services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
+
                 })
                 .UseNavigation(RegistroRoutes)
             );
@@ -109,6 +113,7 @@ public partial class App : Application
             new ViewMap<PersonalPage, PersonalViewModel>(),
             new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<PerfilPage, PerfilViewModel>(),
+            new ViewMap<EventosMesPage, EventosMesViewModel>(),
             new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
             new DataViewMap<PersonaPage, PersonaViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
@@ -130,6 +135,7 @@ public partial class App : Application
                             ]),
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
                         new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
+                        new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
                         new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
                     ]
                     ),

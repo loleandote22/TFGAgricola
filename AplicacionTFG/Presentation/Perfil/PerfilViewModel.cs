@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AplicacionTFG.Presentation.Personal;
 using AplicacionTFG.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Options;
 using Windows.ApplicationModel;
 
@@ -23,6 +24,11 @@ public class PerfilViewModel: ViewModelBase
 
     private Visibility verIdiomas;
     public Visibility VerIdiomas { get => verIdiomas; set => verIdiomas = value; }
+
+    public Idioma IdiomaPerfil { get => IdiomaSeleccionado; set { IdiomaSeleccionado = value; _messenger.Send(new Languagechanged(value)); }}
+
+    private readonly IMessenger _messenger;
+
     #endregion
 
     #region Localización
@@ -111,12 +117,15 @@ public class PerfilViewModel: ViewModelBase
     });
 
 
+
     #endregion
 
     private readonly UsuarioApi _usuarioApi;
 
-    public PerfilViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
+    public PerfilViewModel(IMessenger messenger, IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
     {
+        _messenger = messenger;
+        IdiomaPerfil = IdiomaSeleccionado;
         if (_localizationService is not null)
         {
             CargarCampos();

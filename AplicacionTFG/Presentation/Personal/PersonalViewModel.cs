@@ -25,7 +25,6 @@ public class PersonalViewModel: ViewModelBase
     public PersonalViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _usuarioApi = new UsuarioApi(Apiurl);
-        var result = _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId.GetValueOrDefault()).GetAwaiter().GetResult();
         CargarUsuarios();
     }
 

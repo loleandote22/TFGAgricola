@@ -1,0 +1,85 @@
+﻿<Page
+    x:Class="AplicacionTFG.Presentation.Eventos.EventosMesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel>
+        <TextBlock Text="Calendario" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
+        <Grid ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="Auto,*,*,*,*,*,*">
+            <Border BorderThickness="1,0" BorderBrush="LightGray" >
+                <TextBlock Text="Lunes" HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="1" BorderBrush="LightGray" >
+                <TextBlock Text="Martes" HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="2" BorderBrush="LightGray" >
+                <TextBlock Text="Miercoles" HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="3" BorderBrush="LightGray" >
+                <TextBlock Text="Jueves" HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="4" BorderBrush="LightGray" >
+                <TextBlock Text="Viernes" HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="5" BorderBrush="LightGray" >
+                <TextBlock Text="Sabado"  HorizontalTextAlignment="Center"/>
+            </Border>
+            <Border BorderThickness="1,0" Grid.Column="6" BorderBrush="LightGray" >
+                <TextBlock Text="Domingo" HorizontalTextAlignment="Center"/>
+            </Border>
+            #Region Semana 1
+            <local:DiaControl Grid.Row="1" Dia="{Binding Lunes[0].Numero}" Eventos="{Binding Lunes[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="1" Dia="{Binding Martes[0].Numero}" Eventos="{Binding Martes[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="2" Dia="{Binding Miercoles[0].Numero}" Eventos="{Binding Miercoles[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="3" Dia="{Binding Jueves[0].Numero}" Eventos="{Binding Jueves[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="4"  Dia="{Binding Viernes[0].Numero}" Eventos="{Binding Viernes[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="5" Dia="{Binding Sabado[0].Numero}" Eventos="{Binding Sabado[0].Eventos}"/>
+            <local:DiaControl Grid.Row="1" Grid.Column="6" Dia="{Binding Domingo[0].Numero}" Eventos="{Binding Domingo[0].Eventos}"/>
+
+            <local:DiaControl Grid.Row="2" Dia="{Binding Lunes[1].Numero}" Eventos="{Binding Lunes[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="1" Dia="{Binding Martes[1].Numero}" Eventos="{Binding Martes[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="2" Dia="{Binding Miercoles[1].Numero}" Eventos="{Binding Miercoles[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="3" Dia="{Binding Jueves[1].Numero}" Eventos="{Binding Jueves[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="4"  Dia="{Binding Viernes[1].Numero}" Eventos="{Binding Viernes[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="5" Dia="{Binding Sabado[1].Numero}" Eventos="{Binding Sabado[1].Eventos}"/>
+            <local:DiaControl Grid.Row="2" Grid.Column="6" Dia="{Binding Domingo[1].Numero}" Eventos="{Binding Domingo[1].Eventos}"/>
+
+            <local:DiaControl Grid.Row="3" Dia="{Binding Lunes[2].Numero}" Eventos="{Binding Lunes[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="1" Dia="{Binding Martes[2].Numero}" Eventos="{Binding Martes[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="2" Dia="{Binding Miercoles[2].Numero}" Eventos="{Binding Miercoles[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="3" Dia="{Binding Jueves[2].Numero}" Eventos="{Binding Jueves[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="4"  Dia="{Binding Viernes[2].Numero}" Eventos="{Binding Viernes[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="5" Dia="{Binding Sabado[2].Numero}" Eventos="{Binding Sabado[2].Eventos}"/>
+            <local:DiaControl Grid.Row="3" Grid.Column="6" Dia="{Binding Domingo[2].Numero}" Eventos="{Binding Domingo[2].Eventos}"/>
+
+            <local:DiaControl Grid.Row="4" Dia="{Binding Lunes[3].Numero}" Eventos="{Binding Lunes[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="1" Dia="{Binding Martes[3].Numero}" Eventos="{Binding Martes[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="2" Dia="{Binding Miercoles[3].Numero}" Eventos="{Binding Miercoles[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="3" Dia="{Binding Jueves[3].Numero}" Eventos="{Binding Jueves[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="4"  Dia="{Binding Viernes[3].Numero}" Eventos="{Binding Viernes[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="5" Dia="{Binding Sabado[3].Numero}" Eventos="{Binding Sabado[3].Eventos}"/>
+            <local:DiaControl Grid.Row="4" Grid.Column="6" Dia="{Binding Domingo[3].Numero}" Eventos="{Binding Domingo[3].Eventos}"/>
+
+            <local:DiaControl Grid.Row="5" Dia="{Binding Lunes[4].Numero}" Eventos="{Binding Lunes[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="1" Dia="{Binding Martes[4].Numero}" Eventos="{Binding Martes[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="2" Dia="{Binding Miercoles[4].Numero}" Eventos="{Binding Miercoles[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="3" Dia="{Binding Jueves[4].Numero}" Eventos="{Binding Jueves[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="4"  Dia="{Binding Viernes[4].Numero}" Eventos="{Binding Viernes[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="5" Dia="{Binding Sabado[4].Numero}" Eventos="{Binding Sabado[4].Eventos}"/>
+            <local:DiaControl Grid.Row="5" Grid.Column="6" Dia="{Binding Domingo[4].Numero}" Eventos="{Binding Domingo[4].Eventos}"/>
+
+            <local:DiaControl Grid.Row="6" Dia="{Binding Lunes[5].Numero}" Eventos="{Binding Lunes[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="1" Dia="{Binding Martes[5].Numero}" Eventos="{Binding Martes[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="2" Dia="{Binding Miercoles[5].Numero}" Eventos="{Binding Miercoles[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="3" Dia="{Binding Jueves[5].Numero}" Eventos="{Binding Jueves[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="4"  Dia="{Binding Viernes[5].Numero}" Eventos="{Binding Viernes[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="5" Dia="{Binding Sabado[5].Numero}" Eventos="{Binding Sabado[5].Eventos}"/>
+            <local:DiaControl Grid.Row="6" Grid.Column="6" Dia="{Binding Domingo[5].Numero}" Eventos="{Binding Domingo[5].Eventos}"/>
+        </Grid>
+    </StackPanel>
+</Page>
