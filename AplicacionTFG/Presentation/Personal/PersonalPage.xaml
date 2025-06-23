@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid RowDefinitions="Auto,*">
-        <TextBlock Text="{Binding Titulo_Loc}" FontSize="40"/>
+        <TextBlock Text="{Binding Titulo_Loc}" FontSize="40" Margin="15,0,0,0"/>
         <GridView Grid.Row="1" ItemsSource="{Binding Usuarios}" SelectedItem="{Binding UsuarioSeleccionado,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <GridView.ItemTemplate>
                 <DataTemplate>
@@ -26,9 +26,7 @@
                         </utu:Card.HeaderContentTemplate>
                         <utu:Card.MediaContentTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding}"
-                Stretch="Uniform"
-                MaxHeight="194" />
+                                <Image Source="{Binding}" Stretch="Uniform" MaxHeight="194" />
                             </DataTemplate>
                         </utu:Card.MediaContentTemplate>
                     </utu:Card>

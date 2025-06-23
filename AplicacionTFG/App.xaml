@@ -19,7 +19,9 @@
             </ResourceDictionary>
           </utum:MaterialToolkitTheme.FontOverrideDictionary> -->
                 </utum:MaterialToolkitTheme>
-                
+
+                <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="EliminarButton" TargetType="Button">
                 <Setter Property="Background" Value="Red"/>

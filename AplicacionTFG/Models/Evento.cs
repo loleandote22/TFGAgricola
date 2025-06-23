@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AplicacionTFG.Models;
+
+public class Evento
+{
+    public int Id { get; set; }
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public required string Nombre { get; set; }
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public required string Color { get; set; } // Color del evento en formato hexadecimal (ejemplo: #FF5733)
+    public required DateTime Inicio { get; set; }
+    public DateTime? Fin { get; set; }
+    [StringLength(250, ErrorMessage = "El nombre no puede tener más de 250 caracteres")]
+    public string? Descripcion { get; set; }
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public string? Ubicacion { get; set; }
+    public required int UsuarioId { get; set; }
+    public required int EmpresaId { get; set; }
+    public required int Tipo { get; set; } // 1: Evento, 2: Tarea, 3: Recordatorio
+}
+
+public class EventoDto
+{
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public required string Nombre { get; set; }
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public required string Color { get; set; } // Color del evento en formato hexadecimal (ejemplo: #FF5733)
+    public required DateTime Inicio { get; set; }
+    public DateTime? Fin { get; set; }
+    [StringLength(250, ErrorMessage = "El nombre no puede tener más de 250 caracteres")]
+    public string? Descripcion { get; set; }
+    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    public string? Ubicacion { get; set; }
+    public required int UsuarioId { get; set; }
+    public required int EmpresaId { get; set; }
+    public required int Tipo { get; set; } // 1: Evento, 2: Tarea, 3: Recordatorio
+}
+
+public class EventoMes
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }= string.Empty;
+    public string Color { get; set; } = string.Empty;
+    public DateTime Inicio { get; set; }
+    public int Tipo { get; set; }
+}
+
+public class EventoDia
+{
+    public required int Id { get; set; }
+    public required string Nombre { get; set; }
+    public required string Color { get; set; }
+    public required DateTime Inicio { get; set; }
+    public string InicioHora { get => Inicio.ToString("HH:mm", System.Globalization.CultureInfo.CurrentCulture); }
+    public DateTime? Fin { get; set; }
+    public string FinHora { get => Fin is not null ? Fin.Value.ToString("HH:mm", System.Globalization.CultureInfo.CurrentCulture) : ""; }
+    public required string Ubicacion { get; set; }
+    public required string Descripcion { get; set; }
+}

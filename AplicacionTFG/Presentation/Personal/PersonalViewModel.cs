@@ -17,7 +17,7 @@ public class PersonalViewModel: ViewModelBase
     public required string Titulo_Loc { get; set; }
     #endregion
 
-    public List<UsuarioEmpresa> Usuarios { get; set; }
+    public List<UsuarioEmpresa> Usuarios { get; set; } = null!;
     public UsuarioEmpresa? UsuarioSeleccionado { get => usuarioSeleccionado; set { VerUsuario(value!); usuarioSeleccionado = value; }}
     private readonly UsuarioApi _usuarioApi;
     private UsuarioEmpresa? usuarioSeleccionado;
@@ -31,13 +31,13 @@ public class PersonalViewModel: ViewModelBase
 #if __WASM__
     private async void CargarUsuarios()
     {
-        var result =await _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId.GetValueOrDefault());
+        var result =await _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId);
         TerminarCarga(result);
     }
 #else
     private void CargarUsuarios()
     {
-        var result = _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId.GetValueOrDefault()).GetAwaiter().GetResult();
+        var result = _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
         TerminarCarga(result);
     }
 #endif
@@ -54,8 +54,6 @@ public class PersonalViewModel: ViewModelBase
     public void VerUsuario(UsuarioEmpresa usuario)
     {
        _navigator.NavigateViewModelAsync<PersonaViewModel>(this, qualifier: Qualifiers.ClearBackStack,new EntityNumber(usuario.Id));
-        
-        // _navigator.NavigateViewModelAsync
     }
     protected override void CargarPalabras()
     {

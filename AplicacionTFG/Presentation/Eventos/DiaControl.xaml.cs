@@ -23,25 +23,24 @@ public sealed partial class DiaControl : UserControl
         this.InitializeComponent();
     }
 
-    public DiaControl(int dia, List<Evento> eventos) : this()
+    public DiaControl(int dia, List<EventoMes> eventos) : this()
     {
         this.DiaCampo.Text = dia > 0 ? dia.ToString() : "";
         EventosLista.ItemsSource = eventos;
     }
     public int Dia
     {
-        get => int.Parse(DiaCampo.Text);
+        get => DiaCampo.Text == ""?-1:int.Parse(DiaCampo.Text);
         set => DiaCampo.Text = value > 0 ? value.ToString() : "";
     }
-    public List<Evento> Eventos
+    public List<EventoMes> Eventos
     {
-        get => (List<Evento>)EventosLista.ItemsSource;
+        get => (List<EventoMes>)EventosLista.ItemsSource;
         set => EventosLista.ItemsSource = value;
     }
 
     private void UserControl_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        Console.WriteLine(this.DataContext.GetType());
-        Console.WriteLine(Dia);
+        ((EventosMesViewModel)DataContext).DiaSeleccionado = Dia;
     }
 }

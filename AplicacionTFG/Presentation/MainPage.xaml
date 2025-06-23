@@ -8,20 +8,8 @@
       xmlns:um="using:Uno.Material"
       Background="{ThemeResource BackgroundBrush}"
       AutomationProperties.AutomationId="HomePage">
-    <!--<Page.DataContext>
-        <local:MainViewModel/>
-    </Page.DataContext>-->
-    <Page.Resources>
-        <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
-        <Style x:Key="Customizado" TargetType="Button" BasedOn="{StaticResource PaneToggleButtonStyle}">
-            <Setter Property="Padding" Value="20,0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,-20,0,0"/>
-            <Setter Property="Background" Value="Green"/>
-        </Style>
-    </Page.Resources>
     <Grid utu:SafeArea.Insets="VisibleBounds"  uen:Region.Attached="True" >
-        <NavigationView  PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
+        <NavigationView PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="{Binding Inicio_Loc, UpdateSourceTrigger=PropertyChanged}" Icon="{StaticResource Home}" uen:Region.Name="Inicio" IsSelected="True"/>
                 <NavigationViewItem x:Name="InventarioPage" Content="{Binding Inventario_Loc, UpdateSourceTrigger=PropertyChanged}" uen:Region.Name="Inventario"  uen:Navigation.Request="-/Inventario" Icon="{StaticResource Inventory}"/>

@@ -22,7 +22,7 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                <Button Style="{StaticResource FabStyle}" ToolTipService.ToolTip="Añadir" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding AddInventarioCommand}">
+                <Button Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding AddInventarioCommand}">
                     <ut:ControlExtensions.Icon>
                         <SymbolIcon Symbol="Add" />
                     </ut:ControlExtensions.Icon>

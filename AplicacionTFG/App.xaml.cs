@@ -110,13 +110,22 @@ public partial class App : Application
             new ViewMap<LoginPage, LoginViewModel>(),
             new ViewMap<MainPage, MainViewModel>(),
             new ViewMap<InicioPage, InicioViewModel>(),
-            new ViewMap<PersonalPage, PersonalViewModel>(),
-            new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<PerfilPage, PerfilViewModel>(),
-            new ViewMap<EventosMesPage, EventosMesViewModel>(),
-            new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
+        #region Personal
+            new ViewMap<PersonalPage, PersonalViewModel>(),
             new DataViewMap<PersonaPage, PersonaViewModel, EntityNumber>(),
+        #endregion
+        #region Inventario
+            new ViewMap<InventarioPage, InventarioViewModel>(),
+            new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
+        #endregion
+        #region Eventos
+            new ViewMap<EventosMesPage, EventosMesViewModel>(),
+            new ViewMap<AñadirEventoPage, AñadirEventoViewModel>(),
+            new DataViewMap<EventosDiaPage, EventosDiaViewModel, EntityDate>(),
+            new DataViewMap<EventoPage, EventoViewModel, EntityNumber>(),
+        #endregion
             new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
 
@@ -136,6 +145,8 @@ public partial class App : Application
                         new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
                         new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
                         new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
+                        new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
+                        new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
                         new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
                     ]
                     ),

@@ -22,7 +22,6 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock Text=" Perfil" FontSize="30"/>
                 <Button Style="{StaticResource AccentButtonStyle}" Background="Transparent" BorderThickness="0" Padding="0" Command="{Binding SeleccionarImagenCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Width="150" HorizontalAlignment="Center" Grid.Row="2">
                     <Image Width="150" Source="{Binding ImagenPerfil, UpdateSourceTrigger=PropertyChanged}"  />
                 </Button>

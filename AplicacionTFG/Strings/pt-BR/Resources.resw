@@ -231,4 +231,91 @@
   <data name="Calendario" xml:space="preserve">
     <value>Calendário</value>
   </data>
+  <data name="Lunes" xml:space="preserve">
+    <value>Segunda-feira</value>
+  </data>
+  <data name="Martes" xml:space="preserve">
+    <value>Terça-feira</value>
+  </data>
+  <data name="Miercoles" xml:space="preserve">
+    <value>Quarta-feira</value>
+  </data>
+  <data name="Jueves" xml:space="preserve">
+    <value>Quinta-feira</value>
+  </data>
+  <data name="Viernes" xml:space="preserve">
+    <value>Sexta-feira</value>
+  </data>
+  <data name="Sabado" xml:space="preserve">
+    <value>Sábado</value>
+  </data>
+  <data name="Domingo" xml:space="preserve">
+    <value>Domingo</value>
+  </data>
+  <data name="EventosHoy" xml:space="preserve">
+    <value>Eventos atuais</value>
+  </data>
+  <data name="Hola" xml:space="preserve">
+    <value>Olá</value>
+  </data>
+  <data name="Enero" xml:space="preserve">
+    <value>Janerio</value>
+  </data>
+  <data name="Febrero" xml:space="preserve">
+    <value>Fevereiro</value>
+  </data>
+  <data name="Marzo" xml:space="preserve">
+    <value>Março</value>
+  </data>
+  <data name="Abril" xml:space="preserve">
+    <value>Abril</value>
+  </data>
+  <data name="Mayo" xml:space="preserve">
+    <value>Maio</value>
+  </data>
+  <data name="Junio" xml:space="preserve">
+    <value>Junho</value>
+  </data>
+  <data name="Julio" xml:space="preserve">
+    <value>Julho</value>
+  </data>
+  <data name="Agosto" xml:space="preserve">
+    <value>Agosto</value>
+  </data>
+  <data name="Septiembre" xml:space="preserve">
+    <value>Setembro</value>
+  </data>
+  <data name="Octubre" xml:space="preserve">
+    <value>Outubro</value>
+  </data>
+  <data name="Nobiembre" xml:space="preserve">
+    <value>Novembro</value>
+  </data>
+  <data name="Diciembre" xml:space="preserve">
+    <value>Dezembro</value>
+  </data>
+  <data name="Hoy" xml:space="preserve">
+    <value>Hoje</value>
+  </data>
+  <data name="MesAnterior" xml:space="preserve">
+    <value>Mês anterior</value>
+  </data>
+  <data name="MesSiguiente" xml:space="preserve">
+    <value>Próximo mês</value>
+  </data>
+  <data name="Todos" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="Evento" xml:space="preserve">
+    <value>Evento</value>
+  </data>
+  <data name="Tarea" xml:space="preserve">
+    <value>Tarefa</value>
+  </data>
+  <data name="Recordatorio" xml:space="preserve">
+    <value>Recorde</value>
+  </data>
+  <data name="Añadir" xml:space="preserve">
+    <value>Adicionar</value>
+  </data>
 </root>

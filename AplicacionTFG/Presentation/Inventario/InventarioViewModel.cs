@@ -16,6 +16,7 @@ public class InventarioViewModel : ViewModelBase
     public required string Medicion_Loc { get; set; }
     public required string Descripcion_Loc { get; set; }
     public required string Tipo_Loc { get; set; }
+    public required string Añadir_Loc { get; set; }
     #endregion
 
     #region Elementos
@@ -74,13 +75,13 @@ public class InventarioViewModel : ViewModelBase
 #if __WASM__
     private async void CargarInventario()
     {
-        var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault());
+        var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId);
         TerminarCarga(result);
     }
 #else
     private void CargarInventario()
     {
-        var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId.GetValueOrDefault()).GetAwaiter().GetResult();
+        var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId).GetAwaiter().GetResult();
         TerminarCarga(result);
     }
 #endif
@@ -117,7 +118,7 @@ public class InventarioViewModel : ViewModelBase
 
     private async void Guardar()
     {
-        InventarioDto inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo,Unidad = Unidad, EmpresaId = Usuario.EmpresaId.GetValueOrDefault() };
+        InventarioDto inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo,Unidad = Unidad, EmpresaId = Usuario.EmpresaId };
         if (!ValidarModelo(inventario))
         {
             await _navigator.ShowMessageDialogAsync(this, title: Titulo_Loc, content:_mensajeError);
@@ -151,5 +152,6 @@ public class InventarioViewModel : ViewModelBase
         Medicion_Loc = _localizer["Medida"];
         Descripcion_Loc = _localizer["Descripcion"];
         Tipo_Loc = _localizer["Tipo"];
+        Añadir_Loc = _localizer["Añadir"];
     }
 }

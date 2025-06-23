@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AplicacionTFG.Presentation.Personal;
+using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Options;
@@ -110,7 +112,7 @@ public class PerfilViewModel: ViewModelBase
         ContentDialogResult resultado = await dialog.ShowAsync();
         if (resultado == ContentDialogResult.Primary)
         {
-             var result = await _usuarioApi.DeleteUsuarioAsync(Usuario.Id);
+            var result = await _usuarioApi.DeleteUsuarioAsync(Usuario.Id);
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["PerfilEliminado"], content: _localizer["PerfilEliminadoCorrectamente"]);
             await _navigator.NavigateBackAsync(this);
         }
@@ -172,6 +174,10 @@ public class PerfilViewModel: ViewModelBase
             return;
         }
         var result = await _usuarioApi.PutUsuarioAsync(Usuario.Id, usuarioActualizado);
+        if (result is not null)
+        {
+            localSettings.Values["Usuario"] = result;
+        }
         await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"],content: _localizer["ExitoGuardado"]);
         if (_localizationService is not null)
             Funcional = false;

@@ -12,13 +12,12 @@
     <Border BorderThickness="1" BorderBrush="LightGray">
         <Grid RowDefinitions="Auto, *">
             <Rectangle Grid.RowSpan="2"/>
-            <TextBlock x:Name="DiaCampo" HorizontalTextAlignment="Center" />
+            <TextBlock x:Name="DiaCampo" HorizontalAlignment="Center" />
             <ScrollView Grid.Row="1" VerticalAlignment="Top" >
                 <ItemsControl x:Name="EventosLista">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="10" Background="Aqua">
-                                <TextBlock Text="{Binding Hora}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10" Background="{Binding Color}">
                                 <TextBlock Text="{Binding Nombre}"/>
                             </StackPanel>
                         </DataTemplate>

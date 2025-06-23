@@ -24,7 +24,7 @@ public class Usuario
     [JsonPropertyName("respuesta")]
     public required string Respuesta { get; set; }
     [JsonPropertyName("empresaId")]
-    public int? EmpresaId { get; set; }
+    public int EmpresaId { get; set; }
 
     [JsonPropertyName("imagen")]
     public string? Imagen { get; set; }

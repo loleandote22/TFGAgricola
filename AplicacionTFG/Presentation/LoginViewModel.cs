@@ -290,7 +290,9 @@ public partial class LoginViewModel: ViewModelBase
     private async void Login()
     {
         Funcional = false;
+#if  !WINAPPSDK_PACKAGED
         InputPane.GetForCurrentView().TryHide();
+#endif
 
         if (string.IsNullOrEmpty(NombreUsuarioLogin) || string.IsNullOrEmpty(ContraLogin))
             await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Por favor, introduce un nombre de usuario y una contraseña.");
