@@ -8,7 +8,7 @@
       xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <utu:SafeArea Insets="SoftInput">
+    <utu:SafeArea Insets="All">
         <Grid RowDefinitions="Auto,Auto,Auto,Auto, Auto, Auto" RowSpacing="20">
             <TextBox Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc}"/>
             <TextBox InputScope="Number" Style="{StaticResource Microsoft.UI.Xaml.Controls.NumberBox}" Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Header="{Binding Cantidad_Loc}"/>

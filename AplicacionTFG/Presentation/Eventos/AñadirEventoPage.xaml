@@ -5,10 +5,29 @@
     xmlns:local="using:AplicacionTFG.Presentation.Eventos"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid>
-
-    </Grid>
+    <utu:SafeArea Insets="All">
+            <StackPanel >
+                <TextBox Header="{Binding Nombre_Loc}" Text="{Binding Nombre}"/>
+                <ColorPicker Color="{Binding Color}"/>
+                <TextBlock Text="{Binding Inicio_Loc}"/>
+                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding FechaInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+                <TextBlock Text="{Binding Fin_Loc}"/>
+                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding FechaFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+                <TextBox Header="{Binding Descripcion_Loc}" Text="{Binding Descripción}" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <TextBox Header="{Binding Ubicacion_Loc}" Text="{Binding Ubicacion}"/>
+                <ComboBox ItemsSource="{Binding TiposEventos}" SelectedIndex="{Binding TipoEvento}" PlaceholderText="{Binding Tipo_Loc}"/>
+                <Button Content="{Binding Añadir_Loc}" Command="{Binding AñadirEventoCommand}"/>
+            </StackPanel>
+    </utu:SafeArea>
 </Page>

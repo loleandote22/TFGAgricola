@@ -318,4 +318,10 @@
   <data name="Añadir" xml:space="preserve">
     <value>Ajouter</value>
   </data>
+  <data name="Inicio" xml:space="preserve">
+    <value>Début</value>
+  </data>
+  <data name="Fin" xml:space="preserve">
+    <value>Fin</value>
+  </data>
 </root>

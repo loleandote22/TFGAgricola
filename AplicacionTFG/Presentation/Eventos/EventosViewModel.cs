@@ -366,6 +366,20 @@ public class EventoViewModel : ViewModelBase
 
 public class AñadirEventoViewModel : ViewModelBase
 {
+
+    #region Localización
+    public required string Nombre_Loc { get; set; }
+    public required string Descripcion_Loc { get; set; }
+    public required string Ubicacion_Loc { get; set; }
+    public required string Color_Loc { get; set; }
+    public required string Inicio_Loc { get; set; }
+    public required string Fin_Loc { get; set; }
+    public required string Tipo_Loc { get; set; }
+
+    public required string Añadir_Loc { get; set; }
+    #endregion
+    #region Campos
+    #endregion
     private readonly EventoApi _eventoApi;
     public EventoDto Evento { get; set; } = null!;
     public AñadirEventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
@@ -379,6 +393,13 @@ public class AñadirEventoViewModel : ViewModelBase
     }
     protected override void CargarPalabras()
     {
-        
+        Nombre_Loc = _localizer["Nombre"];
+        Descripcion_Loc = _localizer["Descripcion"];
+        Ubicacion_Loc = _localizer["Ubicacion"];
+        Color_Loc = _localizer["Color"];
+        Inicio_Loc = _localizer["Inicio"];
+        Fin_Loc = _localizer["Fin"];
+        Tipo_Loc = _localizer["Tipo"];
+        Añadir_Loc = _localizer["Añadir"];
     }
 }
