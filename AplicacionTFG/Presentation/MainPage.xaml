@@ -8,6 +8,10 @@
       xmlns:um="using:Uno.Material"
       Background="{ThemeResource BackgroundBrush}"
       AutomationProperties.AutomationId="HomePage">
+    <Page.Resources>
+
+        <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
+    </Page.Resources>
     <Grid utu:SafeArea.Insets="VisibleBounds"  uen:Region.Attached="True" >
         <NavigationView PaneDisplayMode="LeftCompact" uen:Region.Attached="True" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" >
             <NavigationView.MenuItems>

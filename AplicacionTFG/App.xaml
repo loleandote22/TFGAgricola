@@ -8,8 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- Load WinUI resources -->
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <utum:MaterialToolkitTheme
-          ColorOverrideSource="ms-appx:///Styles/ColorPaletteOverride.xaml">
+                <utum:MaterialToolkitTheme ColorOverrideSource="ms-appx:///Styles/ColorPaletteOverride.xaml">
                     <!-- NOTE: You can override the default Roboto font by providing your font assets here. -->
                     <!-- <utum:MaterialToolkitTheme.FontOverrideDictionary>
             <ResourceDictionary>
@@ -20,7 +19,7 @@
           </utum:MaterialToolkitTheme.FontOverrideDictionary> -->
                 </utum:MaterialToolkitTheme>
 
-                <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
+                <!--<ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>-->
 
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="EliminarButton" TargetType="Button">

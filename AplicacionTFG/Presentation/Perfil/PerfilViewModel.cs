@@ -104,7 +104,7 @@ public class PerfilViewModel: ViewModelBase
         ContentDialog dialog = new ContentDialog
         {
             Title = _localizer["Eliminar"],
-            Content = _localizer["EliminarIreversible"],
+            Content = _localizer["EliminarIrreversible"],
             PrimaryButtonText = _localizer["Aceptar"],
             SecondaryButtonText = _localizer["Cancelar"],
             XamlRoot = xamlRoot
