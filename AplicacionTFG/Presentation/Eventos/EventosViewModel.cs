@@ -6,7 +6,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using Microsoft.UI;
 using Windows.Devices.Input;
+using Windows.UI;
 
 namespace AplicacionTFG.Presentation.Eventos;
 public class EventosMesViewModel : ViewModelBase
@@ -364,7 +366,7 @@ public class EventoViewModel : ViewModelBase
     }
 }
 
-public class AñadirEventoViewModel : ViewModelBase
+public partial class AñadirEventoViewModel : ViewModelBase
 {
 
     #region Localización
@@ -378,21 +380,72 @@ public class AñadirEventoViewModel : ViewModelBase
 
     public required string Añadir_Loc { get; set; }
     #endregion
+
     #region Campos
+    public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); }}
+    public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); }}
+    public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); }}
+    private Color colorSeleccionado = Colors.Black;
+
+    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); }}
+    [ObservableProperty]
+    private DateTimeOffset diaInicio = DateTimeOffset.Now;
+    private int tipoSeleccionado = 1;
+    private string nombre = null!;
+    private string descripcion = null!;
+    private string ubicacion = null!;
+
+    public TimeSpan HoraInicio { get; set; }
+    public DateOnly? DiaFin { get; set; } = null;
+    public TimeOnly? HoraFin { get; set; } = null;
+    public List<string> Tipos { get; set; } = null!;
+    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; OnPropertyChanged(nameof(TipoSeleccionado)); }}
     #endregion
+
+    #region Comandos
+    public ICommand AñadirEventoCommand { get; set; }
+    #endregion
+
     private readonly EventoApi _eventoApi;
+    private readonly int _usuarioId;
+
     public EventoDto Evento { get; set; } = null!;
     public AñadirEventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _eventoApi = new(Apiurl);
+        _usuarioId = Usuario.Id;
+        AñadirEventoCommand = new RelayCommand(Guardar);
     }
-    public async Task<bool> AñadirEventoAsync()
+
+    private async void Guardar()
     {
+       
+        Evento = new EventoDto
+        {
+            Nombre = Nombre,
+            Descripcion = Descripcion,
+            Ubicacion = Ubicacion,
+            Color = ColorSeleccionado.ToString(),
+            Inicio = DiaInicio.Date + HoraInicio,
+            Fin = DiaFin.HasValue ? DiaFin.Value.ToDateTime(HoraFin ?? TimeOnly.MinValue) : null,
+            Tipo = TipoSeleccionado,
+            UsuarioId = _usuarioId,
+            EmpresaId = Usuario.EmpresaId
+        };
         var result = await _eventoApi.PostEventoAsync(Evento);
-        return !string.IsNullOrEmpty(result);
+        if (string.IsNullOrEmpty(result))
+        {
+            // Manejar error al guardar el evento
+            return;
+        }
+        else
+            await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
     }
+
+  
     protected override void CargarPalabras()
     {
+        Tipos = new() { _localizer["Todos"], _localizer["Evento"], _localizer["Tarea"], _localizer["Recordatorio"] };
         Nombre_Loc = _localizer["Nombre"];
         Descripcion_Loc = _localizer["Descripcion"];
         Ubicacion_Loc = _localizer["Ubicacion"];
