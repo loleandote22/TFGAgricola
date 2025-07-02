@@ -416,6 +416,11 @@ public class EventoViewModel : ViewModelBase
 
 public partial class AñadirEventoViewModel : ViewModelBase
 {
+#region Propiedades
+    #region Apis
+    private readonly EventoApi _eventoApi;
+    private readonly UsuarioApi _usuarioApi;
+    #endregion
 
     #region Localización
     public required string Eventos_Loc { get; set; }
@@ -431,16 +436,14 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public required string Cantidad_Loc { get; set; }
     public required string Unidad_Loc { get; set; }
     public required string Empleado_Loc { get; set; }
-
     #endregion
 
     #region Campos
-    public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); }}
-    public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); }}
-    public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); }}
+    public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
+    public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
+    public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
     private Color colorSeleccionado = Colors.Black;
-
-    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); }}
+    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
     private DateTimeOffset _diaInicio;
     public DateTimeOffset DiaInicio
     {
@@ -460,12 +463,11 @@ public partial class AñadirEventoViewModel : ViewModelBase
     private string ubicacion = null!;
     private int cantidad = 0;
     private string unidad = null!;
-
     public TimeSpan HoraInicio { get; set; }
     public DateOnly? DiaFin { get; set; } = null;
     public TimeOnly? HoraFin { get; set; } = null;
     public List<string> Tipos { get; set; } = null!;
-    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed;  OnPropertyChanged(nameof(TipoSeleccionado)); }}
+    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed; OnPropertyChanged(nameof(TipoSeleccionado)); } }
     public int Cantidad { get => cantidad; set => cantidad = value; }
     public string Unidad { get => unidad; set => unidad = value; }
     public List<UsuarioNombre> Empleados { get; set; } = null!;
@@ -482,17 +484,18 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public Visibility EmpleadoVisibility { get; set; }
     #endregion
 
-    private readonly EventoApi _eventoApi;
     private readonly int _usuarioId;
-
-    
     public EventoDto Evento { get; set; } = null!;
+#endregion
     public AñadirEventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _eventoApi = new(Apiurl);
+        _usuarioApi = new(Apiurl);
         _usuarioId = Usuario.Id;
         AñadirEventoCommand = new RelayCommand(Guardar);
         EmpleadoVisibility = Usuario.Tipo <2 ? Visibility.Visible : Visibility.Collapsed;
+        if( EmpleadoVisibility == Visibility.Visible)
+            CargarUsuarios();
     }
 
     public AñadirEventoViewModel (INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityDateNumber datos): this ( navigator, localizer, appInfo)
@@ -500,6 +503,27 @@ public partial class AñadirEventoViewModel : ViewModelBase
         DiaInicio = new DateTimeOffset(datos.date);
         _usuarioId = datos.number;
         HoraInicio = datos.date.TimeOfDay;
+    }
+#if __WASM__
+    private async void CargarUsuarios()
+    {
+        var result = await _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId);
+        TerminarCarga(result);
+    }
+#else
+    private void CargarUsuarios()
+    {
+        var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
+        TerminarCarga(result);
+    }
+#endif
+    private void TerminarCarga (string? result)
+    {
+        if (result is not null)
+        Empleados = JsonSerializer.Deserialize(result, UsuarioNombreContext.Default.ListUsuarioNombre)!;
+        EmpleadoSeleccionado = Empleados.FirstOrDefault(e => e.Id == _usuarioId) ?? Empleados.FirstOrDefault()!;
+        OnPropertyChanged(nameof(Empleados));
+        OnPropertyChanged(nameof(EmpleadoSeleccionado));
     }
 
     private async void Guardar()
@@ -514,7 +538,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
             Inicio = DiaInicio.Date + HoraInicio,
             Fin = DiaFin.HasValue ? DiaFin.Value.ToDateTime(HoraFin ?? TimeOnly.MinValue) : null,
             Tipo = TipoSeleccionado,
-            UsuarioId = _usuarioId,
+            UsuarioId = EmpleadoSeleccionado is null ? _usuarioId : EmpleadoSeleccionado.Id,
             EmpresaId = Usuario.EmpresaId,
             TareaDetalle = TipoSeleccionado == 1 && Unidad is not null ? new TareaDetalleDto
             {
@@ -551,5 +575,6 @@ public partial class AñadirEventoViewModel : ViewModelBase
         Dia_Loc = _localizer["Dia"];
         Cantidad_Loc = _localizer["Cantidad"];
         Unidad_Loc = _localizer["Unidad"];
+        Empleado_Loc = _localizer["Empleado"];
     }
 }

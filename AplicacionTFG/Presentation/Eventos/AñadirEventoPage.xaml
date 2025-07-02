@@ -12,26 +12,27 @@
         <StackPanel MaxWidth="600" Spacing="20" Margin="10,0">
             <TextBlock Text="{Binding Eventos_Loc}" FontSize="40" Margin="0,10,0,0"/>
             <TextBox Header="{Binding Nombre_Loc}" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <ColorPicker  Color="{Binding ColorSeleccionado, Mode=TwoWay}" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
-                <StackPanel>
-                    <TextBlock Text="{Binding Inicio_Loc}"/>
-                    <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-                </StackPanel>
-                    <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
-                        <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </VariableSizedWrapGrid>
-                <StackPanel>
-                    <TextBlock Text="{Binding Fin_Loc}"/>
-                    <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-                </StackPanel>
-                    <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
-                        <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </VariableSizedWrapGrid>
-                <TextBox Header="{Binding Descripcion_Loc}" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True"/>
-                <TextBox Header="{Binding Ubicacion_Loc}" Text="{Binding Ubicacion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <ComboBox ItemsSource="{Binding Tipos}" SelectedIndex="{Binding TipoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}"/>
+            <ColorPicker  Color="{Binding ColorSeleccionado, Mode=TwoWay}" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
+            <ComboBox Visibility="{Binding EmpleadoVisibility}" ItemsSource="{Binding Empleados}" SelectedItem="{Binding EmpleadoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Nombre" PlaceholderText="{Binding Empleado_Loc}"/>
+            <StackPanel>
+                <TextBlock Text="{Binding Inicio_Loc}"/>
+                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+            </StackPanel>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+            <StackPanel>
+                <TextBlock Text="{Binding Fin_Loc}"/>
+                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+            </StackPanel>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+            <TextBox Header="{Binding Descripcion_Loc}" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True"/>
+            <TextBox Header="{Binding Ubicacion_Loc}" Text="{Binding Ubicacion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <ComboBox ItemsSource="{Binding Tipos}" SelectedIndex="{Binding TipoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}"/>
             <StackPanel Visibility="{Binding TareaVisibility}" Spacing="10">
                 <TextBox Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" Header="{Binding Cantidad_Loc}" />
                 <TextBox Text="{Binding Unidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Unidad_Loc}" />

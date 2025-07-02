@@ -25,8 +25,15 @@ public class UsuarioApi(string url) : WebApiBase(url)
         var url = urlbase + "empresa/" + idEmpresa;
         return await GetAsync(url);
     }
+
+    public async Task<string?> GetNombreUsuariosEmpresa(int idEmpresa)
+    {
+
+        var url = urlbase + "corto/empresa/" + idEmpresa;
+        return await GetAsync(url);
+    }
     #endregion
-    
+
     #region Posts
     public async Task<string?> PostUsuarioAsync(UsuarioRegistroDto usuario)
     {
