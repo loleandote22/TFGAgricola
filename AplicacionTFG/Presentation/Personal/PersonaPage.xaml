@@ -22,7 +22,6 @@
             <utu:TabBar.Items>
                 <utu:TabBarItem IsSelected="True" Content="{Binding Perfil_Loc, UpdateSourceTrigger=PropertyChanged}"/>
                 <utu:TabBarItem Content="{Binding Eventos_Loc, UpdateSourceTrigger=PropertyChanged}" />
-                <utu:TabBarItem Content="{Binding Restablecer_Loc, UpdateSourceTrigger=PropertyChanged}" />
             </utu:TabBar.Items>
         </utu:TabBar>
     </Grid>

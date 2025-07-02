@@ -6,17 +6,23 @@ using Windows.UI.ViewManagement;
 namespace AplicacionTFG.Presentation;
 public partial class LoginViewModel: ViewModelBase
 {
+    #region Propiedades
+
     #region Auxiliares
     private int indice;
-    public int Indice { get => indice; set 
+    public int Indice
+    {
+        get => indice; set
         {
-            
-            indice = value; 
+
+            indice = value;
             VerAcceso = indice == 0 ? Visibility.Visible : Visibility.Collapsed;
             VerRegistro = indice == 1 ? Visibility.Visible : Visibility.Collapsed;
             VerRecuperacion = indice == 2 ? Visibility.Visible : Visibility.Collapsed;
-            LimpiarCampos(); 
-            OnPropertyChanged(nameof(Indice)); } }
+            LimpiarCampos();
+            OnPropertyChanged(nameof(Indice));
+        }
+    }
     #endregion
     #region Localización
     private string usuario_Loc = "";
@@ -68,23 +74,22 @@ public partial class LoginViewModel: ViewModelBase
     public Visibility VerRecuperacionContraseña { get; set; } = Visibility.Collapsed;
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); } }
 
-    private Visibility verAcceso= Visibility.Visible;
+    private Visibility verAcceso = Visibility.Visible;
     private Visibility verRegistro = Visibility.Collapsed;
     private Visibility verRecuperacion = Visibility.Collapsed;
-    public Visibility VerAcceso { get => verAcceso; set { verAcceso = value; OnPropertyChanged(nameof(VerAcceso)); }}
-    public Visibility VerRegistro { get => verRegistro; set { verRegistro = value; OnPropertyChanged(nameof(VerRegistro)); }}
-    public Visibility VerRecuperacion { get => verRecuperacion; set { verRecuperacion = value; OnPropertyChanged(nameof(VerRecuperacion)); }}
+    public Visibility VerAcceso { get => verAcceso; set { verAcceso = value; OnPropertyChanged(nameof(VerAcceso)); } }
+    public Visibility VerRegistro { get => verRegistro; set { verRegistro = value; OnPropertyChanged(nameof(VerRegistro)); } }
+    public Visibility VerRecuperacion { get => verRecuperacion; set { verRecuperacion = value; OnPropertyChanged(nameof(VerRecuperacion)); } }
     #endregion
     #region Strings
     public string NombreUsuarioLogin { get; set; } = string.Empty;
-    public string ContraLogin { get; set ; } = string.Empty;
+    public string ContraLogin { get; set; } = string.Empty;
     public string NombreUsuarioRegistro { get; set; } = string.Empty;
     public string ContraRegistro { get; set; } = string.Empty;
     public string ContraRegistroConfirm { get; set; } = string.Empty;
     public string PreguntaRegistro { get; set; } = string.Empty;
     public string RespuestaRegistro { get; set; } = string.Empty;
-    public List<string> RolesRegistro { get; set; } = [ "Dueño", "Administrador", "Empleado" ]; 
-    public string RolRegistro { get; set; } = string.Empty;
+    public List<string> RolesRegistro { get; set; }
     public string NombreEmpresa { get; set; } = string.Empty;
     public string ContraEmpresa { get; set; } = string.Empty;
     public string NombeUsuarioRecuperar { get; set; } = string.Empty;
@@ -94,15 +99,18 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRecuperarConfirm { get; set; } = string.Empty;
     #endregion
 
+    public int RolRegistro { get; set; } = -1;
 
-    private UsuarioRegistroDto? usuarioRegistro = null;
-    private Usuario? usuario = null;
+    private UsuarioRegistroDto usuarioRegistro = null!;
+    private Usuario? susuario = null;
     private readonly UsuarioApi _usuarioApi;
     private readonly EmpresaApi _empresaApi;
     private bool funcional = true;
 
+    #endregion
     public LoginViewModel(IStringLocalizer localizer,ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo) : base(localizer, navigator,appInfo, localizationService)
     {
+        RolesRegistro = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
         Indice =0;
         _usuarioApi = new(Apiurl);
         _empresaApi = new(Apiurl);
@@ -158,7 +166,7 @@ public partial class LoginViewModel: ViewModelBase
             Funcional = true;
             return;
         }
-        usuario = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
+        Usuario = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
         VerRecuperacionPregunta = Visibility.Collapsed;
         VerRecuperacionContraseña = Visibility.Visible;
         OnPropertyChanged(nameof(VerRecuperacionPregunta));
@@ -176,8 +184,8 @@ public partial class LoginViewModel: ViewModelBase
             Funcional = true;
             return;
         }
-        usuario!.Contrasena = ContraRecuperar;
-        var result = await _usuarioApi.PutUsuarioAsync(usuario);
+        Usuario!.Contrasena = ContraRecuperar;
+        var result = await _usuarioApi.PutUsuarioAsync(Usuario);
         if (result == null)
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Error al cambiar la contraseña");
@@ -192,7 +200,8 @@ public partial class LoginViewModel: ViewModelBase
             return;
         }
         ResetearFormularios();
-        localSettings.Values["Usuario"] = result;
+        TransientSettings.Set("Usuario", usuarioDevuelto);
+        TransientSettings.Set("Usuario", usuarioDevuelto);
         await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
         Funcional = true;
     }
@@ -213,7 +222,7 @@ public partial class LoginViewModel: ViewModelBase
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: _mensajeError);
             return;
         }
-        if (RolRegistro == "Dueño")
+        if (RolRegistro == 0)
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación crea tu empresa.");
         else
             await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación únete a tu equipo.");
@@ -248,7 +257,7 @@ public partial class LoginViewModel: ViewModelBase
         string? result;
         try
         {
-            if (usuarioRegistro!.Tipo == "Dueño")
+            if (usuarioRegistro!.Tipo ==  0)
                 result = await _empresaApi.PostEmpresaAsync(empresa);
             else
                 result = await _empresaApi.Login(empresa);
@@ -264,8 +273,8 @@ public partial class LoginViewModel: ViewModelBase
             if (result is not null)
             {
                 await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "Usuario registrado correctamente");
-                Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
-                localSettings.Values["Usuario"] = result;
+                Usuario usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
+                TransientSettings.Set("Usuario", usuarioDevuelto);
                 ResetearFormularios();
                 await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
             }
@@ -310,7 +319,8 @@ public partial class LoginViewModel: ViewModelBase
                 {
                     Usuario usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
                     ResetearFormularios();
-                    localSettings.Values["Usuario"] = result;
+
+                    TransientSettings.Set("Usuario", usuarioDevuelto);
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
                 }
                 else
@@ -351,7 +361,7 @@ public partial class LoginViewModel: ViewModelBase
         ContraLogin = string.Empty;
         NombreUsuarioRegistro = string.Empty;
         ContraRegistro = string.Empty;
-        RolRegistro = string.Empty;
+        RolRegistro = -1;
         PreguntaRegistro = string.Empty;
         RespuestaRegistro = string.Empty;
         ContraRegistroConfirm = string.Empty;

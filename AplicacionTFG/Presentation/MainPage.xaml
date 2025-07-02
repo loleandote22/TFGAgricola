@@ -22,7 +22,7 @@
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="{Binding Perfil_Loc}" Icon="{StaticResource Person}" uen:Region.Name="Perfil" uen:Navigation.Request="-/Perfil"/>
-                <NavigationViewItem Content="{Binding Salir_Loc}" uen:Navigation.Request="-" Icon="{StaticResource Sign Out}" />
+                <NavigationViewItem Content="{Binding Salir_Loc}" uen:Navigation.Request="-/Login" Icon="{StaticResource Sign Out}" />
             </NavigationView.FooterMenuItems>
             <ContentControl uen:Region.Attached="True" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
         </NavigationView>

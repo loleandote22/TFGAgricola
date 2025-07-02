@@ -63,7 +63,7 @@ public class PersonaViewModel : ViewModelBase
         Indice = 0;
         CargarUsuario(elemento.number);
         PerfilViewModel = new PerfilViewModel(messenger, localizer,_localizationService, navigator, appInfo) { Usuario = UsuarioBuscado};
-        EventosViewModel = new EventosMesViewModel(navigator, localizer, appInfo, UsuarioBuscado.Id);   
+        EventosViewModel = new EventosMesViewModel(navigator, localizer, appInfo, UsuarioBuscado.Id, "Persona");   
         PerfilViewModel.CargarCampos();
     }
 

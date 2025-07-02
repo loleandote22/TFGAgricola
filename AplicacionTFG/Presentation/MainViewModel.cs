@@ -26,7 +26,7 @@ public partial class MainViewModel : ViewModelBase
     {
         messenger.Register<Languagechanged>(this, (r,msg) => { IdiomaSeleccionado = msg.idioma; CargarPalabras(); });
         Title = localizer["ApplicationName"];
-        VerPersonal = Usuario.Tipo == "Dueño" || Usuario.Tipo == "Administrador" ? Visibility.Visible : Visibility.Collapsed;
+        VerPersonal = Usuario.Tipo <2 ? Visibility.Visible : Visibility.Collapsed;
     }
 #pragma warning restore CS8618
     public string? Title { get; }

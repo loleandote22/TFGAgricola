@@ -126,7 +126,7 @@ public class InventarioViewModel : ViewModelBase
         }
         VerAnadir = Visibility.Collapsed;
         var resultado = await _inventarioApi.PostInventarioAsync(inventario);
-        var elemento = JsonSerializer.Deserialize<Models.InventarioConsulta>(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
+        var elemento = JsonSerializer.Deserialize(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
         var inventarios = Inventarios.ToList();
         inventarios.Add(elemento!);
         Inventarios = inventarios;

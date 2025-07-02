@@ -47,6 +47,12 @@ public class EventoApi(string url) : WebApiBase(url)
         var content = new StringContent(JsonSerializer.Serialize(evento, EventoDtoContext.Default.EventoDto), Encoding.UTF8, "application/json");
         return await PostAsync(urlbase, content);
     }
+    public async Task<string?> PostTareaAsync(EventoDto evento)
+    {
+        var url = urlbase + "tarea";
+        var content = new StringContent(JsonSerializer.Serialize(evento, EventoDtoContext.Default.EventoDto), Encoding.UTF8, "application/json");
+        return await PostAsync(url, content);
+    }
     #endregion
 
     #region Puts

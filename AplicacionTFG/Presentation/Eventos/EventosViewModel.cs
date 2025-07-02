@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 using Microsoft.UI;
@@ -16,9 +17,10 @@ public class EventosMesViewModel : ViewModelBase
     #region Auxiliar
     private DateOnly _fechaBusqueda;
     private readonly int _idUsuario = 0;
-    private readonly string _tipoUsuario = "Empleado";
+    private readonly int _tipoUsuario = 2;
     private int diaSeleccionado;
     public int DiaSeleccionado { get => diaSeleccionado; set { diaSeleccionado = value; VerDia(value); }}
+    public Visibility AñadirEventosVisibility { get; set; }
     #endregion
 
     #region Localización
@@ -80,7 +82,7 @@ public class EventosMesViewModel : ViewModelBase
 
     public RelayCommand AñadirEventoCommand => new (() =>
     {
-        _navigator.NavigateViewModelAsync<AñadirEventoViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+        _navigator.NavigateViewModelAsync<AñadirEventoViewModel>(this, qualifier: Qualifiers.ClearBackStack, new EntityDateNumber(DateTime.Now, _idUsuario));
     });
     #endregion
 
@@ -92,29 +94,40 @@ public class EventosMesViewModel : ViewModelBase
 
     private readonly EventoApi _eventoApi;
     private List<EventoMes> _eventos = null!;
-    // 42 dias para mostrar eventos
     public List<Dia> Dias { get; set; } = null!;
+
+    private bool esPropio = true;
     public EventosMesViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _tipoUsuario = Usuario.Tipo;
         _idUsuario = Usuario.Id;
         _eventoApi = new EventoApi(Apiurl);
         _fechaBusqueda = DateOnly.FromDateTime(DateTime.Now);
+        AñadirEventosVisibility = Visibility.Visible;
         CargarEventos( _fechaBusqueda.Month, _fechaBusqueda.Year);
     }
-
-    public EventosMesViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, int idUsuario) : base(localizer, navigator, appInfo)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="navigator"> Permite "navegar entre páginas"</param>
+    /// <param name="localizer"> Permite cargar los textos en distintos idiomas </param>
+    /// <param name="appInfo"> Permite obtener los valores de variables del programa</param>
+    /// <param name="idUsuario"> Usuario del que se quieren saber los eventos</param>
+    /// <param name="origen"> Saber si se llama desde el perfil de un Usuario o desde el módulo de eventos</param>
+    public EventosMesViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, int idUsuario, string? origen="Home") : base(localizer, navigator, appInfo)
     {
         _idUsuario = idUsuario;
         _eventoApi = new EventoApi(Apiurl);
         _fechaBusqueda = DateOnly.FromDateTime(DateTime.Now);
+        AñadirEventosVisibility = Visibility.Collapsed;
         CargarEventos(_fechaBusqueda.Month, _fechaBusqueda.Year);
+        esPropio = false;
     }
 #if __WASM__
     private async void CargarEventos( int mes, int año)
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if (_tipoUsuario == "Empleado")
+        if (_tipoUsuario == 2)
         {
             var result =await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes , año);
             TerminarCarga(result);
@@ -128,7 +141,7 @@ public class EventosMesViewModel : ViewModelBase
     private void CargarEventos(int mes, int año)
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if(_tipoUsuario == "Empleado")
+        if(_tipoUsuario == 2)
         { 
             var result = _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año).GetAwaiter().GetResult();
             TerminarCarga(result);
@@ -148,7 +161,7 @@ public class EventosMesViewModel : ViewModelBase
     private async void CargarEventosComando(int mes, int año)
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if (_tipoUsuario == "Empleado")
+        if (_tipoUsuario == 2)
         {
             var result = await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año);
             TerminarCarga(result);
@@ -184,7 +197,7 @@ public class EventosMesViewModel : ViewModelBase
         for (int i = 1; i <= diasDelMes; i++)
         {
             DiasTemporal.Add(new () { Numero = i, Eventos = _eventos
-                .Where(e => e.Inicio.Day == i && (e.Tipo == TipoSeleccionado||TipoSeleccionado==0))
+                .Where(e => e.Inicio.Day == i && (e.Tipo == TipoSeleccionado-1||TipoSeleccionado==0))
                 .OrderBy(e => e.Inicio).ToList() });
         }
         Dias = DiasTemporal;
@@ -194,7 +207,7 @@ public class EventosMesViewModel : ViewModelBase
 
     private void VerDia(int dia)
     {
-        if (dia > 0)
+        if (dia > 0 && esPropio)
         {
             var fecha = new DateOnly(_fechaBusqueda.Year, _fechaBusqueda.Month, dia);
             _navigator.NavigateViewModelAsync<EventosDiaViewModel>(this, qualifier: Qualifiers.ClearBackStack, data: new EntityDate(fecha));
@@ -203,8 +216,8 @@ public class EventosMesViewModel : ViewModelBase
 
     protected override void CargarPalabras()
     {
-        Tipos = new (){ _localizer["Todos"], _localizer["Evento"], _localizer["Tarea"], _localizer["Recordatorio"] };
-        var lunes = new DateOnly(2023, 1, 2); // Primer lunes de 2023
+        Tipos = new (){ _localizer["Todos"], _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        var lunes = new DateOnly(2023, 1, 2);
         var martes = lunes.AddDays(1);
         var miercoles = lunes.AddDays(2);
         var jueves = lunes.AddDays(3);
@@ -245,7 +258,7 @@ public class EventosDiaViewModel : ViewModelBase
 {
     #region Auxiliar
     private readonly DateOnly _fechaBusqueda;
-    private readonly string _tipoUsuario = "Empleado";
+    private readonly int _tipoUsuario = 2;
     private readonly int _idUsuario = 0;
     public Visibility VerNoHayEventos { get => Eventos.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
     #endregion
@@ -272,7 +285,7 @@ public class EventosDiaViewModel : ViewModelBase
     #region Comandos
     public RelayCommand AñadirEventoCommand => new(() =>
     {
-        _navigator.NavigateViewModelAsync<AñadirEventoViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+        _navigator.NavigateViewModelAsync<AñadirEventoViewModel>(this, qualifier: Qualifiers.ClearBackStack, new EntityDateNumber(new DateTime(_fechaBusqueda, TimeOnly.FromDateTime(DateTime.Now)), _idUsuario));
     });
     #endregion
 
@@ -298,7 +311,7 @@ public class EventosDiaViewModel : ViewModelBase
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
 
-      if (_tipoUsuario == "Empleado")
+      if (_tipoUsuario == 2)
         {
             var result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
             if (result is not null)
@@ -316,7 +329,7 @@ public class EventosDiaViewModel : ViewModelBase
     private void CargarEventos()
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-      if(_tipoUsuario == "Empleado")
+      if(_tipoUsuario == 2)
         {
             var result = _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year).GetAwaiter().GetResult();
             if (result is not null)
@@ -345,8 +358,25 @@ public class EventosDiaViewModel : ViewModelBase
 
 public class EventoViewModel : ViewModelBase
 {
+    #region Localización
+    private string tipo = string.Empty;
+    private string fechaInicio = string.Empty;
+    private string fechaFin = string.Empty;
+    public string FechaFin { get => fechaFin; set => fechaFin = value; }
+    public string FechaInicio { get => fechaInicio; set => fechaInicio = value; }
+    public string Tipo { get => tipo; set => tipo = value; }
+    public string Editar_Loc { get; set; } = null!;
+    public string Eliminar_Loc { get; set; } = null!;
+    #endregion
+  
+    #region Comandos
+    public ICommand EditarCommand => new RelayCommand(Editar);
+    public ICommand EliminarCommand => new RelayCommand(Eliminar);
+    #endregion
+
     private readonly EventoApi _eventoApi;
     public Evento Evento { get; set; } = null!;
+
     public EventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber id): base(localizer, navigator, appInfo)
     {
         _eventoApi = new(Apiurl);
@@ -358,11 +388,29 @@ public class EventoViewModel : ViewModelBase
         if (result is null)
             return;
         Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
-        Console.WriteLine($"Evento cargado: {Evento.Nombre}");
+        List<string> Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        Tipo = Tipos[Evento.Tipo - 1];
+        FechaInicio = Evento.Inicio.ToString(System.Globalization.CultureInfo.CurrentCulture);
+        FechaFin = Evento.Fin.HasValue? Evento.Fin.Value.ToString(System.Globalization.CultureInfo.CurrentCulture):"";
     }
+
+    private async void Editar()
+    {
+
+    }
+
+    private async void Eliminar()
+    {
+        await _eventoApi.DeleteEventoAsync(Evento.Id);
+        await _navigator.NavigateRouteAsync(this, route: "-/Persona/EventosMes");
+        //await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+    }
+
     protected override void CargarPalabras()
     {
-       
+
+        Editar_Loc = _localizer["Editar"];
+        Eliminar_Loc = _localizer["Eliminar"];
     }
 }
 
@@ -370,6 +418,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
 {
 
     #region Localización
+    public required string Eventos_Loc { get; set; }
     public required string Nombre_Loc { get; set; }
     public required string Descripcion_Loc { get; set; }
     public required string Ubicacion_Loc { get; set; }
@@ -377,8 +426,12 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public required string Inicio_Loc { get; set; }
     public required string Fin_Loc { get; set; }
     public required string Tipo_Loc { get; set; }
-
+    public required string Dia_Loc { get; set; }
     public required string Añadir_Loc { get; set; }
+    public required string Cantidad_Loc { get; set; }
+    public required string Unidad_Loc { get; set; }
+    public required string Empleado_Loc { get; set; }
+
     #endregion
 
     #region Campos
@@ -388,33 +441,65 @@ public partial class AñadirEventoViewModel : ViewModelBase
     private Color colorSeleccionado = Colors.Black;
 
     public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); }}
-    [ObservableProperty]
-    private DateTimeOffset diaInicio = DateTimeOffset.Now;
+    private DateTimeOffset _diaInicio;
+    public DateTimeOffset DiaInicio
+    {
+        get => _diaInicio;
+        set
+        {
+            if (_diaInicio != value)
+            {
+                _diaInicio = value;
+                OnPropertyChanged(nameof(DiaInicio));
+            }
+        }
+    }
     private int tipoSeleccionado = 1;
     private string nombre = null!;
     private string descripcion = null!;
     private string ubicacion = null!;
+    private int cantidad = 0;
+    private string unidad = null!;
 
     public TimeSpan HoraInicio { get; set; }
     public DateOnly? DiaFin { get; set; } = null;
     public TimeOnly? HoraFin { get; set; } = null;
     public List<string> Tipos { get; set; } = null!;
-    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; OnPropertyChanged(nameof(TipoSeleccionado)); }}
+    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed;  OnPropertyChanged(nameof(TipoSeleccionado)); }}
+    public int Cantidad { get => cantidad; set => cantidad = value; }
+    public string Unidad { get => unidad; set => unidad = value; }
+    public List<UsuarioNombre> Empleados { get; set; } = null!;
+    public UsuarioNombre EmpleadoSeleccionado { get; set; } = null!;
     #endregion
 
     #region Comandos
     public ICommand AñadirEventoCommand { get; set; }
     #endregion
 
+    #region Visibilidad
+    private Visibility tareaVisibility;
+    public Visibility TareaVisibility { get => tareaVisibility; set { tareaVisibility = value; OnPropertyChanged(nameof(TareaVisibility)); } }
+    public Visibility EmpleadoVisibility { get; set; }
+    #endregion
+
     private readonly EventoApi _eventoApi;
     private readonly int _usuarioId;
 
+    
     public EventoDto Evento { get; set; } = null!;
     public AñadirEventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
         _eventoApi = new(Apiurl);
         _usuarioId = Usuario.Id;
         AñadirEventoCommand = new RelayCommand(Guardar);
+        EmpleadoVisibility = Usuario.Tipo <2 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public AñadirEventoViewModel (INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityDateNumber datos): this ( navigator, localizer, appInfo)
+    {
+        DiaInicio = new DateTimeOffset(datos.date);
+        _usuarioId = datos.number;
+        HoraInicio = datos.date.TimeOfDay;
     }
 
     private async void Guardar()
@@ -430,9 +515,18 @@ public partial class AñadirEventoViewModel : ViewModelBase
             Fin = DiaFin.HasValue ? DiaFin.Value.ToDateTime(HoraFin ?? TimeOnly.MinValue) : null,
             Tipo = TipoSeleccionado,
             UsuarioId = _usuarioId,
-            EmpresaId = Usuario.EmpresaId
+            EmpresaId = Usuario.EmpresaId,
+            TareaDetalle = TipoSeleccionado == 1 && Unidad is not null ? new TareaDetalleDto
+            {
+                Cantidad = Cantidad, 
+                Unidad = Unidad
+            } : null
         };
-        var result = await _eventoApi.PostEventoAsync(Evento);
+        var result = "";
+        if (Evento.TareaDetalle is null)
+            result = await _eventoApi.PostEventoAsync(Evento);
+        else
+            result = await _eventoApi.PostTareaAsync(Evento);
         if (string.IsNullOrEmpty(result))
         {
             // Manejar error al guardar el evento
@@ -442,10 +536,10 @@ public partial class AñadirEventoViewModel : ViewModelBase
             await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
     }
 
-  
     protected override void CargarPalabras()
     {
-        Tipos = new() { _localizer["Todos"], _localizer["Evento"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        Eventos_Loc = _localizer["Eventos"];
+        Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
         Nombre_Loc = _localizer["Nombre"];
         Descripcion_Loc = _localizer["Descripcion"];
         Ubicacion_Loc = _localizer["Ubicacion"];
@@ -454,5 +548,8 @@ public partial class AñadirEventoViewModel : ViewModelBase
         Fin_Loc = _localizer["Fin"];
         Tipo_Loc = _localizer["Tipo"];
         Añadir_Loc = _localizer["Añadir"];
+        Dia_Loc = _localizer["Dia"];
+        Cantidad_Loc = _localizer["Cantidad"];
+        Unidad_Loc = _localizer["Unidad"];
     }
 }

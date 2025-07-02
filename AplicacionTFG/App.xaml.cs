@@ -68,16 +68,14 @@ public partial class App : Application
                 // Enable localization (see appsettings.json for supported languages)
                 .UseLocalization()
                 // Register Json serializers (ISerializer and ISerializer)
-                .UseSerialization((context, services) => services
-                    .AddContentSerializer(context)
-                    .AddJsonTypeInfo(WeatherForecastContext.Default.IImmutableListWeatherForecast))
+                
                 .UseHttp((context, services) =>
                 {
 #if DEBUG
                     // DelegatingHandler will be automatically injected
                     services.AddTransient<DelegatingHandler, DebugHttpHandler>();
 #endif
-                    services.AddSingleton<IWeatherCache, WeatherCache>();
+                   
                     //services.AddKiotaClient<WeatherServiceClient>(
                     //context,
                     //options: new EndpointOptions { Url = context.Configuration["ApiClient:Url"]! }
@@ -122,11 +120,10 @@ public partial class App : Application
         #endregion
         #region Eventos
             new ViewMap<EventosMesPage, EventosMesViewModel>(),
-            new ViewMap<AñadirEventoPage, AñadirEventoViewModel>(),
+            new DataViewMap<AñadirEventoPage, AñadirEventoViewModel, EntityDateNumber>(),
             new DataViewMap<EventosDiaPage, EventosDiaViewModel, EntityDate>(),
-            new DataViewMap<EventoPage, EventoViewModel, EntityNumber>(),
+            new DataViewMap<EventoPage, EventoViewModel, EntityNumber>()
         #endregion
-            new DataViewMap<SecondPage, SecondViewModel, Entity>()
         );
 
         routes.Register(
@@ -135,22 +132,26 @@ public partial class App : Application
                 [
                     new ("Login", View: views.FindByViewModel<LoginViewModel>(), IsDefault:true),
                     new ("Main", View: views.FindByViewModel<MainViewModel>(),
-                    Nested: [
-                        new ("Inicio", View: views.FindByViewModel<InicioViewModel>()),
-                        new ("Inventario",View: views.FindByViewModel<InventarioViewModel>(),
-                        Nested:[
-                            new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
-                            new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
-                            ]),
-                        new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
-                        new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
-                        new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
-                        new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
-                        new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
-                        new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
-                    ]
+                        Nested: [
+                            new ("Inicio", View: views.FindByViewModel<InicioViewModel>()),
+                            new ("Inventario",View: views.FindByViewModel<InventarioViewModel>(),
+                            Nested:[
+                                new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
+                                new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
+                                ]),
+                            new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
+                            new ("Persona", View: views.FindByViewModel<PersonaViewModel>(),
+                            Nested:[
+                                new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
+                                new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
+                                new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
+                                ]),
+                            new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
+                            new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
+                            new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
+                            new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
+                        ]
                     ),
-                    new ("Second", View: views.FindByViewModel<SecondViewModel>()),
                 ]
             )
         );

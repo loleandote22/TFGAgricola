@@ -8,7 +8,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,0">
+        <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
+        <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
+        <TextBlock Text="{Binding Tipo}" Grid.Row="1" FontSize="24"/>
+        <TextBlock Text="{Binding Evento.Nombre}" Grid.Row="2"/>
+        <TextBlock Text="{Binding FechaInicio}" Grid.Row="3"/>
+        <TextBlock Text="{Binding FechaFin}" Grid.Row="4"/>
+        <TextBlock Text="{Binding Evento.Ubicacion}" Grid.Row="5"/>
+        <TextBlock Text="{Binding Evento.Descripcion}" Grid.Row="6"/>
     </Grid>
 </Page>

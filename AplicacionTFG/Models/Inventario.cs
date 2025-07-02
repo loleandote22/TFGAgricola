@@ -133,7 +133,7 @@ public class InventarioConsulta
         [JsonPropertyName("nombre")]
         [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
-        [StringLength(50)]
+        [StringLength(50, MinimumLength =1)]
         public required string Tipo { get; set; }
         [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
         public required string Descripcion { get; set; }

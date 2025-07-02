@@ -79,7 +79,6 @@ public class ElementoViewModel : ViewModelBase
        _inventarioApi = new InventarioApi(Apiurl);
 #if __WASM__
         CargarElemento(elemento.number);
-
 #else
        var resultado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
         if (resultado is not null)
@@ -87,8 +86,7 @@ public class ElementoViewModel : ViewModelBase
             Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
             CargarMasEventos();
             CargarMasMensajes();
-            if (Mensajes.Count < 20)
-                VerMasEventos = Visibility.Collapsed;
+          
         }
         else
             _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
@@ -115,14 +113,12 @@ public class ElementoViewModel : ViewModelBase
             Console.WriteLine(ex.Message);
             await _navigator.ShowMessageDialogAsync(this, title:"Fallo", content: ex.Message);
         }
-       
     }
 
 #if __WASM__
     private void CargarMasEventos()
     {
         _PaginaEventos++;
-        Console.WriteLine(_PaginaEventos);
         _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos).ContinueWith(t =>
         {
             if (t.Result is not null)
@@ -159,13 +155,9 @@ public class ElementoViewModel : ViewModelBase
         {
             var eventosNuevos = JsonSerializer.Deserialize(resultado, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
             if (eventosNuevos.Count < 20)
-            {
                 VerMasEventos = Visibility.Collapsed;
-            }
             Eventos = Eventos.Union(eventosNuevos).ToList();
         }
-
-        Console.WriteLine(VerMasEventos);
     }
 
     private async void CargarMasMensajes()
@@ -197,7 +189,6 @@ public class ElementoViewModel : ViewModelBase
         Mensaje_Loc = _localizer["Mensaje"];
         Mas_Loc = _localizer["Mas"];
     }
-
 
     private async void Eliminar()
     {

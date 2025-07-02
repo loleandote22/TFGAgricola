@@ -324,4 +324,19 @@
   <data name="Fin" xml:space="preserve">
     <value>Fin</value>
   </data>
+  <data name="Dia" xml:space="preserve">
+    <value>Día</value>
+  </data>
+  <data name="Reunion" xml:space="preserve">
+    <value>Reunión</value>
+  </data>
+  <data name="Dueno" xml:space="preserve">
+    <value>Dueño</value>
+  </data>
+  <data name="Administrador" xml:space="preserve">
+    <value>Administrador</value>
+  </data>
+  <data name="Empleado" xml:space="preserve">
+    <value>Empleado</value>
+  </data>
 </root>

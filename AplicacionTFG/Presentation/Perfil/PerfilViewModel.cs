@@ -68,9 +68,10 @@ public class PerfilViewModel: ViewModelBase
     private string respuesta = "";
     private string imagenSeleccionada = "";
     private string imagenPerfil = "";
+    private int rolSeleccionado = -1;
 
-    public List<string> Roles { get; set; } = ["Dueño", "Administrador", "Empleado"];
-    public string RolSeleccionado { get; set; } = string.Empty;
+    public List<string> Roles { get; set; }
+    public int RolSeleccionado { get => rolSeleccionado; set { Funcional = true; rolSeleccionado = value; }}
     public string Nombre { get => nombre; set { Funcional = true; nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Contraseña { get => contraseña; set { Funcional = true; contraseña = value; OnPropertyChanged(nameof(Contraseña)); } }
     public string ConfirmarContraseña { get => confirmarContraseña; set { confirmarContraseña = value; OnPropertyChanged(nameof(ConfirmarContraseña)); } }
@@ -126,6 +127,7 @@ public class PerfilViewModel: ViewModelBase
 
     public PerfilViewModel(IMessenger messenger, IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
     {
+        Roles = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
         _messenger = messenger;
         IdiomaPerfil = IdiomaSeleccionado;
         if (_localizationService is not null)
@@ -146,12 +148,12 @@ public class PerfilViewModel: ViewModelBase
         Imagenes = _appInfo.Value.Icons!;
         Nombre = Usuario.Nombre;
         RolSeleccionado = Usuario.Tipo;
-        VerRoles = RolSeleccionado == "Dueño" || RolSeleccionado == "Administrador" ? Visibility.Visible : Visibility.Collapsed;
+        VerRoles = RolSeleccionado < 2 ? Visibility.Visible : Visibility.Collapsed;
         Pregunta = Usuario.Pregunta;
         Funcional = false;
     }
 
-    private async  void Guardar()
+    private async void Guardar()
     {
         UsuarioAcutliazarDto usuarioActualizado = new UsuarioAcutliazarDto
         {

@@ -56,3 +56,9 @@ public partial class UsuarioActualizarDtoContext : JsonSerializerContext
 public partial class UsuarioEmpresaContext : JsonSerializerContext
 {
 }
+
+[JsonSerializable(typeof(List<UsuarioNombre>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+public partial class UsuarioNombreContext : JsonSerializerContext
+{
+}

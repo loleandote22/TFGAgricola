@@ -18,14 +18,13 @@ public class Usuario
     [JsonPropertyName("password")]
     public required string Contrasena { get; set; }
     [JsonPropertyName("rol")]
-    public required string Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required int Tipo { get; set; } // Dueño, Administrador, Empleado
     [JsonPropertyName("pregunta")]
     public required string Pregunta { get; set; }
     [JsonPropertyName("respuesta")]
     public required string Respuesta { get; set; }
     [JsonPropertyName("empresaId")]
     public int EmpresaId { get; set; }
-
     [JsonPropertyName("imagen")]
     public string? Imagen { get; set; }
 }
@@ -42,7 +41,7 @@ public class UsuarioRegistroDto
     public required string Contrasena { get; set; }
     [JsonPropertyName("rol")]
     [Required(ErrorMessage = "Selecciona el tipo de usuario")]
-    public required string Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required int Tipo { get; set; } 
     [JsonPropertyName("pregunta")]
     [Required(ErrorMessage = "Introduce una pregunta de seguridad")]
     public required string Pregunta { get; set; }
@@ -63,7 +62,7 @@ public class UsuarioAcutliazarDto
     public string? Contrasena { get; set; }
     [JsonPropertyName("rol")]
     [Required(ErrorMessage = "Selecciona el tipo de usuario")]
-    public required string Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required int Tipo { get; set; } // Dueño, Administrador, Empleado
     [JsonPropertyName("pregunta")]
     [Required(ErrorMessage = "Introduce una pregunta de seguridad")]
     public required string Pregunta { get; set; }
@@ -100,6 +99,12 @@ public class  UsuarioEmpresa
     public int Id { get; set; }
     public required string Nombre { get; set; }
     [JsonPropertyName("rol")]
-    public required string Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required int Tipo { get; set; } // Dueño, Administrador, Empleado
     public required string Imagen { get; set; }
+}
+
+public class UsuarioNombre
+{
+    public int Id { get; set; }
+    public required string Nombre { get; set; }
 }
