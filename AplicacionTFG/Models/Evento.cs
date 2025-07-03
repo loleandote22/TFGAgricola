@@ -25,8 +25,7 @@ public class Evento
     public string? Ubicacion { get; set; }
     public required int UsuarioId { get; set; }
     public required int EmpresaId { get; set; }
-    public required int Tipo { get; set; } // 1: Evento, 2: Tarea, 3: Recordatorio
-    public int? TareaDetalleId { get; set; }
+    public required int Tipo { get; set; }
     public TareaDetalle? TareaDetalle { get; set; }
 }
 
@@ -38,7 +37,9 @@ public class TareaDetalle
     [Required(ErrorMessage = "La unidad es requerida")]
     public required string Unidad { get; set; }
     public required int EventoId { get; set; }
-    public required Evento Evento { get; set; }
+    [JsonIgnore]
+    public Evento Evento { get; set; }
+    public required bool Finalizada { get; set; } = false; 
     public ICollection<TareaActualizacion>? Actualizaciones { get; set; }
 }
 
@@ -80,7 +81,8 @@ public class TareaActualizacion
     public int TareaId { get; set; }
     public required TareaDetalle TareaDetalle { get; set; }
     public int UsuarioId { get; set; }
-    public required Usuario Usuario { get; set; }
+    [JsonIgnore]
+    public Usuario Usuario { get; set; }
 }
 
 public class EventoMes
@@ -99,7 +101,10 @@ public class EventoMes
         set => colorLetra = value;
     }
     public DateTime Inicio { get; set; }
+
+    public DateTime? Fin { get; set; }
     public int Tipo { get; set; }
+    public int UsuarioId { get; set; }
 }
 
 public class EventoDia

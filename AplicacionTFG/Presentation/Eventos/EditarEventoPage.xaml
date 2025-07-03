@@ -5,37 +5,59 @@
     xmlns:local="using:AplicacionTFG.Presentation.Eventos"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ut="using:Uno.Themes"
     xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <utu:SafeArea Insets="All">
-        <StackPanel MaxWidth="600" Spacing="20" Margin="10,0">
-            <TextBlock Text="{Binding Eventos_Loc}" FontSize="40" Margin="0,10,0,0"/>
-            <TextBox Header="{Binding Nombre_Loc}" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <ColorPicker  Color="{Binding ColorSeleccionado, Mode=TwoWay}" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
-            <StackPanel>
-                <TextBlock Text="{Binding Inicio_Loc}"/>
-                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+        <Grid>
+            <StackPanel MaxWidth="600" Spacing="20" Margin="10,0,10,20">
+                <TextBlock Text="{Binding Titulo_Loc}" FontSize="40" Margin="0,10,0,0"/>
+                <TextBox Header="{Binding Nombre_Loc}" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel>
+                    <TextBlock Text="{Binding Color_Loc}"/>
+                    <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <ColorPicker Color="{Binding ColorSeleccionado, Mode=TwoWay}" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
+                <StackPanel>
+                    <TextBlock Text="{Binding Inicio_Loc}"/>
+                    <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+                <StackPanel>
+                    <TextBlock Text="{Binding Fin_Loc}"/>
+                    <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                    <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </VariableSizedWrapGrid>
+                <TextBox Header="{Binding Descripcion_Loc}" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <TextBox Header="{Binding Ubicacion_Loc}" Text="{Binding Ubicacion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel Visibility="{Binding TareaVisibility}" Spacing="10">
+                    <TextBox Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" Header="{Binding Cantidad_Loc}" />
+                    <Grid ColumnDefinitions="*, Auto, Auto"  ColumnSpacing="10">
+                        <TextBox Text="{Binding Unidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Unidad_Loc}" />
+                        <TextBlock Text="{Binding Completado_Loc}" VerticalAlignment="Center" Grid.Column="1"/>
+                        <CheckBox IsChecked="{Binding Finalizada,Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"/>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Detalle_Loc}"/>
+                        <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Content="{Binding Guardar_Loc}" HorizontalAlignment="Center" Width="150" Command="{Binding GuardarEventoCommand}"/>
             </StackPanel>
-            <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
-                <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraInicio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </VariableSizedWrapGrid>
-            <StackPanel>
-                <TextBlock Text="{Binding Fin_Loc}"/>
-                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-            </StackPanel>
-            <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
-                <DatePicker Header="{Binding Dia_Loc}" VariableSizedWrapGrid.ColumnSpan="6" Date="{Binding DiaFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TimePicker Margin="15,0,0,0" VariableSizedWrapGrid.ColumnSpan="6" SelectedTime="{Binding HoraFin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </VariableSizedWrapGrid>
-            <TextBox Header="{Binding Descripcion_Loc}" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True"/>
-            <TextBox Header="{Binding Ubicacion_Loc}" Text="{Binding Ubicacion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <StackPanel Visibility="{Binding TareaCamposVisibility}">
-                
-            </StackPanel>
-            <Button Content="{Binding Guardar_Loc}" HorizontalAlignment="Center" Width="150" Command="{Binding AñadirEventoCommand}"/>
-        </StackPanel>
+            <Button Grid.Row="2" Visibility="{Binding TareaVisibility}" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding AñadirActualizacionCommand}">
+                <ut:ControlExtensions.Icon>
+                    <SymbolIcon Symbol="Add" />
+                </ut:ControlExtensions.Icon>
+            </Button>
+        </Grid>
+        
     </utu:SafeArea>
 </Page>

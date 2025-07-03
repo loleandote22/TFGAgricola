@@ -10,19 +10,20 @@
     xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid RowDefinitions="Auto,*">
-        <Grid Visibility="{Binding VerPerfil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
-            <perfil:PerfilPage DataContext="{Binding PerfilViewModel}"/>
+    <utu:SafeArea Insets="All">
+        <Grid RowDefinitions="Auto,*">
+            <Grid Visibility="{Binding VerPerfil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+                <perfil:PerfilPage DataContext="{Binding PerfilViewModel}"/>
+            </Grid>
+            <Grid Visibility="{Binding VerEventos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+                <eventos:EventosMesPerfilPage DataContext="{Binding EventosViewModel}"  />
+            </Grid>
+            <utu:TabBar MaxWidth="350" HorizontalAlignment="Center" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
+                <utu:TabBar.Items>
+                    <utu:TabBarItem IsSelected="True" Content="{Binding Perfil_Loc, UpdateSourceTrigger=PropertyChanged}"/>
+                    <utu:TabBarItem Content="{Binding Eventos_Loc, UpdateSourceTrigger=PropertyChanged}" />
+                </utu:TabBar.Items>
+            </utu:TabBar>
         </Grid>
-        <Grid Visibility="{Binding VerEventos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
-            <eventos:EventosMesPage DataContext="{Binding EventosViewModel}"  />
-        </Grid>       
-        <utu:TabBar MaxWidth="350" HorizontalAlignment="Center" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
-            <utu:TabBar.Items>
-                <utu:TabBarItem IsSelected="True" Content="{Binding Perfil_Loc, UpdateSourceTrigger=PropertyChanged}"/>
-                <utu:TabBarItem Content="{Binding Eventos_Loc, UpdateSourceTrigger=PropertyChanged}" />
-            </utu:TabBar.Items>
-        </utu:TabBar>
-    </Grid>
+    </utu:SafeArea>
 </Page>

@@ -102,7 +102,6 @@ public partial class LoginViewModel: ViewModelBase
     public int RolRegistro { get; set; } = -1;
 
     private UsuarioRegistroDto usuarioRegistro = null!;
-    private Usuario? susuario = null;
     private readonly UsuarioApi _usuarioApi;
     private readonly EmpresaApi _empresaApi;
     private bool funcional = true;

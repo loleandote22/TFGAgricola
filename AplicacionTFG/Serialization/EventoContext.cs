@@ -12,7 +12,13 @@ namespace AplicacionTFG.Serialization;
     public partial class EventoContext : JsonSerializerContext
     {
     }
-    [JsonSerializable(typeof(EventoDto))]
+
+[JsonSerializable(typeof(TareaDetalle))]
+    [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+    public partial class TareaDetalleContext : JsonSerializerContext
+    {
+}
+[JsonSerializable(typeof(EventoDto))]
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
     public partial class EventoDtoContext : JsonSerializerContext
     {

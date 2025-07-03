@@ -43,11 +43,12 @@ public class PersonalViewModel: ViewModelBase
 #endif
     private void TerminarCarga(string? resultado)
     {
+        List<string> Tipos = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
         if (string.IsNullOrEmpty(resultado))
             return;
         var deserializedResult = JsonSerializer.Deserialize(resultado, UsuarioEmpresaContext.Default.ListUsuarioEmpresa);
         
-        Usuarios = deserializedResult!.Select(usuario => { usuario.Imagen = directorioImagenes + usuario.Imagen; return usuario; }).ToList();
+        Usuarios = deserializedResult!.Select(usuario => { usuario.Imagen = directorioImagenes + usuario.Imagen; usuario.TipoNombre = Tipos[usuario.Tipo];  return usuario; }).ToList();
         OnPropertyChanged(nameof(Usuarios));
     }
 

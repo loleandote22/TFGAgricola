@@ -121,7 +121,7 @@ public partial class App : Application
         #region Eventos
             new ViewMap<EventosMesPage, EventosMesViewModel>(),
             new DataViewMap<AñadirEventoPage, AñadirEventoViewModel, EntityDateNumber>(),
-            new DataViewMap<EventosDiaPage, EventosDiaViewModel, EntityDate>(),
+            new DataViewMap<EventosDiaPage, EventosDiaViewModel, EntityDateNumber>(),
             new DataViewMap<EventoPage, EventoViewModel, EntityNumber>()
         #endregion
         );
@@ -144,7 +144,6 @@ public partial class App : Application
                             Nested:[
                                 new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
                                 new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
-                                new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
                                 ]),
                             new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
                             new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),

@@ -339,4 +339,19 @@
   <data name="Empleado" xml:space="preserve">
     <value>Empleado</value>
   </data>
+  <data name="EditarEvento" xml:space="preserve">
+    <value>Edita el evento</value>
+  </data>
+  <data name="CrearEvento" xml:space="preserve">
+    <value>Crea el evento</value>
+  </data>
+  <data name="Detalle" xml:space="preserve">
+    <value>Detalle</value>
+  </data>
+  <data name="Completado" xml:space="preserve">
+    <value>Completado</value>
+  </data>
+  <data name="AnadirActualizacion" xml:space="preserve">
+    <value>Añadir actualización</value>
+  </data>
 </root>

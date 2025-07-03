@@ -16,7 +16,7 @@
                 <DataTemplate>
                     <utu:Card
                         HeaderContent="{Binding Nombre}"
-                        SubHeaderContent="{Binding Tipo}"
+                        SubHeaderContent="{Binding TipoNombre}"
                         MediaContent="{Binding Imagen}"
                         AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}" Width="150">
                         <utu:Card.HeaderContentTemplate>

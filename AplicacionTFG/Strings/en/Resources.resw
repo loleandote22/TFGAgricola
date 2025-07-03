@@ -211,7 +211,7 @@
     <value>Accept</value>
   </data>
   <data name="ZonaPeligrosa" xml:space="preserve">
-    <value>DangerZone</value>
+    <value>Danger zone</value>
   </data>
   <data name="ImagenActualizada" xml:space="preserve">
     <value>Imagen actualizada</value>
@@ -338,5 +338,20 @@
   </data>
   <data name="Empleado" xml:space="preserve">
     <value>Staff</value>
+  </data>
+  <data name="EditarEvento" xml:space="preserve">
+    <value>Edit the event</value>
+  </data>
+  <data name="CrearEvento" xml:space="preserve">
+    <value>Create an event</value>
+  </data>
+  <data name="Detalle" xml:space="preserve">
+    <value>Detail</value>
+  </data>
+  <data name="Completado" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="AnadirActualizacion" xml:space="preserve">
+    <value>Add update</value>
   </data>
 </root>
