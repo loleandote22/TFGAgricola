@@ -15,8 +15,8 @@
                 <TextBox Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc}"/>
                 <TextBox InputScope="Number" Style="{StaticResource Microsoft.UI.Xaml.Controls.NumberBox}" Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Header="{Binding Cantidad_Loc}"/>
                 <TextBox Text="{Binding Unidad, Mode= TwoWay}" Grid.Row="2" Header="{Binding Medicion_Loc}"/>
-                <TextBox Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AutomationProperties.AutomationId="TextBox_MultiLine_Material" AcceptsReturn="True" Grid.Row="3" Header="{Binding Descripcion_Loc}"/>
-                <ComboBox ItemsSource="{Binding Tipos}"  SelectedItem="{Binding Tipo, Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}" Grid.Row="4"/>
+                <TextBox MaxHeight="150" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AutomationProperties.AutomationId="TextBox_MultiLine_Material" AcceptsReturn="True" Grid.Row="3" Header="{Binding Descripcion_Loc}"/>
+                <ComboBox ItemsSource="{Binding Tipos}"  SelectedIndex="{Binding Tipo, Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}" Grid.Row="4"/>
                 <Button Command="{Binding GuardarCommand}" Grid.Row="5" Content="{Binding Guardar_Loc}" HorizontalAlignment="Center" Margin="0,10,10,0" Width="150" />
             </Grid>
         </ScrollView>

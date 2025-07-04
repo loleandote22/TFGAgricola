@@ -60,12 +60,13 @@ public class InventarioViewModel : ViewModelBase
     public int Cantidad { get; set; }
     public string Unidad { get; set; } = "Unidades";
 
-    private string tipo;
-    public List<string> Tipos { get; set; } = new() { "Material", "Herramienta", "Equipo" };
-    public string Tipo { get => tipo; set  { tipo = value; OnPropertyChanged(nameof(Tipo)); }}
+    private int tipo;
+    public List<string> Tipos { get; set; } 
+    public int Tipo { get => tipo; set  { tipo = value; OnPropertyChanged(nameof(Tipo)); }}
 #pragma warning disable CS8618
     public InventarioViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo) 
     {
+        Tipos = [_localizer["Maquinaria"], _localizer["Consumible"]];
         VerAnadir = Visibility.Collapsed;
         VerNoHay = Visibility.Collapsed;
         _inventarioApi = new(Apiurl);
@@ -122,7 +123,7 @@ public class InventarioViewModel : ViewModelBase
         Nombre = string.Empty;
         Descripcion = string.Empty;
         Cantidad = 0;
-        Tipo = string.Empty;
+        Tipo = -1;
         OnPropertyChanged(nameof(Nombre));
         OnPropertyChanged(nameof(Descripcion));
         OnPropertyChanged(nameof(Cantidad));
@@ -146,12 +147,15 @@ public class InventarioViewModel : ViewModelBase
             }
             var resultado = await _inventarioApi.PostInventarioAsync(inventario);
             VerAnadir = Visibility.Collapsed;
-            var elemento = JsonSerializer.Deserialize(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
-            var inventarios = Inventarios.ToList();
-            inventarios.Add(elemento!);
-            Inventarios = inventarios;
-            LimpiarCampos();
-            OnPropertyChanged(nameof(Inventarios));
+            if (resultado is not null)
+            {
+                var elemento = JsonSerializer.Deserialize(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
+                var inventarios = Inventarios.ToList();
+                inventarios.Add(elemento!);
+                Inventarios = inventarios;
+                LimpiarCampos();
+                OnPropertyChanged(nameof(Inventarios));
+            }
         }
         catch (HttpRequestException)
         {
@@ -164,7 +168,7 @@ public class InventarioViewModel : ViewModelBase
         Nombre = string.Empty;
         Descripcion = string.Empty;
         Cantidad = 0;
-        Tipo = string.Empty;
+        Tipo = -1;
     }
 
     protected override void CargarPalabras()
