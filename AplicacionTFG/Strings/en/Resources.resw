@@ -483,4 +483,7 @@
   <data name="LongitudDescripcion300" xml:space="preserve">
     <value>The description cannot be longer than 300 characters</value>
   </data>
+  <data name="NoEliminarActualizacionesAjena" xml:space="preserve">
+    <value>You do not have permission to delete updates from other workers</value>
+  </data>
 </root>
