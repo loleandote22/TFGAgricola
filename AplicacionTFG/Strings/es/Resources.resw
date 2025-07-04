@@ -354,4 +354,13 @@
   <data name="AnadirActualizacion" xml:space="preserve">
     <value>Añadir actualización</value>
   </data>
+  <data name="DetallesTareaAlerta" xml:space="preserve">
+    <value>Los detalles de la tarea por defecto son:\Cantidad: 0\Unidad: Unidades </value>
+  </data>
+  <data name="Actualizacion" xml:space="preserve">
+    <value>Actualización</value>
+  </data>
+  <data name="Actualizaciones" xml:space="preserve">
+    <value>Actualizaciones</value>
+  </data>
 </root>

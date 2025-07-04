@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 using Microsoft.UI;
-using Windows.Devices.Input;
 using Windows.UI;
 
 namespace AplicacionTFG.Presentation.Eventos;
@@ -121,7 +116,7 @@ public class EventosMesViewModel : ViewModelBase
         CargarUsuarios();
         noCargar = false;
         ColumnasEmpleados = Usuario.Tipo < 2 ? 6 : 0;
-        CargarEventos( _fechaBusqueda.Month, _fechaBusqueda.Year);
+       CargarEventos( _fechaBusqueda.Month, _fechaBusqueda.Year);
     }
 
 
@@ -170,23 +165,21 @@ public class EventosMesViewModel : ViewModelBase
     private void CargarEventos(int mes, int año)
     {
         Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if(_tipoUsuario == 2)
-        { 
-            var result = _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año).GetAwaiter().GetResult();
-            TerminarCarga(result);
-        }
+        var result = "";
+        if (_tipoUsuario == 2)
+            result = _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año).GetAwaiter().GetResult();
         else
-        {
-            var result = _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año).GetAwaiter().GetResult();
-            TerminarCarga(result);
-        }
-    }
+             result = _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año).GetAwaiter().GetResult();
 
+        TerminarCarga(result);
+    }
     private void CargarUsuarios()
     {
         var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
         TerminarCargaUsuarios(result);
     }
+
+    
 
     /// <summary>
     /// 
@@ -242,9 +235,21 @@ public class EventosMesViewModel : ViewModelBase
         for (int i = 1; i <= diasDelMes; i++)
         {
             var dia = new DateOnly(_fechaBusqueda.Year, _fechaBusqueda.Month, i);
-            DiasTemporal.Add(new () { Numero = i, Eventos = _eventos
-                .Where(e => ((e.Inicio.Day == i  && e.Fin is null) || (DateOnly.FromDateTime(e.Inicio)<=dia && dia <= DateOnly.FromDateTime(e.Fin.GetValueOrDefault()))) && (e.Tipo == TipoSeleccionado-1||TipoSeleccionado==0)&&(e.UsuarioId == EmpleadoSeleccionado.Id || EmpleadoSeleccionado.Id == -1))
-                .OrderBy(e => e.Inicio).ToList() });
+            try
+            {
+                DiasTemporal.Add(new()
+                {
+                    Numero = i,
+                    Eventos = _eventos
+                               .Where(e => ((e.Inicio.Day == i && e.Fin is null) || (DateOnly.FromDateTime(e.Inicio) <= dia && dia <= DateOnly.FromDateTime(e.Fin.GetValueOrDefault()))) && (e.Tipo == TipoSeleccionado - 1 || TipoSeleccionado == 0) && (e.UsuarioId == EmpleadoSeleccionado.Id || EmpleadoSeleccionado.Id == -1))
+                               .OrderBy(e => e.Inicio).ToList()
+                });
+            }
+            catch (Exception ex)
+            {
+                DiasTemporal.Add(new Dia() { Numero = i, Eventos = new List<EventoMes>() });
+                Console.WriteLine($"Error al procesar el día {i}: {ex.Message} habiendo {_eventos.Count} para elegir");
+            }
         }
         Dias = DiasTemporal;
         OnPropertyChanged(nameof(Dias));
@@ -395,6 +400,9 @@ public class EventosDiaViewModel : ViewModelBase
             result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
         if (result is not null)
                 Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+                
+            OnPropertyChanged(nameof(Eventos));
+            OnPropertyChanged(nameof(VerNoHayEventos));
     }
 #else
     private void CargarEventos()
@@ -433,33 +441,143 @@ public class EventoViewModel : ViewModelBase
     public string Tipo { get => tipo; set => tipo = value; }
     public string Editar_Loc { get; set; } = null!;
     public string Eliminar_Loc { get; set; } = null!;
+    public required string Añadir_Loc { get; set; }
+    public required string Aceptar_Loc { get; set; }
+    public required string Cancelar_Loc { get; set; }
+    public required string Detalle_Loc { get; set; }
+    public required string Cantidad_Loc { get; set; }
+    public required string Unidad_Loc { get; set; }
+    public required string Completado_Loc { get; set; }
+    public required string Nombre_Loc { get; set; }
+    public required string Inicio_Loc { get; set; }
+    public required string Fin_Loc { get; set; }
+    public required string Ubicacion_Loc { get; set; }
+    public required string Descripcion_Loc { get; set; }
+    public required string Actualizacion_Loc { get; set; }
+    public required string Actualizaciones_Loc { get; set; }
+    public required string NoElementos_Loc { get; set; }
+
     #endregion
-  
+
     #region Comandos
     public ICommand EditarCommand => new RelayCommand(Editar);
     public ICommand EliminarCommand => new RelayCommand(Eliminar);
+
+    public IAsyncRelayCommand<XamlRoot> AñadirActualizacionCommand => new AsyncRelayCommand<XamlRoot>(async (xamlRoot) =>
+    {
+        var dialog = new ActualizacionEventoContentDialog()
+        {
+            DataContext = this
+        };
+
+        dialog.XamlRoot = xamlRoot;
+        ContentDialogResult resultado = await dialog.ShowAsync();
+        if (resultado == ContentDialogResult.Primary)
+        {
+            var insertar = new TareaActualizacionDto() { Cantidad = Cantidad, Fecha = DiaSeleccionado.Date + HoraSeleccionada, TareaDetalleId = Evento.TareaDetalle!.Id, UsuarioId = Usuario.Id };
+            var result = await _eventoApi.PostTareaActualizacion(insertar);
+            if (result is not null)
+                {
+                var actualizacion = JsonSerializer.Deserialize(result, TareaActualizacionContext.Default.TareaActualizacion)!;
+                if (Evento.TareaDetalle!.Actualizaciones is null)
+                    Evento.TareaDetalle!.Actualizaciones = new List<TareaActualizacion>();
+                Evento.TareaDetalle!.Actualizaciones!.Add(actualizacion);
+                Actualizaciones = new ObservableCollection<TareaActualizacion>(Evento.TareaDetalle!.Actualizaciones.OrderBy(t => t.Fecha));
+                Finalizada = Evento.TareaDetalle!.Cantidad<= Actualizaciones.Sum(a => a.Cantidad);
+                DiaSeleccionado = DateTimeOffset.Now;
+                HoraSeleccionada = DateTime.Now.TimeOfDay;
+                NoHayActualizacionesVisibility = Visibility.Collapsed;
+                OnPropertyChanged(nameof(NoHayActualizacionesVisibility));
+                OnPropertyChanged(nameof(Actualizaciones));
+            }
+        }
+    });
+    public ICommand DeleteCommand { get; }
+
+    #endregion
+
+    #region Visibilidad
+    public Visibility DetalleVisibility { get => detalleVisibility; set => detalleVisibility = value; }
+    public Visibility NoHayActualizacionesVisibility { get => noHayActualizacionesVisibility; set => noHayActualizacionesVisibility = value; }
+
+    private Visibility detalleVisibility = Visibility.Collapsed;
+    private Visibility noHayActualizacionesVisibility;
+    #endregion
+
+    #region Campos
+    private double cantidad;
+    private bool finalizada;
+
+    public double Cantidad { get => cantidad; set { cantidad = value; OnPropertyChanged(nameof(Cantidad)); } }
+    public DateTimeOffset DiaSeleccionado { get; set; }
+    public TimeSpan HoraSeleccionada { get; set; }
+
+    public ObservableCollection<TareaActualizacion> Actualizaciones { get; set; }
+    public bool Finalizada { get => finalizada; set  { finalizada = value; OnPropertyChanged(nameof(Finalizada)); }}
     #endregion
 
     private readonly EventoApi _eventoApi;
     public Evento Evento { get; set; } = null!;
-
+    
+    
     public EventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber id): base(localizer, navigator, appInfo)
     {
+        DeleteCommand = new RelayCommand<TareaActualizacion>(OnDelete);
+        DiaSeleccionado = DateTimeOffset.Now;
+        HoraSeleccionada = DateTime.Now.TimeOfDay;
         _eventoApi = new(Apiurl);
         CargarEvento(id.number);
     }
-
+#if __WASM__
+    private async void CargarEvento(int id)
+    {
+    var result = await _eventoApi.GetEvento(id);
+        if (result is null)
+            return;
+     Console.WriteLine(result);
+     TerminarCarga(result);
+   
+    }
+#else
     private void CargarEvento(int id)
     {
         var result = _eventoApi.GetEvento(id).GetAwaiter().GetResult();
         if (result is null)
             return;
+       TerminarCarga(result);
+    }
+#endif
+
+    private void TerminarCarga(string result )
+    {
         Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
         List<string> Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
         Tipo = Tipos[Evento.Tipo];
+        OnPropertyChanged(nameof(Tipo));
+        if (Evento.Tipo == 1)
+        {
+            DetalleVisibility = Visibility.Visible;
+            if (Evento.TareaDetalle.Actualizaciones is not null && Evento.TareaDetalle.Actualizaciones.Count > 0)
+            {
+                NoHayActualizacionesVisibility = Visibility.Collapsed;
+                Actualizaciones = new ObservableCollection<TareaActualizacion>(Evento.TareaDetalle.Actualizaciones);
+            }
+            else
+            {
+                NoHayActualizacionesVisibility = Visibility.Visible;
+            }
+        }
+        else
+            DetalleVisibility = Visibility.Collapsed;
+        OnPropertyChanged(nameof(Actualizaciones));
+        OnPropertyChanged(nameof(Evento));
         FechaInicio = Evento.Inicio.ToString(System.Globalization.CultureInfo.CurrentCulture);
-        FechaFin = Evento.Fin.HasValue? Evento.Fin.Value.ToString(System.Globalization.CultureInfo.CurrentCulture):"";
+        FechaFin = Evento.Fin.HasValue ? Evento.Fin.Value.ToString(System.Globalization.CultureInfo.CurrentCulture) : "";
+        OnPropertyChanged(nameof(FechaInicio));
+        OnPropertyChanged(nameof(FechaFin));
     }
+
+
 
     private async void Editar()
     {
@@ -472,11 +590,35 @@ public class EventoViewModel : ViewModelBase
         await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this);
     }
 
+    private void OnDelete(TareaActualizacion item)
+    {
+        if (item != null && Actualizaciones.Contains(item))
+        {
+            Actualizaciones.Remove(item);
+           var result =  _eventoApi.DeleteActualizacion(item.Id);
+            Evento.TareaDetalle.Actualizaciones.Remove(item);
+        }
+    }
+
     protected override void CargarPalabras()
     {
-
         Editar_Loc = _localizer["Editar"];
         Eliminar_Loc = _localizer["Eliminar"];
+        Añadir_Loc = _localizer["AnadirActualizacion"];
+        Aceptar_Loc = _localizer["Aceptar"];
+        Cancelar_Loc = _localizer["Cancelar"];
+        Detalle_Loc = _localizer["Detalle"];
+        Cantidad_Loc = _localizer["Cantidad"];
+        Unidad_Loc = _localizer["Unidad"];
+        Completado_Loc = _localizer["Completado"];
+        Nombre_Loc = _localizer["Nombre"];
+        Inicio_Loc = _localizer["Inicio"];
+        Fin_Loc = _localizer["Fin"];
+        Ubicacion_Loc = _localizer["Ubicacion"];
+        Descripcion_Loc = _localizer["Descripcion"];
+        Actualizacion_Loc = _localizer["Actualizacion"];
+        Actualizaciones_Loc = _localizer["Actualizaciones"];
+        NoElementos_Loc = _localizer["NoElementos"];
     }
 }
 
@@ -499,7 +641,6 @@ public class EditarEventoViewModel : ViewModelBase
     public required string Titulo_Loc { get; set; }
     public required string Detalle_Loc { get; set; }
     public required string Completado_Loc { get; set; }
-    public required string Añadir_Loc { get; set; }
     #endregion
 
     #region Campos
@@ -508,31 +649,23 @@ public class EditarEventoViewModel : ViewModelBase
     public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
     private Color colorSeleccionado = Colors.Black;
     public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
-    private DateTimeOffset _diaInicio;
-    public DateTimeOffset DiaInicio
-    {
-        get => _diaInicio;
-        set
-        {
-            if (_diaInicio != value)
-            {
-                _diaInicio = value;
-                OnPropertyChanged(nameof(DiaInicio));
-            }
-        }
-    }
+ 
+    public DateTimeOffset? DiaInicio{ get; set; } = null;
     private string nombre = null!;
     private string descripcion = null!;
     private string ubicacion = null!;
     private double cantidad = 0;
     private string unidad = null!;
-    public TimeSpan HoraInicio { get; set; }
-    public DateOnly? DiaFin { get; set; } = null;
-    public TimeOnly? HoraFin { get; set; } = null;
+
+    private bool finalizada = false;
+    public TimeSpan? HoraInicio { get; set; } = null;
+    public DateTimeOffset? DiaFin { get; set; } = null;
+    public TimeSpan? HoraFin { get; set; } = null;
     public double Cantidad { get => cantidad; set => cantidad = value; }
     public string Unidad { get => unidad; set => unidad = value; }
     public List<UsuarioNombre> Empleados { get; set; } = null!;
     public UsuarioNombre EmpleadoSeleccionado { get; set; } = null!;
+    public bool Finalizada { get => finalizada; set { finalizada = value; OnPropertyChanged(nameof(Finalizada)); }}
     #endregion
 
 
@@ -545,22 +678,7 @@ public class EditarEventoViewModel : ViewModelBase
 
     public ICommand GuardarEventoCommand => new RelayCommand(Guardar);
 
-    public IAsyncRelayCommand<XamlRoot> AñadirActualizacionCommand => new AsyncRelayCommand<XamlRoot>(async (xamlRoot) =>
-    {
-        var dialog = new ActualizacionEventoContentDialog()
-        {
-            DataContext = this
-        };
-
-        dialog.XamlRoot = xamlRoot;
-        ContentDialogResult resultado = await dialog.ShowAsync();
-        if (resultado == ContentDialogResult.Primary)
-        {
-            //Actualizaciones = new List<TareaActualizacion> { }
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["ImagenActualizada"], content: _localizer["NoOlvidesGuardar"]);
-        }
-
-    });
+   
 
     public Visibility TareaVisibility { get => tareaVisibility; set => tareaVisibility = value; }
 
@@ -573,6 +691,16 @@ public class EditarEventoViewModel : ViewModelBase
         _idEvento = id.number;
         CargarEvento();
     }
+#if __WASM__
+  private async void CargarEvento()
+    {
+        var result = await _eventoApi.GetEvento(_idEvento);
+        if (result is null)
+            return;
+        Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
+        CargarCampos(Evento);
+    }
+#else
     private void CargarEvento()
     {
         var result = _eventoApi.GetEvento(_idEvento).GetAwaiter().GetResult();
@@ -581,6 +709,7 @@ public class EditarEventoViewModel : ViewModelBase
         Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
         CargarCampos(Evento);
     }
+#endif
 
     private void CargarCampos(Evento evento)
     {
@@ -592,8 +721,10 @@ public class EditarEventoViewModel : ViewModelBase
         HoraInicio = evento.Inicio.TimeOfDay;
         if (evento.Fin.HasValue)
         {
-            DiaFin = new DateOnly(evento.Fin.Value.Year, evento.Fin.Value.Month, evento.Fin.Value.Day);
-            HoraFin = new TimeOnly(evento.Fin.Value.Hour, evento.Fin.Value.Minute);
+            DiaFin = new DateTimeOffset(evento.Fin.Value);
+            HoraFin = evento.Fin.Value.TimeOfDay;
+            OnPropertyChanged(nameof(HoraFin));
+            OnPropertyChanged(nameof(DiaFin));
         }
         else
         {
@@ -604,35 +735,51 @@ public class EditarEventoViewModel : ViewModelBase
         {
             Cantidad = evento.TareaDetalle?.Cantidad ?? 0;
             Unidad = evento.TareaDetalle?.Unidad ?? string.Empty;
+            Finalizada = Evento.TareaDetalle!.Finalizada;
         }
         if (evento.Tipo != 1) 
             TareaVisibility = Visibility.Collapsed;
+
+        OnPropertyChanged(nameof(DiaInicio));
+        OnPropertyChanged(nameof(HoraInicio));
     }
 
     private async void Guardar()
     {
-        Evento.Nombre = Nombre;
-        Evento.Descripcion = Descripcion;
-        Evento.Ubicacion = Ubicacion;
-        Evento.Color = ColorSeleccionado.ToString();
-        Evento.Inicio = DiaInicio.Date + HoraInicio;
-        Evento.Fin = DiaFin.HasValue ? DiaFin.Value.ToDateTime(HoraFin ?? TimeOnly.MinValue) : null;
+        Evento eventoguarda = new Evento()
+        {
+            Id = Evento.Id,
+            Nombre = Nombre,
+            Descripcion = Descripcion,
+            Ubicacion = Ubicacion,
+            Color = ColorSeleccionado.ToString(),
+            Inicio = DiaInicio!.Value.Date + HoraInicio!.Value,
+            Fin = DiaFin.HasValue ? DiaFin.Value.Date + HoraFin : null,
+            Tipo = Evento.Tipo,
+            UsuarioId = Evento.UsuarioId,
+            EmpresaId = Evento.EmpresaId,
+        };
+       
         if (Evento.TareaDetalle is not null)
         {
-            Evento.TareaDetalle!.Cantidad = Cantidad;
-            Evento.TareaDetalle!.Unidad = Unidad;
+            eventoguarda.TareaDetalle = new TareaDetalle()
+            {
+                Id = Evento.TareaDetalle.Id,
+                Cantidad = Cantidad,
+                Unidad = Unidad,
+                Finalizada = Finalizada,
+                EventoId = Evento.Id
+
+            };
         }
-        if (!ValidarModelo(Evento))
+        if (!ValidarModelo(eventoguarda))
             return;
-        var result = await _eventoApi.PutEventoAsync(Evento);
+        var result = await _eventoApi.PutEventoAsync(eventoguarda);
         if (result is not null)
         {
            await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
         }
     }
-
-   
-
     protected override void CargarPalabras()
     {
         Titulo_Loc = _localizer["EditarEvento"];
@@ -649,7 +796,6 @@ public class EditarEventoViewModel : ViewModelBase
         Guardar_Loc = _localizer["Guardar"];
         Detalle_Loc = _localizer["Detalle"];
         Completado_Loc = _localizer["Completado"];
-        Añadir_Loc = _localizer["AnadirActualizacion"];
     }
 }
 
@@ -703,8 +849,8 @@ public partial class AñadirEventoViewModel : ViewModelBase
     private int cantidad = 0;
     private string unidad = null!;
     public TimeSpan HoraInicio { get; set; }
-    public DateOnly? DiaFin { get; set; } = null;
-    public TimeOnly? HoraFin { get; set; } = null;
+    public DateTimeOffset? DiaFin { get; set; } = null;
+    public TimeSpan? HoraFin { get; set; } = null;
     public List<string> Tipos { get; set; } = null!;
     public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed; OnPropertyChanged(nameof(TipoSeleccionado)); } }
     public int Cantidad { get => cantidad; set => cantidad = value; }
@@ -767,7 +913,20 @@ public partial class AñadirEventoViewModel : ViewModelBase
 
     private async void Guardar()
     {
-       
+        if (TipoSeleccionado ==1  && (Unidad is null || Cantidad == 0))
+        {
+            var acciones = new[]
+    {
+        new DialogAction(_localizer["Aceptar"].ToString()),
+        new DialogAction(_localizer["Cancelar"].ToString())
+    };
+            string texto = _localizer["DetallesTareaAlerta"];
+            string[] parts = texto.Split('\\');
+            string textoseparado = parts[0] + "\n" + parts[1] + "\n" + parts[2];
+            string resultado = await _navigator.ShowMessageDialogAsync<string>(this, title: _localizer["Error"], content: textoseparado, buttons: acciones);
+            if (resultado != _localizer["Aceptar"].ToString())
+                return;
+        }
         Evento = new EventoDto
         {
             Nombre = Nombre,
@@ -775,14 +934,14 @@ public partial class AñadirEventoViewModel : ViewModelBase
             Ubicacion = Ubicacion,
             Color = ColorSeleccionado.ToString(),
             Inicio = DiaInicio.Date + HoraInicio,
-            Fin = DiaFin.HasValue ? DiaFin.Value.ToDateTime(HoraFin ?? TimeOnly.MinValue) : null,
+            Fin = DiaFin.HasValue ? DiaInicio.Date + HoraInicio : null,
             Tipo = TipoSeleccionado,
             UsuarioId = EmpleadoSeleccionado is null ? _usuarioId : EmpleadoSeleccionado.Id,
             EmpresaId = Usuario.EmpresaId,
-            TareaDetalle = TipoSeleccionado == 1 && Unidad is not null ? new TareaDetalleDto
+            TareaDetalle = TipoSeleccionado == 1 ? new TareaDetalleDto
             {
-                Cantidad = Cantidad, 
-                Unidad = Unidad
+                Cantidad = Cantidad,
+                Unidad = Unidad ?? "Unidades"
             } : null
         };
         var result = "";
@@ -791,10 +950,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
         else
             result = await _eventoApi.PostTareaAsync(Evento);
         if (string.IsNullOrEmpty(result))
-        {
-            // Manejar error al guardar el evento
             return;
-        }
         else
             await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
     }

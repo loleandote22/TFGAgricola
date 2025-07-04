@@ -53,6 +53,13 @@ public class EventoApi(string url) : WebApiBase(url)
         var content = new StringContent(JsonSerializer.Serialize(evento, EventoDtoContext.Default.EventoDto), Encoding.UTF8, "application/json");
         return await PostAsync(url, content);
     }
+
+    public async Task<string?> PostTareaActualizacion(TareaActualizacionDto actualizacionDto)
+    {
+        var url = urlbase + "actualizacion";
+        var content = new StringContent(JsonSerializer.Serialize(actualizacionDto, TareaActualizacionDtoContext.Default.TareaActualizacionDto), Encoding.UTF8, "application/json");
+        return await PostAsync(url, content);
+    }
     #endregion
 
     #region Puts
@@ -67,6 +74,12 @@ public class EventoApi(string url) : WebApiBase(url)
     public async Task<string?> DeleteEventoAsync(int id)
     {
         var url = urlbase + id;
+        return await DeleteAsync(url);
+    }
+
+    public async Task<string?> DeleteActualizacion(int id)
+    {
+        var url = urlbase + "actualizacion/" + id;
         return await DeleteAsync(url);
     }
     #endregion

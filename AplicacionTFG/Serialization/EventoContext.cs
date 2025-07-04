@@ -13,12 +13,12 @@ namespace AplicacionTFG.Serialization;
     {
     }
 
-[JsonSerializable(typeof(TareaDetalle))]
+    [JsonSerializable(typeof(TareaDetalle))]
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
     public partial class TareaDetalleContext : JsonSerializerContext
     {
-}
-[JsonSerializable(typeof(EventoDto))]
+    }
+    [JsonSerializable(typeof(EventoDto))]
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
     public partial class EventoDtoContext : JsonSerializerContext
     {
@@ -35,5 +35,19 @@ namespace AplicacionTFG.Serialization;
     [JsonSerializable(typeof(List<EventoDia>))]
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
     public partial class EventoDiaContext : JsonSerializerContext
+    {
+    }
+
+    [JsonSerializable(typeof(TareaActualizacionDto))]
+    [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+    public partial class TareaActualizacionDtoContext : JsonSerializerContext
+    {
+    }
+    [JsonSerializable(typeof(TareaActualizacion))]
+    [JsonSerializable(typeof(TareaActualizacion[]))]
+    [JsonSerializable(typeof(IEnumerable<TareaActualizacion>))]
+    [JsonSerializable(typeof(List<TareaActualizacion>))]
+    [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+    public partial class TareaActualizacionContext : JsonSerializerContext
     {
     }

@@ -2,20 +2,60 @@
     x:Class="AplicacionTFG.Presentation.Eventos.EventoPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="RootPage"
     xmlns:local="using:AplicacionTFG.Presentation.Eventos"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ut="using:Uno.Themes"
+    xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,0">
-        <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
-        <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
-        <TextBlock Text="{Binding Tipo}" Grid.Row="1" FontSize="24"/>
-        <TextBlock Text="{Binding Evento.Nombre}" Grid.Row="2"/>
-        <TextBlock Text="{Binding FechaInicio}" Grid.Row="3"/>
-        <TextBlock Text="{Binding FechaFin}" Grid.Row="4"/>
-        <TextBlock Text="{Binding Evento.Ubicacion}" Grid.Row="5"/>
-        <TextBlock Text="{Binding Evento.Descripcion}" Grid.Row="6"/>
+    <Page.Resources>
+        <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
+    </Page.Resources>
+    <Grid>
+        <utu:SafeArea Insets="All">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto, Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,50">
+                <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
+                <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                    <TextBlock Text="{Binding Tipo}" FontSize="24" Margin="10,0,0,0"/>
+                    <Line X1="60" Stretch="Fill" Margin="0,16,0,10" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="1" />
+                </StackPanel>
+                <TextBox IsReadOnly="True" Header="{Binding Nombre_Loc}" Text="{Binding Evento.Nombre}" Grid.Row="2" Grid.ColumnSpan="2"/>
+                <TextBox IsReadOnly="True" Header="{Binding Inicio_Loc}" Text="{Binding FechaInicio}" Grid.Row="3" Grid.ColumnSpan="2"/>
+                <TextBox IsReadOnly="True" Header="{Binding Fin_Loc}" Text="{Binding FechaFin}" Grid.Row="4" Grid.ColumnSpan="2"/>
+                <TextBox IsReadOnly="True" Header="{Binding Ubicacion_Loc}" Text="{Binding Evento.Ubicacion}" Grid.Row="5" Grid.ColumnSpan="2"/>
+                <TextBox IsReadOnly="True" Header="{Binding Descripcion_Loc}" Text="{Binding Evento.Descripcion}" Grid.Row="6" Grid.ColumnSpan="2"/>
+                <Grid Visibility="{Binding DetalleVisibility}" Grid.ColumnSpan="2" ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="16" ColumnSpacing="10" Grid.Row="7" Margin="0,0,0,20">
+                    <TextBlock Text="{Binding Detalle_Loc}" FontSize="20" Margin="10,10,0,0" Grid.ColumnSpan="3" />
+                    <Line X1="60" Stretch="Fill" Margin="0,0,0,10" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="1" />
+                    <TextBox IsReadOnly="True" Text="{Binding Evento.TareaDetalle.Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" Header="{Binding Cantidad_Loc}" Grid.Row="2" />
+                    <TextBox Grid.Row="3" IsReadOnly="True" Text="{Binding Evento.TareaDetalle.Unidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Unidad_Loc}" />
+                    <TextBlock Grid.Row="3" Text="{Binding Completado_Loc}" VerticalAlignment="Center" Grid.Column="1"/>
+                    <CheckBox Grid.Row="3" IsEnabled="False" IsChecked="{Binding Finalizada,Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"/>
+                    <TextBlock Text="{Binding Actualizaciones_Loc}" Margin="10,0,0,0" Grid.Row="4" Grid.ColumnSpan="3"/>
+                    <Line X1="60" Stretch="Fill" Margin="0,0,0,10" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="5" />
+                    <TextBlock Grid.Row="6" Visibility="{Binding NoHayActualizacionesVisibility, UpdateSourceTrigger=PropertyChanged}" Text="{Binding NoElementos_Loc}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <ListView ItemsSource="{Binding Actualizaciones, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="6" Grid.ColumnSpan="3">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto, *, Auto"  ColumnSpacing="10">
+                                    <TextBlock Text="{Binding FechaTexto}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Cantidad}" Grid.Column="1" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="2" Style="{StaticResource EliminarButton}" Content="{StaticResource Trash}" HorizontalContentAlignment="Center" Command="{Binding DataContext.DeleteCommand, ElementName=RootPage}" CommandParameter="{Binding}" Margin="16,0,0,0" Padding="-50,0,0,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </utu:SafeArea>
+        <Button Visibility="{Binding DetalleVisibility}" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding AñadirActualizacionCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}">
+            <ut:ControlExtensions.Icon>
+                <SymbolIcon Symbol="Add" />
+            </ut:ControlExtensions.Icon>
+        </Button>
     </Grid>
+    
 </Page>

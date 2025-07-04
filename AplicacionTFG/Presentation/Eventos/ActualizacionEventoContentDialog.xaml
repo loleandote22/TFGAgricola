@@ -4,12 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AplicacionTFG.Presentation.Eventos"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="TITLE"
+    Title="{Binding Actualizacion_Loc}"
     Style="{ThemeResource DefaultContentDialogStyle}"
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
+    PrimaryButtonText="{Binding Aceptar_Loc}"
+    SecondaryButtonText="{Binding Cancelar_Loc}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-	<Grid>
-	</Grid>
+	<StackPanel Spacing="10">
+        <TextBox Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number"/>
+        <DatePicker SelectedDate="{Binding DiaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TimePicker SelectedTime="{Binding HoraSeleccionada, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </StackPanel>
 </ContentDialog>

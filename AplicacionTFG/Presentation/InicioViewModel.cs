@@ -29,8 +29,7 @@ public class InicioViewModel :ViewModelBase
         { "Otoño", new DateOnly(2000, 12, 21) }
     };
     #region Eventos
-    public List<EventoDia> Eventos { get; set; } = new List<EventoDia>();
-
+    public List<EventoDia> Eventos { get => eventos; set { eventos = value; OnPropertyChanged(nameof(Eventos)); OnPropertyChanged(nameof(VerNoHayEventos)); }}
     private readonly EventoApi _eventoApi;
 
     private EventoDia eventoSeleccionado;
@@ -38,6 +37,8 @@ public class InicioViewModel :ViewModelBase
     public Visibility VerNoHayEventos { get => Eventos.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
     #endregion
     private string imagenFondo;
+    private List<EventoDia> eventos = new List<EventoDia>();
+
     public string ImagenFondo { get => imagenFondo; set { imagenFondo = value; }}
 
 #pragma warning disable CS8618
@@ -72,7 +73,9 @@ public class InicioViewModel :ViewModelBase
     {
         var hoy = DateTime.Now;
         var result = await _eventoApi.GetEventosDiaUsuarioAsync(Usuario.Id, hoy.Day, hoy.Month, hoy.Year);
-        //TerminarCarga(result, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
+        if (result is not null)
+            Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+
     }
 #else
     private void CargarEventos()

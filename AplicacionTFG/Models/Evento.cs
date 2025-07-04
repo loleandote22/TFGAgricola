@@ -78,11 +78,21 @@ public class TareaActualizacion
     public int Id { get; set; }
     public required double Cantidad { get; set; }
     public required DateTime Fecha { get; set; }
+    public string FechaTexto { get => Fecha.ToString("dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.CurrentCulture); }
     public int TareaId { get; set; }
-    public required TareaDetalle TareaDetalle { get; set; }
+    [JsonIgnore]
+    public TareaDetalle TareaDetalle { get; set; }
     public int UsuarioId { get; set; }
     [JsonIgnore]
     public Usuario Usuario { get; set; }
+}
+
+public class TareaActualizacionDto
+{
+    public required double Cantidad { get; set; }
+    public required DateTime Fecha { get; set; }
+    public int TareaDetalleId { get; set; }
+    public int UsuarioId { get; set; }
 }
 
 public class EventoMes

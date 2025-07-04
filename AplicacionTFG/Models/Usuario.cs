@@ -99,7 +99,7 @@ public class  UsuarioEmpresa
     public int Id { get; set; }
     public required string Nombre { get; set; }
     [JsonPropertyName("rol")]
-    public required int Tipo { get; set; } // Dueño, Administrador, Empleado
+    public required int Tipo { get; set; }
     public string TipoNombre { get; set; } = string.Empty;
     public required string Imagen { get; set; }
 }

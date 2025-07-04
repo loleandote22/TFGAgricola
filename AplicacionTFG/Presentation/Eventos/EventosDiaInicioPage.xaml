@@ -11,7 +11,7 @@
     <Grid MinWidth="300" RowDefinitions="Auto,*">
         <TextBlock Text="{Binding EventosHoy_Loc}" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
         <TextBlock Text="{Binding FechaSeleccionada, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Margin="10"/>
-        <ListView Grid.Row="1" ItemsSource="{Binding Eventos}" SelectedItem="{Binding EventoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <ListView Grid.Row="1" ItemsSource="{Binding Eventos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding EventoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="2" CornerRadius="10" Padding="2">
