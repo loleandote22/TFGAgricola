@@ -422,6 +422,7 @@ public partial class LoginViewModel: ViewModelBase
         NombreUsuarioRegistro = string.Empty;
         ContraRegistro = string.Empty;
         RolRegistro = -1;
+        rolguardado = -1;
         PreguntaRegistro = string.Empty;
         RespuestaRegistro = string.Empty;
         ContraRegistroConfirm = string.Empty;
