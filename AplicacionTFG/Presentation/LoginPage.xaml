@@ -50,7 +50,7 @@
                             <TextBox Text="{Binding NombreUsuarioRegistro, Mode=TwoWay}" Header="{Binding Usuario_Loc, UpdateSourceTrigger=PropertyChanged}"/>
                             <PasswordBox Password="{Binding ContraRegistro, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
                             <PasswordBox Password="{Binding ContraRegistroConfirm, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContra_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2"/>
-                            <ComboBox ItemsSource="{Binding RolesRegistro}" SelectedIndex="{Binding RolRegistro, Mode=TwoWay}" PlaceholderText="{Binding Tipo_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3"/>
+                            <ComboBox ItemsSource="{Binding RolesRegistro}" SelectedIndex="{Binding RolRegistro, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3"/>
                             <TextBox Text="{Binding PreguntaRegistro, Mode=TwoWay}" Header="{Binding Pregunta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4"/>
                             <TextBox Text="{Binding RespuestaRegistro, Mode=TwoWay}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5"/>
                             <Button Content="{Binding Registrar_Loc, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Funcional}" Command="{Binding CambiarAEmpresaCommand}" HorizontalAlignment="Center" Width="300" Grid.Row="6"/>
