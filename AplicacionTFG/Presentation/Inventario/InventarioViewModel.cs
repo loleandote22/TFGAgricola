@@ -49,9 +49,11 @@ public class InventarioViewModel : ViewModelBase
             VerInventario = value != Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
         } }
     public Visibility VerInventario { get => verInventario; set { verInventario = value; OnPropertyChanged(nameof(VerInventario)); } }
+    private Visibility verBotonAñadir = Visibility.Collapsed;
+    public Visibility VerBotonAñadir { get => verBotonAñadir; set => verBotonAñadir = value; }
     #endregion
 
-    
+
 
     public ICommand AddInventarioCommand => new RelayCommand(Añadir);
     public ICommand GuardarCommand => new RelayCommand(Guardar);
@@ -63,9 +65,11 @@ public class InventarioViewModel : ViewModelBase
     private int tipo;
     public List<string> Tipos { get; set; } 
     public int Tipo { get => tipo; set  { tipo = value; OnPropertyChanged(nameof(Tipo)); }}
+
 #pragma warning disable CS8618
     public InventarioViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo) 
     {
+        VerBotonAñadir = Usuario.Tipo<2 ? Visibility.Visible : Visibility.Collapsed;
         Tipos = [_localizer["Maquinaria"], _localizer["Consumible"]];
         VerAnadir = Visibility.Collapsed;
         VerNoHay = Visibility.Collapsed;

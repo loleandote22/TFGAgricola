@@ -11,8 +11,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,10">
-        <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
-        <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
+        <Button Visibility="{Binding VerEditarEliminar}"  Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
+        <Button Visibility="{Binding VerEditarEliminar}" Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
         <TextBlock Text="{Binding Elemento.Nombre}" FontSize="40" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBlock FontSize="20"  HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" >
                <Run Text="{Binding Elemento.Cantidad}"/>
