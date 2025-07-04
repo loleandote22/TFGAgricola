@@ -98,17 +98,18 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRecuperarConfirm { get; set; } = string.Empty;
     #endregion
 
-    public int RolRegistro { get; set; }
+    public int RolRegistro { get => rolRegistro; set {  rolRegistro = value; if (value > -1) rolguardado = value; } }
 
     private UsuarioRegistroDto usuarioRegistro = null!;
     private readonly UsuarioApi _usuarioApi;
     private readonly EmpresaApi _empresaApi;
     private bool funcional = true;
+    private int rolRegistro =-1;
+    private int rolguardado;
 
     #endregion
     public LoginViewModel(IStringLocalizer localizer,ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo) : base(localizer, navigator,appInfo, localizationService)
     {
-        RolesRegistro = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
         Indice =0;
         _usuarioApi = new(Apiurl);
         _empresaApi = new(Apiurl);
@@ -393,6 +394,10 @@ public partial class LoginViewModel: ViewModelBase
 
     protected override void CargarPalabras()
     {
+        RolesRegistro = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
+        OnPropertyChanged(nameof(RolesRegistro));
+        RolRegistro = rolguardado;
+        OnPropertyChanged(nameof(RolRegistro));
         Usuario_Loc = _localizer["Usuario"];
         Contraseña_Loc = _localizer["Contraseña"];
         Iniciar_Loc = _localizer["IniciarSesion"];
