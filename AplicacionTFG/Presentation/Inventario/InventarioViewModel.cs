@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using Windows.UI.ViewManagement;
 
 namespace AplicacionTFG.Presentation.Inventario;
 
@@ -75,14 +76,28 @@ public class InventarioViewModel : ViewModelBase
 #if __WASM__
     private async void CargarInventario()
     {
-        var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId);
-        TerminarCarga(result);
+        try
+        {
+            var result =await _inventarioApi.GetInventariosAsync(Usuario.EmpresaId);
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarInventario()
     {
-        var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId).GetAwaiter().GetResult();
-        TerminarCarga(result);
+        try
+        {
+            var result = _inventarioApi.GetInventariosAsync(Usuario.EmpresaId).GetAwaiter().GetResult();
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
     private void TerminarCarga(string? resultado)
@@ -118,20 +133,30 @@ public class InventarioViewModel : ViewModelBase
 
     private async void Guardar()
     {
-        InventarioDto inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo,Unidad = Unidad, EmpresaId = Usuario.EmpresaId };
-        if (!ValidarModelo(inventario))
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
+        try
         {
-            await _navigator.ShowMessageDialogAsync(this, title: Titulo_Loc, content:_mensajeError);
-            return;
+            InventarioDto inventario = new() { Nombre = Nombre, Descripcion = Descripcion, Cantidad = Cantidad, Tipo = Tipo, Unidad = Unidad, EmpresaId = Usuario.EmpresaId };
+            if (!ValidarModelo(inventario))
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: Titulo_Loc, content: _localizer[_mensajeError]);
+                return;
+            }
+            var resultado = await _inventarioApi.PostInventarioAsync(inventario);
+            VerAnadir = Visibility.Collapsed;
+            var elemento = JsonSerializer.Deserialize(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
+            var inventarios = Inventarios.ToList();
+            inventarios.Add(elemento!);
+            Inventarios = inventarios;
+            LimpiarCampos();
+            OnPropertyChanged(nameof(Inventarios));
         }
-        VerAnadir = Visibility.Collapsed;
-        var resultado = await _inventarioApi.PostInventarioAsync(inventario);
-        var elemento = JsonSerializer.Deserialize(resultado!, InventarioConsultaContext.Default.InventarioConsulta);
-        var inventarios = Inventarios.ToList();
-        inventarios.Add(elemento!);
-        Inventarios = inventarios;
-        LimpiarCampos();
-        OnPropertyChanged(nameof(Inventarios));
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     private void LimpiarCampos()

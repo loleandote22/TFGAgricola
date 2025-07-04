@@ -99,7 +99,7 @@ public partial class LoginViewModel: ViewModelBase
     public string ContraRecuperarConfirm { get; set; } = string.Empty;
     #endregion
 
-    public int RolRegistro { get; set; } = -1;
+    public int RolRegistro { get; set; }
 
     private UsuarioRegistroDto usuarioRegistro = null!;
     private readonly UsuarioApi _usuarioApi;
@@ -122,13 +122,15 @@ public partial class LoginViewModel: ViewModelBase
     private async void Preguntar()
     {
         Funcional = false;
+#if  !WINAPPSDK_PACKAGED
         InputPane.GetForCurrentView().TryHide();
+#endif
         try
         {
             var pregunta = await _usuarioApi.GetPregunta(NombeUsuarioRecuperar);
             if (pregunta == null)
             {
-                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "El usuario no existe");
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["UsuarioNoExiste"]);
                 Funcional = true;
                 return;
             }
@@ -141,7 +143,7 @@ public partial class LoginViewModel: ViewModelBase
         }
         catch (HttpRequestException)
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Error de conexión con el servidor");
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorConexion"]);
         }
         finally
         {
@@ -151,84 +153,137 @@ public partial class LoginViewModel: ViewModelBase
 
     private async void Responder()
     {
-        Funcional = false;
+#if !WINAPPSDK_PACKAGED
         InputPane.GetForCurrentView().TryHide();
-        UsuarioRespuestaDto usuarioRespuestaDto = new()
+#endif
+        try
         {
-            Nombre = NombeUsuarioRecuperar,
-            Respuesta = RespuestaRecuperar
-        };
-        var result = await _usuarioApi.PostRespuesta(usuarioRespuestaDto);
-        if (result == null)
-        {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "La respuesta es incorrecta");
-            Funcional = true;
-            return;
+            Funcional = false;
+            InputPane.GetForCurrentView().TryHide();
+            UsuarioRespuestaDto usuarioRespuestaDto = new()
+            {
+                Nombre = NombeUsuarioRecuperar,
+                Respuesta = RespuestaRecuperar
+            };
+            var result = await _usuarioApi.PostRespuesta(usuarioRespuestaDto);
+            if (result == null)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["RespuestaIncorrecta"]);
+                Funcional = true;
+                return;
+            }
+            Usuario = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
+            VerRecuperacionPregunta = Visibility.Collapsed;
+            VerRecuperacionContraseña = Visibility.Visible;
+            OnPropertyChanged(nameof(VerRecuperacionPregunta));
+            OnPropertyChanged(nameof(VerRecuperacionContraseña));
         }
-        Usuario = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
-        VerRecuperacionPregunta = Visibility.Collapsed;
-        VerRecuperacionContraseña = Visibility.Visible;
-        OnPropertyChanged(nameof(VerRecuperacionPregunta));
-        OnPropertyChanged(nameof(VerRecuperacionContraseña));
-        Funcional = true;
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorConexion"]);
+        }
+        finally
+        {
+            Funcional = true;
+        }
     }
 
     private async void CambiarContra()
     {
-        Funcional = false;
+#if !WINAPPSDK_PACKAGED
         InputPane.GetForCurrentView().TryHide();
-        if (ContraRecuperar != ContraRecuperarConfirm)
+#endif
+        try
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Las contraseñas no coinciden");
-            Funcional = true;
-            return;
-        }
-        Usuario!.Contrasena = ContraRecuperar;
-        var result = await _usuarioApi.PutUsuarioAsync(Usuario);
-        if (result == null)
+            Funcional = false;
+            InputPane.GetForCurrentView().TryHide();
+            if (ContraRecuperar != ContraRecuperarConfirm)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ContraNoCoin"]);
+                Funcional = true;
+                return;
+            }
+            Usuario!.Contrasena = ContraRecuperar;
+            var result = await _usuarioApi.PutUsuarioAsync(Usuario);
+            if (result == null)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorCambiarContra"]);
+                Funcional = true;
+                return;
+            }
+            Usuario? usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario);
+            if (usuarioDevuelto == null)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorCambiarContra"]);
+                Funcional = true;
+                return;
+            }
+            ResetearFormularios();
+            TransientSettings.Set("Usuario", usuarioDevuelto);
+            await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
+        }catch (HttpRequestException)
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Error al cambiar la contraseña");
-            Funcional = true;
-            return;
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorConexion"]);
         }
-        Usuario? usuarioDevuelto = JsonSerializer.Deserialize<Usuario>(result, UsuarioContext.Default.Usuario);
-        if (usuarioDevuelto == null)
+        finally
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: "Error al cambiar la contraseña");
             Funcional = true;
-            return;
         }
-        ResetearFormularios();
-        TransientSettings.Set("Usuario", usuarioDevuelto);
-        TransientSettings.Set("Usuario", usuarioDevuelto);
-        await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
-        Funcional = true;
     }
 
     private async void ComprobarUsuario()
     {
-        usuarioRegistro = new UsuarioRegistroDto()
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
+
+        try
         {
-            Nombre = NombreUsuarioRegistro,
-            Contrasena = ContraRegistro,
-            Pregunta = PreguntaRegistro,
-            Respuesta = RespuestaRegistro,
-            Tipo = RolRegistro
-        };
-        _mensajeError = "Las contraseñas no coinciden";
-        if (ContraRegistro != ContraRegistroConfirm || ValidarModelo(usuarioRegistro) == false)
+            Funcional = false;
+            usuarioRegistro = new UsuarioRegistroDto()
+            {
+                Nombre = NombreUsuarioRegistro,
+                Contrasena = ContraRegistro,
+                Pregunta = PreguntaRegistro,
+                Respuesta = RespuestaRegistro,
+                Tipo = RolRegistro
+            };
+            if (RolRegistro == -1)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["SeleccionaUsuario"]);
+                return;
+            }
+            _mensajeError = "ContraNoCoin";
+            if (ContraRegistro != ContraRegistroConfirm || ValidarModelo(usuarioRegistro) == false)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer[_mensajeError]);
+                return;
+            }
+            var result = await _usuarioApi.GetExisteNombreUsuarioAsync(NombreUsuarioRegistro);
+            if (result is not null)
+                if (bool.Parse(result))
+                {
+                    await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["NombreExistente"]);
+                    return;
+                }
+            if (RolRegistro == 0)
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["ACrearEmpresa"]);
+            else
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["UnirEmpresa"]);
+
+
+            VerRegistroUsuario = Visibility.Collapsed;
+            VerRegistroEmpresa = Visibility.Visible;
+            OnPropertyChanged(nameof(VerRegistroUsuario));
+            OnPropertyChanged(nameof(VerRegistroEmpresa));
+        }catch(HttpRequestException)
         {
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: _mensajeError);
-            return;
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RecuperarContraseña"], content: _localizer["ErrorConexion"]);
         }
-        if (RolRegistro == 0)
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación crea tu empresa.");
-        else
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "A continuación únete a tu equipo.");
-        VerRegistroUsuario = Visibility.Collapsed;
-        VerRegistroEmpresa = Visibility.Visible;
-        OnPropertyChanged(nameof(VerRegistroUsuario));
-        OnPropertyChanged(nameof(VerRegistroEmpresa));
+        finally
+        {
+            Funcional = true;
+        }
     }
     
     private void CambiarAUsuario()
@@ -242,7 +297,9 @@ public partial class LoginViewModel: ViewModelBase
     private async void Registrar()
     {
         Funcional = false;
+#if  !WINAPPSDK_PACKAGED
         InputPane.GetForCurrentView().TryHide();
+#endif
         EmpresaDto empresa = new()
         {
             Nombre = NombreEmpresa,
@@ -250,7 +307,7 @@ public partial class LoginViewModel: ViewModelBase
         };
         if(!ValidarModelo(empresa) )
         {
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar empresa", content: _mensajeError);
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarEmpresa"], content: _localizer[_mensajeError]);
             return;
         }
         string? result;
@@ -263,7 +320,7 @@ public partial class LoginViewModel: ViewModelBase
             if (result is null)
             {
                 Funcional = true;
-                await _navigator.ShowMessageDialogAsync(this, title: "Registrar empresa", content: "Error al registrar la empresa");
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarEmpresa"], content: _localizer["ErrorCrearEmpresa"]);
                 return;
             }
             Empresa? empresaDevuelta = JsonSerializer.Deserialize<Empresa>(result, EmpresaContext.Default.Empresa);
@@ -271,7 +328,7 @@ public partial class LoginViewModel: ViewModelBase
             result = await _usuarioApi.PostUsuarioAsync(usuarioRegistro);
             if (result is not null)
             {
-                await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "Usuario registrado correctamente");
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["UsuarioCreado"]);
                 Usuario usuarioDevuelto = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
                 TransientSettings.Set("Usuario", usuarioDevuelto);
                 ResetearFormularios();
@@ -279,7 +336,7 @@ public partial class LoginViewModel: ViewModelBase
             }
             else
             {
-                await _navigator.ShowMessageDialogAsync(this, title: "Registrar usuario", content: "Error al registrar el usuario");
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarUsuario"], content: _localizer["ErrorCrearUsuario"]);
                 VerRegistroUsuario = Visibility.Collapsed;
                 VerRegistroEmpresa = Visibility.Visible;
                 OnPropertyChanged(nameof(VerRegistroUsuario));
@@ -289,7 +346,7 @@ public partial class LoginViewModel: ViewModelBase
         }
         catch (HttpRequestException)
         {
-            await _navigator.ShowMessageDialogAsync(this, title: "Registrar empresa", content: "Error de conexión con el servidor");
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["RegistrarEmpresa"], content: _localizer["ErrorConexion"]);
             Funcional = true;
             return;
         }
@@ -303,7 +360,7 @@ public partial class LoginViewModel: ViewModelBase
 #endif
 
         if (string.IsNullOrEmpty(NombreUsuarioLogin) || string.IsNullOrEmpty(ContraLogin))
-            await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Por favor, introduce un nombre de usuario y una contraseña.");
+            await _navigator.ShowMessageDialogAsync(this, title: "Login", content: _localizer["UsuarioContraseña"]);
         else
         {
             UsuarioDto usuario = new()
@@ -323,11 +380,11 @@ public partial class LoginViewModel: ViewModelBase
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
                 }
                 else
-                    await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Error en el login");
+                    await _navigator.ShowMessageDialogAsync(this, title: "Login", content: _localizer["ErrorLogin"]);
             }
             catch (HttpRequestException)
             {
-                await _navigator.ShowMessageDialogAsync(this, title: "Login", content: "Error de conexión con el servidor");
+                await _navigator.ShowMessageDialogAsync(this, title: "Login", content: _localizer["ErrorConexion"]);
                 Funcional = true;
                 return;
             }

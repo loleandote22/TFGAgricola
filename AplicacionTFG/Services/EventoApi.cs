@@ -23,6 +23,7 @@ public class EventoApi(string url) : WebApiBase(url)
         var url = urlbase + $"usuario/{idUsuario}/dia/{dia}/mes/{mes}/anno/{anno}";
         return await GetAsync(url);
     }
+
     public async Task<string?> GetEventosMesEmpresaAsync(int idEmpresa, int mes, int anno)
     {
         var url = urlbase + $"empresa/{idEmpresa}/mes/{mes}/anno/{anno}";
@@ -31,6 +32,12 @@ public class EventoApi(string url) : WebApiBase(url)
     public async Task<string?> GetEventosMesUsuarioAsync(int idUsuario, int mes, int anno)
     {
         var url = urlbase + $"usuario/{idUsuario}/mes/{mes}/anno/{anno}";
+        return await GetAsync(url);
+    }
+
+    public async Task<string?> GetTareasPendientes(int idUsuario)
+    {
+        var url = urlbase + $"tareasPendientes/usuario/{idUsuario}";
         return await GetAsync(url);
     }
 

@@ -13,15 +13,15 @@ namespace AplicacionTFG.Models;
 public class Evento
 {
     public int Id { get; set; }
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50, ErrorMessage = "LongitudNombre")]
     public required string Nombre { get; set; }
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50)]
     public required string Color { get; set; } // Color del evento en formato hexadecimal (ejemplo: #FF5733)
     public required DateTime Inicio { get; set; }
     public DateTime? Fin { get; set; }
-    [StringLength(250, ErrorMessage = "El nombre no puede tener más de 250 caracteres")]
+    [StringLength(250, ErrorMessage = "LongitudDescripcion")]
     public string? Descripcion { get; set; }
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50, ErrorMessage = "LongitudUbicacion")]
     public string? Ubicacion { get; set; }
     public required int UsuarioId { get; set; }
     public required int EmpresaId { get; set; }
@@ -32,9 +32,9 @@ public class Evento
 public class TareaDetalle
 {
     public int Id { get; set; }
-    [Required(ErrorMessage = "La cantidad es requerida")]
+    [Required(ErrorMessage = "CantidadRequerida")]
     public required double Cantidad { get; set; }
-    [Required(ErrorMessage = "La unidad es requerida")]
+    [Required(ErrorMessage = "UnidadRequerida")]
     public required string Unidad { get; set; }
     public required int EventoId { get; set; }
     [JsonIgnore]
@@ -45,19 +45,19 @@ public class TareaDetalle
 
 public class EventoDto
 {
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50, ErrorMessage = "LongitudNombre")]
     public required string Nombre { get; set; }
     public required string Color { get; set; }
     [Required(ErrorMessage = "La fecha de inicio es obligatoria")]
     public required DateTime Inicio { get; set; }
     public DateTime? Fin { get; set; }
-    [StringLength(250, ErrorMessage = "El nombre no puede tener más de 250 caracteres")]
+    [StringLength(250, ErrorMessage = "LongitudDescripcion")]
     public string? Descripcion { get; set; }
-    [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+    [StringLength(50, ErrorMessage = "LongitudUbicacion")]
     public string? Ubicacion { get; set; }
     public required int UsuarioId { get; set; }
     public required int EmpresaId { get; set; }
-    [Required(ErrorMessage = "El tipo de evento es obligatorio")]
+    [Required(ErrorMessage = "TipoEventoRequerido")]
     public required int Tipo { get; set; }
     public TareaDetalleDto? TareaDetalle { get; set; } // Relación con la entidad TareaDetalle
 }
@@ -65,9 +65,9 @@ public class EventoDto
 
 public class TareaDetalleDto
 {
-    [Required(ErrorMessage = "La cantidad es requerida")]
+    [Required(ErrorMessage = "CantidadRequerida")]
     public required double Cantidad { get; set; }
-    [Required(ErrorMessage = "La unidad es requerida")]
+    [Required(ErrorMessage = "UnidadRequerida")]
     public required string Unidad { get; set; }
 }
 

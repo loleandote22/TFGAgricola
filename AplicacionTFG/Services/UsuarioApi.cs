@@ -32,6 +32,12 @@ public class UsuarioApi(string url) : WebApiBase(url)
         var url = urlbase + "corto/empresa/" + idEmpresa;
         return await GetAsync(url);
     }
+
+    public async Task<string?> GetExisteNombreUsuarioAsync(string nombre)
+    {
+        var url = urlbase + "nombre/"+nombre;
+        return await GetAsync(url);
+    }
     #endregion
 
     #region Posts

@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="AplicacionTFG.Presentation.Eventos.TareasPendientesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{Binding Color}">
+
+    <Grid MinWidth="300" RowDefinitions="Auto,*">
+        <TextBlock Text="{Binding TareasPendientes_Loc}" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding TareasPendientes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding EventoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowDefinitions="Auto,Auto,*" Background="{Binding Color}" Margin="7">
+                        <TextBlock Text="{Binding Nombre}" Foreground="{Binding ColorLetra}"/>
+                        <TextBlock Grid.Row="1" Foreground="{Binding ColorLetra}">
+                                 <Run Text="{Binding InicioHora}"/>
+                                 <Run Text=" - "/>
+                                 <Run Text="{Binding FinHora}"/>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Descripcion}" Foreground="{Binding ColorLetra}" Grid.Row="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock Grid.Row="1" Text="{Binding NoHayEventos_Loc}" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Visibility="{Binding VerNoHayTareasPendientes}"/>
+    </Grid>
+</Page>

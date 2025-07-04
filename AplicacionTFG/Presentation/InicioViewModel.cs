@@ -17,6 +17,7 @@ public class InicioViewModel :ViewModelBase
     #endregion
     #region Localización
     public required string EventosHoy_Loc { get; set; }
+    public required string TareasPendientes_Loc { get; set; }
     public required string Bienvenida_Loc { get; set; }
     public required string NoHayEventos_Loc { get; set; }
     #endregion
@@ -29,17 +30,23 @@ public class InicioViewModel :ViewModelBase
         { "Otoño", new DateOnly(2000, 12, 21) }
     };
     #region Eventos
+    private List<EventoDia> eventos = new List<EventoDia>();
     public List<EventoDia> Eventos { get => eventos; set { eventos = value; OnPropertyChanged(nameof(Eventos)); OnPropertyChanged(nameof(VerNoHayEventos)); }}
+
+    private List<EventoDia> tareasPendientes;
+    public List<EventoDia> TareasPendientes { get => tareasPendientes; set { tareasPendientes = value; OnPropertyChanged(nameof(TareasPendientes)); OnPropertyChanged(nameof(VerNoHayTareasPendientes)); }}
     private readonly EventoApi _eventoApi;
 
     private EventoDia eventoSeleccionado;
     public EventoDia EventoSeleccionado { get => eventoSeleccionado; set { eventoSeleccionado = value; VerEvento(); } }
     public Visibility VerNoHayEventos { get => Eventos.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
+    public Visibility VerNoHayTareasPendientes { get => TareasPendientes.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
     #endregion
     private string imagenFondo;
-    private List<EventoDia> eventos = new List<EventoDia>();
+
 
     public string ImagenFondo { get => imagenFondo; set { imagenFondo = value; }}
+
 
 #pragma warning disable CS8618
     public InicioViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo): base(localizer, navigator, appInfo)
@@ -64,27 +71,73 @@ public class InicioViewModel :ViewModelBase
         {
             ImagenFondo += "Otoño.png";
         }
+
+        TransientSettings.Set("Calendario", false);
         OnPropertyChanged(nameof(ImagenFondo));
         CargarEventos();
+        CargarTareasPendientes();
     }
 
 #if __WASM__
      private async void CargarEventos()
     {
-        var hoy = DateTime.Now;
-        var result = await _eventoApi.GetEventosDiaUsuarioAsync(Usuario.Id, hoy.Day, hoy.Month, hoy.Year);
-        if (result is not null)
-            Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
-
+        try
+        {
+            var hoy = DateTime.Now;
+            var result = await _eventoApi.GetEventosDiaUsuarioAsync(Usuario.Id, hoy.Day, hoy.Month, hoy.Year);
+            if (result is not null)
+                Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
+
+    private async  void CargarTareasPendientes()
+    {
+        try
+        {
+            var result = await _eventoApi.GetTareasPendientes(Usuario.Id);
+            if (result is not null)
+                TareasPendientes = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
+    }
+
 #else
     private void CargarEventos()
     {
-        var hoy = DateTime.Now;
-        var result = _eventoApi.GetEventosDiaUsuarioAsync(Usuario.Id, hoy.Day, hoy.Month, hoy.Year).GetAwaiter().GetResult();
-        if (result is not null)
-            Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        try
+        {
+            var hoy = DateTime.Now;
+            var result = _eventoApi.GetEventosDiaUsuarioAsync(Usuario.Id, hoy.Day, hoy.Month, hoy.Year).GetAwaiter().GetResult();
+            if (result is not null)
+                Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
+    }
 
+    private void CargarTareasPendientes()
+    {
+        try
+        {
+            var result = _eventoApi.GetTareasPendientes(Usuario.Id).GetAwaiter().GetResult();
+            if (result is not null)
+                TareasPendientes = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+
+            Console.WriteLine(TareasPendientes.Count);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
     private void VerEvento()
@@ -97,6 +150,7 @@ public class InicioViewModel :ViewModelBase
     protected override void CargarPalabras()
     {
         EventosHoy_Loc = _localizer["EventosHoy"];
+        TareasPendientes_Loc = _localizer["TareasPendientes"];
         Bienvenida_Loc = _localizer["Hola"] + ", " + Usuario.Nombre;
         NoHayEventos_Loc = _localizer["NoElementos"];
     }

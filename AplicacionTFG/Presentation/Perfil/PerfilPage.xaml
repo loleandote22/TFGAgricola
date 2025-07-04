@@ -32,9 +32,9 @@
             <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Pregunta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Pregunta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7"/>
             <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Respuesta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="8"/>
             <Button  Content="{Binding Guardar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding GuardarCommand}" IsEnabled="{Binding Funcional, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" HorizontalAlignment="Center" Width="150"/>
-            <TextBlock Text="{Binding ZonaPeligrosa_Loc,UpdateSourceTrigger=PropertyChanged}" Grid.Row="10" FontSize="20" Margin="10,10,0,0" />
-            <Line X1="60" Stretch="Fill" Grid.Row="11" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-            <Button Style="{StaticResource EliminarButton}" Width="150" HorizontalAlignment="Center"  Content="{Binding Eliminar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding EliminarPerfilCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Grid.Row="12"/>
+            <TextBlock Visibility="{Binding VerRoles}" Text="{Binding ZonaPeligrosa_Loc,UpdateSourceTrigger=PropertyChanged}" Grid.Row="10" FontSize="20" Margin="10,10,0,0" />
+            <Line Visibility="{Binding VerRoles}" X1="60" Stretch="Fill" Grid.Row="11" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+            <Button Visibility="{Binding VerRoles}" Style="{StaticResource EliminarButton}" Width="150" HorizontalAlignment="Center"  Content="{Binding Eliminar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding EliminarPerfilCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Grid.Row="12"/>
         </Grid>
     </utu:SafeArea>
     <!--Posible implentación de logros del usuario-->

@@ -363,4 +363,112 @@
   <data name="Actualizaciones" xml:space="preserve">
     <value>Actualizaciones</value>
   </data>
+  <data name="ContraNoCoin" xml:space="preserve">
+    <value>Las contraseñas no coinciden</value>
+  </data>
+  <data name="ErrorCambiarContra" xml:space="preserve">
+    <value>Error al cambiar la contraseña</value>
+  </data>
+  <data name="RegistrarUsuario" xml:space="preserve">
+    <value>Registrar usuario</value>
+  </data>
+  <data name="ACrearEmpresa" xml:space="preserve">
+    <value>A continuación crea tu empresa</value>
+  </data>
+  <data name="UnirEmpresa" xml:space="preserve">
+    <value>A continuación únete a tu equipo</value>
+  </data>
+  <data name="RegistrarEmpresa" xml:space="preserve">
+    <value>Registrar empresa</value>
+  </data>
+  <data name="UsuarioContraseña" xml:space="preserve">
+    <value>Por favor, introduce un nombre de usuario y una contraseña</value>
+  </data>
+  <data name="ErrorCrearEmpresa" xml:space="preserve">
+    <value>Error al registrar la empresa</value>
+  </data>
+  <data name="UsuarioCreado" xml:space="preserve">
+    <value>Usuario registrado correctamente</value>
+  </data>
+  <data name="NombreExistente" xml:space="preserve">
+    <value>El nombre ya está en uso</value>
+  </data>
+  <data name="ErrorCrearUsuario" xml:space="preserve">
+    <value>Error al registrar el usuario</value>
+  </data>
+  <data name="ErrorConexion" xml:space="preserve">
+    <value>Error de conexión con el servidor</value>
+  </data>
+  <data name="ErrorLogin" xml:space="preserve">
+    <value>Error en el login</value>
+  </data>
+  <data name="RespuestaIncorrecta" xml:space="preserve">
+    <value>La respuesta es incorrecta</value>
+  </data>
+  <data name="NombreObligatorio" xml:space="preserve">
+    <value>El nombre es obligatorio</value>
+  </data>
+  <data name="ContraseñaObligatoria" xml:space="preserve">
+    <value>La contraseña es obligatoria</value>
+  </data>
+  <data name="LongitudContraseña" xml:space="preserve">
+    <value>La contraseña debe tener entre 8 y 16 caracteres</value>
+  </data>
+  <data name="ContraseñaLetraNumero" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra y un número</value>
+  </data>
+  <data name="SeleccionaUsuario" xml:space="preserve">
+    <value>Selecciona el tipo de usuario</value>
+  </data>
+  <data name="PreguntaRequerida" xml:space="preserve">
+    <value>Introduce una pregunta de seguridad</value>
+  </data>
+  <data name="RespuestaRequerida" xml:space="preserve">
+    <value>La pregunta de seguridad requiere respuesta</value>
+  </data>
+  <data name="LongitudNombre" xml:space="preserve">
+    <value>El nombre no puede tener más de 50 caracteres</value>
+  </data>
+  <data name="LongitudDescripcion" xml:space="preserve">
+    <value>La descripción no puede tener más de 250 caracteres</value>
+  </data>
+  <data name="LongitudUbicacion" xml:space="preserve">
+    <value>La ubicación no puede tener más de 50 caracteres</value>
+  </data>
+  <data name="CantidadRequerida" xml:space="preserve">
+    <value>La cantidad es requerida</value>
+  </data>
+  <data name="UnidadRequerida" xml:space="preserve">
+    <value>La unidad es requerida</value>
+  </data>
+  <data name="TipoEventoRequerido" xml:space="preserve">
+    <value>El tipo de evento es obligatorio</value>
+  </data>
+  <data name="TipoObligatorio" xml:space="preserve">
+    <value>El tipo es obligatorio</value>
+  </data>
+  <data name="DescripcionObligatoria" xml:space="preserve">
+    <value>La descripción es obligatoria</value>
+  </data>
+  <data name="LongitudDescripcion200" xml:space="preserve">
+    <value>La descripción no puede tener más de 200 caracteres</value>
+  </data>
+  <data name="Entrada" xml:space="preserve">
+    <value>Entrada</value>
+  </data>
+  <data name="Salida" xml:space="preserve">
+    <value>Salida</value>
+  </data>
+  <data name="LongitudMensaje" xml:space="preserve">
+    <value>El mensaje no puede tener más de 250 caracteres</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="TareasPendientes" xml:space="preserve">
+    <value>Tareas pendientes</value>
+  </data>
+  <data name="UsuarioNoExiste" xml:space="preserve">
+    <value>El usuario no existe</value>
+  </data>
 </root>

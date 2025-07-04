@@ -31,14 +31,28 @@ public class PersonalViewModel: ViewModelBase
 #if __WASM__
     private async void CargarUsuarios()
     {
-        var result =await _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId);
-        TerminarCarga(result);
+        try
+        {
+            var result =await _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId);
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarUsuarios()
     {
-        var result = _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
-        TerminarCarga(result);
+        try
+        {
+            var result = _usuarioApi.GetUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
     private void TerminarCarga(string? resultado)

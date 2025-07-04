@@ -45,14 +45,14 @@ public class PersonaViewModel : ViewModelBase
 
 
     private readonly UsuarioApi _usuarioApi;
-    private Usuario usuario = null!;
+    private Usuario usuarioBuscado = null!;
 
     public Usuario UsuarioBuscado
     {
-        get => usuario;
+        get => usuarioBuscado;
         set
         {
-            usuario = value;
+            usuarioBuscado = value;
             OnPropertyChanged(nameof(UsuarioBuscado));
         }
     }
@@ -62,18 +62,25 @@ public class PersonaViewModel : ViewModelBase
         _usuarioApi = new UsuarioApi(Apiurl);
         Indice = 0;
         CargarUsuario(elemento.number);
-        PerfilViewModel = new PerfilViewModel(messenger, localizer,_localizationService, navigator, appInfo) { Usuario = UsuarioBuscado};
+        PerfilViewModel = new PerfilViewModel(messenger, localizer,_localizationService, navigator, appInfo) { UsuarioActualizar = UsuarioBuscado};
         EventosViewModel = new EventosMesViewModel(navigator, localizer, appInfo, UsuarioBuscado.Id, "Persona");   
         PerfilViewModel.CargarCampos();
     }
 
     private void CargarUsuario(int id)
     {
-        var result = _usuarioApi.GetUsuarioAsync(id).Result;
-       if (result is not null)
-                UsuarioBuscado = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
-        else
-            _navigator.ShowMessageDialogAsync(this, title:"Error", content:_localizer["ErrorCargarUsuario"]);
+        try 
+        {
+            var result = _usuarioApi.GetUsuarioAsync(id).Result;
+            if (result is not null)
+                    UsuarioBuscado = JsonSerializer.Deserialize(result, UsuarioContext.Default.Usuario)!;
+            else
+                _navigator.ShowMessageDialogAsync(this, title:"Error", content:_localizer["ErrorCargarUsuario"]);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     protected override void CargarPalabras()

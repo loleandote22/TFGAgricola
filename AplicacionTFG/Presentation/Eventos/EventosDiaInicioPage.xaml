@@ -18,9 +18,9 @@
                         <Grid RowDefinitions="Auto,Auto,*" Background="{Binding Color}" Padding="5">
                             <TextBlock Text="{Binding Nombre}" Foreground="{Binding ColorLetra}"/>
                             <TextBlock Grid.Row="1" Foreground="{Binding ColorLetra}">
-                             <Run Text="{Binding InicioHora}"/>
-                             <Run Text=" - "/>
-                             <Run Text="{Binding FinHora}"/>
+                                 <Run Text="{Binding InicioHora}"/>
+                                 <Run Text=" - "/>
+                                 <Run Text="{Binding FinHora}"/>
                             </TextBlock>
                             <TextBlock Text="{Binding Descripcion}" Foreground="{Binding ColorLetra}" Grid.Row="2"/>
                         </Grid>

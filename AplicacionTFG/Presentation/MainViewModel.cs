@@ -7,6 +7,7 @@ public partial class MainViewModel : ViewModelBase
 {
 
     public Visibility VerPersonal { get; set; } = Visibility.Collapsed;
+    public bool CalendarioSeleccionado { get; set; } = false;
     #region Localización
     private string inicio_Loc;
     private string inventario_Loc;
@@ -25,6 +26,11 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(IMessenger messenger, IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo): base(localizer, navigator, appInfo, localizationService)
     {
         messenger.Register<Languagechanged>(this, (r,msg) => { IdiomaSeleccionado = msg.idioma; CargarPalabras(); });
+        messenger.Register<Eventosaved>(this, (r, msg) =>
+        {
+            CalendarioSeleccionado = true;
+            OnPropertyChanged(nameof(CalendarioSeleccionado));
+        });
         Title = localizer["ApplicationName"];
         VerPersonal = Usuario.Tipo <2 ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -42,3 +48,4 @@ public partial class MainViewModel : ViewModelBase
     }
 }
 public record Languagechanged(Idioma idioma);
+public record Eventosaved(bool guardado);

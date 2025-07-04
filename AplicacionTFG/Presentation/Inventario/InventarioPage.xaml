@@ -16,7 +16,6 @@
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
             <Grid >
                 <TextBlock Visibility="{Binding VerNoHay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding NoElementos_Loc}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
-
                 <GridView ItemsSource="{Binding Inventarios, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding InventarioSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <GridView.ItemTemplate>
                         <DataTemplate>

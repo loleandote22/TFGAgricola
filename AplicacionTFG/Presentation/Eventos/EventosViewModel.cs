@@ -4,9 +4,10 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI;
 using Windows.UI;
-
+using Windows.UI.ViewManagement;
 namespace AplicacionTFG.Presentation.Eventos;
 public class EventosMesViewModel : ViewModelBase
 {
@@ -106,6 +107,7 @@ public class EventosMesViewModel : ViewModelBase
 
     public EventosMesViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo) : base(localizer, navigator, appInfo)
     {
+        TransientSettings.Set("Calendario", true);
         _tipoUsuario = Usuario.Tipo;
         _idUsuario = Usuario.Id;
         _eventoApi = new EventoApi(Apiurl);
@@ -116,7 +118,7 @@ public class EventosMesViewModel : ViewModelBase
         CargarUsuarios();
         noCargar = false;
         ColumnasEmpleados = Usuario.Tipo < 2 ? 6 : 0;
-       CargarEventos( _fechaBusqueda.Month, _fechaBusqueda.Year);
+        CargarEventos( _fechaBusqueda.Month, _fechaBusqueda.Year);
     }
 
 
@@ -144,39 +146,59 @@ public class EventosMesViewModel : ViewModelBase
 #if __WASM__
     private async void CargarEventos( int mes, int año)
     {
-        Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if (_tipoUsuario == 2)
+        try
         {
-            var result =await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes , año);
-            TerminarCarga(result);
-        }
-        else{
-            var result =await _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes , año);
-            TerminarCarga(result);
+            Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            var result = string.Empty;
+            if (_tipoUsuario == 2)
+                result =await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes , año);
+            else
+                result =await _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes , año);
+                TerminarCarga(result);
+        }catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
 
     private async void CargarUsuarios()
     {
-        var result = await _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId);
-        TerminarCargaUsuarios(result);
+        try{
+            var result = await _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId);
+            TerminarCargaUsuarios(result);
+        }catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarEventos(int mes, int año)
     {
-        Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        var result = "";
-        if (_tipoUsuario == 2)
-            result = _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año).GetAwaiter().GetResult();
-        else
-             result = _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año).GetAwaiter().GetResult();
+        try { 
+            Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            var result = "";
+            if (_tipoUsuario == 2)
+                result = _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año).GetAwaiter().GetResult();
+            else
+                 result = _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año).GetAwaiter().GetResult();
 
-        TerminarCarga(result);
+            TerminarCarga(result);
+        }catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
     private void CargarUsuarios()
     {
-        var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
-        TerminarCargaUsuarios(result);
+        try
+        {
+            var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
+            TerminarCargaUsuarios(result);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     
@@ -188,16 +210,19 @@ public class EventosMesViewModel : ViewModelBase
     /// <param name="año"></param>
     private async void CargarEventosComando(int mes, int año)
     {
-        Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        if (_tipoUsuario == 2)
-        {
-            var result = await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año);
+        try 
+        { 
+            Fecha_Loc = _fechaBusqueda.ToString("MMMM - yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            string? result = null;
+            if (_tipoUsuario == 2)
+                result = await _eventoApi.GetEventosMesUsuarioAsync(_idUsuario, mes, año);
+            else
+                result = await _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año);
             TerminarCarga(result);
         }
-        else
+        catch (HttpRequestException)
         {
-            var result = await _eventoApi.GetEventosMesEmpresaAsync(Usuario.EmpresaId, mes, año);
-            TerminarCarga(result);
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
 #endif
@@ -215,11 +240,19 @@ public class EventosMesViewModel : ViewModelBase
 
     private void TerminarCargaUsuarios(string? result)
     {
-        if (result is not null)
-            Empleados = new List<UsuarioNombre> { new UsuarioNombre() { Id =-1, Nombre = _localizer["Todos"] } }.Concat(JsonSerializer.Deserialize(result, UsuarioNombreContext.Default.ListUsuarioNombre)!).ToList();
-        EmpleadoSeleccionado = Empleados.FirstOrDefault()!;
-        OnPropertyChanged(nameof(Empleados));
-        OnPropertyChanged(nameof(EmpleadoSeleccionado));
+        try
+        {
+            if (result is not null)
+                Empleados = new List<UsuarioNombre> { new UsuarioNombre() { Id = -1, Nombre = _localizer["Todos"] } }.Concat(JsonSerializer.Deserialize(result, UsuarioNombreContext.Default.ListUsuarioNombre)!).ToList();
+            EmpleadoSeleccionado = Empleados.FirstOrDefault()!;
+            OnPropertyChanged(nameof(Empleados));
+            OnPropertyChanged(nameof(EmpleadoSeleccionado));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los usuarios: {ex.Message}");
+        }
+       
     }
 
     private void ActualizarEventos()
@@ -247,7 +280,7 @@ public class EventosMesViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                DiasTemporal.Add(new Dia() { Numero = i, Eventos = new List<EventoMes>() });
+                i--;
                 Console.WriteLine($"Error al procesar el día {i}: {ex.Message} habiendo {_eventos.Count} para elegir");
             }
         }
@@ -375,46 +408,66 @@ public class EventosDiaViewModel : ViewModelBase
 
     private async void CargarEventosComando()
     {
-        Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        string? result = null;
-        if (_tipoUsuario<2 && _idUsuario <1)
-            result = await _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
-        else
-            result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
-        if (result is not null)
+        try 
+        { 
+            Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            string? result = null;
+            if (_tipoUsuario<2 && _idUsuario <1)
+                result = await _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
+            else
+                result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
+            if (result is not null)
+            {
+                Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+                OnPropertyChanged(nameof(Eventos));
+                OnPropertyChanged(nameof(VerNoHayEventos));
+            }
+        }
+        catch (HttpRequestException)
         {
-            Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
-            OnPropertyChanged(nameof(Eventos));
-            OnPropertyChanged(nameof(VerNoHayEventos));
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
 #if __WASM__
-     private async void CargarEventos()
+    private async void CargarEventos()
     {
-        Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        string? result = null;
+        try{
+            Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            string? result = null;
       
-        if (_tipoUsuario<2 && _idUsuario <1)
-            result = await _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
-        else
-            result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
-        if (result is not null)
-                Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+            if (_tipoUsuario<2 && _idUsuario <1)
+                result = await _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
+            else
+                result = await _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year);
+            if (result is not null)
+                    Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
                 
-            OnPropertyChanged(nameof(Eventos));
-            OnPropertyChanged(nameof(VerNoHayEventos));
+                OnPropertyChanged(nameof(Eventos));
+                OnPropertyChanged(nameof(VerNoHayEventos));
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarEventos()
     {
-        Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
-        string? result = null;
-        if (_tipoUsuario < 2 && _idUsuario < 1)
-            result = _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year).GetAwaiter().GetResult();
-        else
-            result = _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year).GetAwaiter().GetResult();
-        if (result is not null)
-            Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        try 
+        { 
+            Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+            string? result = null;
+            if (_tipoUsuario < 2 && _idUsuario < 1)
+                result = _eventoApi.GetEventosDiaEmpresaAsync(Usuario.EmpresaId, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year).GetAwaiter().GetResult();
+            else
+                result = _eventoApi.GetEventosDiaUsuarioAsync(_idUsuario, _fechaBusqueda.Day, _fechaBusqueda.Month, _fechaBusqueda.Year).GetAwaiter().GetResult();
+            if (result is not null)
+                Eventos = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
 
@@ -456,7 +509,6 @@ public class EventoViewModel : ViewModelBase
     public required string Actualizacion_Loc { get; set; }
     public required string Actualizaciones_Loc { get; set; }
     public required string NoElementos_Loc { get; set; }
-
     #endregion
 
     #region Comandos
@@ -474,21 +526,31 @@ public class EventoViewModel : ViewModelBase
         ContentDialogResult resultado = await dialog.ShowAsync();
         if (resultado == ContentDialogResult.Primary)
         {
-            var insertar = new TareaActualizacionDto() { Cantidad = Cantidad, Fecha = DiaSeleccionado.Date + HoraSeleccionada, TareaDetalleId = Evento.TareaDetalle!.Id, UsuarioId = Usuario.Id };
-            var result = await _eventoApi.PostTareaActualizacion(insertar);
-            if (result is not null)
+            try 
+            {
+#if !WINAPPSDK_PACKAGED
+                InputPane.GetForCurrentView().TryHide();
+#endif
+                var insertar = new TareaActualizacionDto() { Cantidad = Cantidad, Fecha = DiaSeleccionado.Date + HoraSeleccionada, TareaDetalleId = Evento.TareaDetalle!.Id, UsuarioId = Usuario.Id };
+                var result = await _eventoApi.PostTareaActualizacion(insertar);
+                if (result is not null)
                 {
-                var actualizacion = JsonSerializer.Deserialize(result, TareaActualizacionContext.Default.TareaActualizacion)!;
-                if (Evento.TareaDetalle!.Actualizaciones is null)
-                    Evento.TareaDetalle!.Actualizaciones = new List<TareaActualizacion>();
-                Evento.TareaDetalle!.Actualizaciones!.Add(actualizacion);
-                Actualizaciones = new ObservableCollection<TareaActualizacion>(Evento.TareaDetalle!.Actualizaciones.OrderBy(t => t.Fecha));
-                Finalizada = Evento.TareaDetalle!.Cantidad<= Actualizaciones.Sum(a => a.Cantidad);
-                DiaSeleccionado = DateTimeOffset.Now;
-                HoraSeleccionada = DateTime.Now.TimeOfDay;
-                NoHayActualizacionesVisibility = Visibility.Collapsed;
-                OnPropertyChanged(nameof(NoHayActualizacionesVisibility));
-                OnPropertyChanged(nameof(Actualizaciones));
+                    var actualizacion = JsonSerializer.Deserialize(result, TareaActualizacionContext.Default.TareaActualizacion)!;
+                    if (Evento.TareaDetalle!.Actualizaciones is null)
+                        Evento.TareaDetalle!.Actualizaciones = new List<TareaActualizacion>();
+                    Evento.TareaDetalle!.Actualizaciones!.Add(actualizacion);
+                    Actualizaciones = new ObservableCollection<TareaActualizacion>(Evento.TareaDetalle!.Actualizaciones.OrderBy(t => t.Fecha));
+                    Finalizada = Evento.TareaDetalle!.Cantidad<= Actualizaciones.Sum(a => a.Cantidad);
+                    DiaSeleccionado = DateTimeOffset.Now;
+                    HoraSeleccionada = DateTime.Now.TimeOfDay;
+                    NoHayActualizacionesVisibility = Visibility.Collapsed;
+                    OnPropertyChanged(nameof(NoHayActualizacionesVisibility));
+                    OnPropertyChanged(nameof(Actualizaciones));
+                }
+            }
+            catch (HttpRequestException)
+            {
+                await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
             }
         }
     });
@@ -531,20 +593,32 @@ public class EventoViewModel : ViewModelBase
 #if __WASM__
     private async void CargarEvento(int id)
     {
-    var result = await _eventoApi.GetEvento(id);
-        if (result is null)
-            return;
-     Console.WriteLine(result);
-     TerminarCarga(result);
-   
+        try
+        {
+            var result = await _eventoApi.GetEvento(id);
+                if (result is null)
+                    return;
+             TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarEvento(int id)
     {
-        var result = _eventoApi.GetEvento(id).GetAwaiter().GetResult();
-        if (result is null)
-            return;
-       TerminarCarga(result);
+        try 
+        { 
+            var result = _eventoApi.GetEvento(id).GetAwaiter().GetResult();
+            if (result is null)
+                return;
+           TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
 
@@ -586,17 +660,31 @@ public class EventoViewModel : ViewModelBase
 
     private async void Eliminar()
     {
-        await _eventoApi.DeleteEventoAsync(Evento.Id);
-        await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this);
+        try 
+        {
+            await _eventoApi.DeleteEventoAsync(Evento.Id);
+            await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     private void OnDelete(TareaActualizacion item)
     {
-        if (item != null && Actualizaciones.Contains(item))
+        try 
         {
-            Actualizaciones.Remove(item);
-           var result =  _eventoApi.DeleteActualizacion(item.Id);
-            Evento.TareaDetalle.Actualizaciones.Remove(item);
+            if (item != null && Actualizaciones.Contains(item))
+            {
+               var result =  _eventoApi.DeleteActualizacion(item.Id);
+                Actualizaciones.Remove(item);
+                Evento.TareaDetalle!.Actualizaciones!.Remove(item);
+            }
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
 
@@ -684,9 +772,10 @@ public class EditarEventoViewModel : ViewModelBase
 
     private Visibility tareaVisibility;
 
-    
-    public EditarEventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber id) : base(localizer, navigator, appInfo)
+    private readonly IMessenger _messenger;
+    public EditarEventoViewModel(IMessenger messenger, INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber id) : base(localizer, navigator, appInfo)
     {
+        _messenger = messenger;
         _eventoApi = new(Apiurl);
         _idEvento = id.number;
         CargarEvento();
@@ -694,20 +783,34 @@ public class EditarEventoViewModel : ViewModelBase
 #if __WASM__
   private async void CargarEvento()
     {
-        var result = await _eventoApi.GetEvento(_idEvento);
-        if (result is null)
-            return;
-        Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
-        CargarCampos(Evento);
+        try
+        {
+            var result = await _eventoApi.GetEvento(_idEvento);
+            if (result is null)
+                return;
+            Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
+            CargarCampos(Evento);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarEvento()
     {
-        var result = _eventoApi.GetEvento(_idEvento).GetAwaiter().GetResult();
-        if (result is null)
-            return;
-        Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
-        CargarCampos(Evento);
+        try 
+        { 
+            var result = _eventoApi.GetEvento(_idEvento).GetAwaiter().GetResult();
+            if (result is null)
+                return;
+            Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
+            CargarCampos(Evento);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
 
@@ -746,6 +849,9 @@ public class EditarEventoViewModel : ViewModelBase
 
     private async void Guardar()
     {
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
         Evento eventoguarda = new Evento()
         {
             Id = Evento.Id,
@@ -773,11 +879,24 @@ public class EditarEventoViewModel : ViewModelBase
             };
         }
         if (!ValidarModelo(eventoguarda))
-            return;
-        var result = await _eventoApi.PutEventoAsync(eventoguarda);
-        if (result is not null)
         {
-           await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+            await _navigator.ShowMessageDialogAsync(_localizer["Error"], _localizer[_mensajeError]);
+            return;
+        }
+        try
+        {
+            var result = await _eventoApi.PutEventoAsync(eventoguarda);
+            if (result is not null)
+            {
+                if(!(bool)TransientSettings.Get("Calendario"))
+                    _messenger.Send(new Eventosaved(true));
+                else
+                    await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+            }
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
     protected override void CargarPalabras()
@@ -892,14 +1011,28 @@ public partial class AñadirEventoViewModel : ViewModelBase
 #if __WASM__
     private async void CargarUsuarios()
     {
-        var result = await _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId);
-        TerminarCarga(result);
+        try
+        {
+            var result = await _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId);
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private void CargarUsuarios()
     {
-        var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
-        TerminarCarga(result);
+        try
+        {
+            var result = _usuarioApi.GetNombreUsuariosEmpresa(Usuario.EmpresaId).GetAwaiter().GetResult();
+            TerminarCarga(result);
+        }
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #endif
     private void TerminarCarga (string? result)
@@ -913,46 +1046,61 @@ public partial class AñadirEventoViewModel : ViewModelBase
 
     private async void Guardar()
     {
-        if (TipoSeleccionado ==1  && (Unidad is null || Cantidad == 0))
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
+        try
         {
-            var acciones = new[]
-    {
-        new DialogAction(_localizer["Aceptar"].ToString()),
-        new DialogAction(_localizer["Cancelar"].ToString())
-    };
-            string texto = _localizer["DetallesTareaAlerta"];
-            string[] parts = texto.Split('\\');
-            string textoseparado = parts[0] + "\n" + parts[1] + "\n" + parts[2];
-            string resultado = await _navigator.ShowMessageDialogAsync<string>(this, title: _localizer["Error"], content: textoseparado, buttons: acciones);
-            if (resultado != _localizer["Aceptar"].ToString())
-                return;
-        }
-        Evento = new EventoDto
-        {
-            Nombre = Nombre,
-            Descripcion = Descripcion,
-            Ubicacion = Ubicacion,
-            Color = ColorSeleccionado.ToString(),
-            Inicio = DiaInicio.Date + HoraInicio,
-            Fin = DiaFin.HasValue ? DiaInicio.Date + HoraInicio : null,
-            Tipo = TipoSeleccionado,
-            UsuarioId = EmpleadoSeleccionado is null ? _usuarioId : EmpleadoSeleccionado.Id,
-            EmpresaId = Usuario.EmpresaId,
-            TareaDetalle = TipoSeleccionado == 1 ? new TareaDetalleDto
+            if (TipoSeleccionado == 1 && (Unidad is null || Cantidad == 0))
             {
-                Cantidad = Cantidad,
-                Unidad = Unidad ?? "Unidades"
-            } : null
-        };
-        var result = "";
-        if (Evento.TareaDetalle is null)
-            result = await _eventoApi.PostEventoAsync(Evento);
-        else
-            result = await _eventoApi.PostTareaAsync(Evento);
-        if (string.IsNullOrEmpty(result))
-            return;
-        else
-            await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+                var acciones = new[]
+                {
+                    new DialogAction(_localizer["Aceptar"].ToString()),
+                    new DialogAction(_localizer["Cancelar"].ToString())
+                };
+                string texto = _localizer["DetallesTareaAlerta"];
+                string[] parts = texto.Split('\\');
+                string textoseparado = parts[0] + "\n" + parts[1] + "\n" + parts[2];
+                string resultado = await _navigator.ShowMessageDialogAsync<string>(this, title: _localizer["Error"], content: textoseparado, buttons: acciones);
+                if (resultado != _localizer["Aceptar"].ToString())
+                    return;
+            }
+            Evento = new EventoDto
+            {
+                Nombre = Nombre,
+                Descripcion = Descripcion,
+                Ubicacion = Ubicacion,
+                Color = ColorSeleccionado.ToString(),
+                Inicio = DiaInicio.Date + HoraInicio,
+                Fin = DiaFin.HasValue ? DiaInicio.Date + HoraInicio : null,
+                Tipo = TipoSeleccionado,
+                UsuarioId = EmpleadoSeleccionado is null ? _usuarioId : EmpleadoSeleccionado.Id,
+                EmpresaId = Usuario.EmpresaId,
+                TareaDetalle = TipoSeleccionado == 1 ? new TareaDetalleDto
+                {
+                    Cantidad = Cantidad,
+                    Unidad = Unidad ?? "Unidades"
+                } : null
+            };
+            if (!ValidarModelo(Evento))
+            {
+                await _navigator.ShowMessageDialogAsync(_localizer["Error"], _localizer[_mensajeError]);
+                return;
+            }
+            var result = "";
+            if (Evento.TareaDetalle is null)
+                result = await _eventoApi.PostEventoAsync(Evento);
+            else
+                result = await _eventoApi.PostTareaAsync(Evento);
+            if (string.IsNullOrEmpty(result))
+                return;
+            else
+                await _navigator.NavigateViewModelAsync<EventosMesViewModel>(this, qualifier: Qualifiers.ClearBackStack);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     protected override void CargarPalabras()
