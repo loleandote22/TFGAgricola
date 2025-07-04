@@ -68,43 +68,43 @@ namespace AplicacionTFG.Models;
         public int? UsuarioId { get; set; }
     }
 
-public class InventarioConsulta
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-    [JsonPropertyName("nombre")]
-    public required string Nombre { get; set; }
-    [JsonPropertyName("descripcion")]
-    public required string Descripcion { get; set; }
-    [JsonIgnore]
-    private string? _descripcionCorta;
-    [JsonIgnore]
-    public string DescripcionCorta
+    public class InventarioConsulta
     {
-        get
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+        [JsonPropertyName("nombre")]
+        public required string Nombre { get; set; }
+        [JsonPropertyName("descripcion")]
+        public required string Descripcion { get; set; }
+        [JsonIgnore]
+        private string? _descripcionCorta;
+        [JsonIgnore]
+        public string DescripcionCorta
         {
-            if (!string.IsNullOrEmpty(_descripcionCorta))
-                return _descripcionCorta;
-            if (Descripcion == null)
-                return string.Empty;
-            if (Descripcion.Length > 75)
-                _descripcionCorta = Descripcion.Substring(0, 75);
-            return Descripcion.Length > 75 ? _descripcionCorta!.Substring(0,_descripcionCorta.LastIndexOf(" "))+"..." : Descripcion;
+            get
+            {
+                if (!string.IsNullOrEmpty(_descripcionCorta))
+                    return _descripcionCorta;
+                if (Descripcion == null)
+                    return string.Empty;
+                if (Descripcion.Length > 75)
+                    _descripcionCorta = Descripcion.Substring(0, 75);
+                return Descripcion.Length > 75 ? _descripcionCorta!.Substring(0,_descripcionCorta.LastIndexOf(" "))+"..." : Descripcion;
+            }
+            set
+            {
+                _descripcionCorta = value;
+            }
         }
-        set
-        {
-            _descripcionCorta = value;
-        }
+        [JsonPropertyName("tipo")]
+        public required int Tipo { get; set; }
+        [JsonPropertyName("cantidad")]
+        public required int Cantidad { get; set; }
+        [JsonPropertyName("empresaId")]
+        public required int EmpresaId { get; set; }
+        [JsonPropertyName("unidad")]
+        public required string Unidad { get; set; }
     }
-    [JsonPropertyName("tipo")]
-    public required string Tipo { get; set; }
-    [JsonPropertyName("cantidad")]
-    public required int Cantidad { get; set; }
-    [JsonPropertyName("empresaId")]
-    public required int EmpresaId { get; set; }
-    [JsonPropertyName("unidad")]
-    public required string Unidad { get; set; }
-}
 
 
     public class InventarioEventoConsulta
@@ -133,17 +133,20 @@ public class InventarioConsulta
     public class InventarioDto
     {
         [JsonPropertyName("nombre")]
-        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [Required(ErrorMessage = "NombreObligatorio")]
+        [StringLength(50, ErrorMessage = "LongitudNombre")]
         public required string Nombre { get; set; }
-        [StringLength(50, MinimumLength =1)]
-        public required string Tipo { get; set; }
-        [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
+        [Required(ErrorMessage = "TipoObligatorio")]
+        [Range(0, int.MaxValue, ErrorMessage = "TipoObligatorio")]
+        public required int Tipo { get; set; }
+        [JsonPropertyName("descripcion")]
         public required string Descripcion { get; set; }
+        [Required(ErrorMessage ="CantidadRequerida")]
         public required int Cantidad { get; set; }
         public required int EmpresaId { get; set; }
         [JsonPropertyName("unidad")]
-        [Required(ErrorMessage = "La unidad es obligatoria")]
-        [StringLength(50, ErrorMessage = "La unidad no puede tener más de 50 caracteres")]
+        [Required(ErrorMessage = "UnidadRequerida")]
+        [StringLength(50, ErrorMessage = "LongitudUnidad")]
         public required string Unidad { get; set; }
 }
 
@@ -152,30 +155,30 @@ public class InventarioConsulta
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [Required(ErrorMessage = "NombreObligatorio")]
+        [StringLength(50, ErrorMessage = "LongitudNombre")]
         public required string Nombre { get; set; }
-        [StringLength(50)]
-        [Required(ErrorMessage = "El tipo es obligatorio")]
+        [Required(ErrorMessage = "TipoObligatorio")]
+        [Range(0, int.MaxValue, ErrorMessage = "TipoObligatorio")]
         [JsonPropertyName("tipo")]
-        public required string Tipo { get; set; }
-        [Required(ErrorMessage = "La descripción es obligatoria")]
+        public required int Tipo { get; set; }
         [JsonPropertyName("descripcion")]
-        [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
-            public required string Descripcion { get; set; }
+        public required string Descripcion { get; set; }
         [JsonPropertyName("cantidad")]
-        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        [Required(ErrorMessage = "CantidadRequerida")]
         public required int Cantidad { get; set; }
         [JsonPropertyName("usuarioId")]
         public required int UsuarioId { get; set; }
 
         [JsonPropertyName("unidad")]
+        [Required(ErrorMessage = "UnidadRequerida")]
+        [StringLength(50, ErrorMessage = "LongitudUnidad")]
         public required string Unidad { get; set; }
     }
 
     public class InventarioChatDto
     {
-        [StringLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
+        [StringLength(250, ErrorMessage = "LongitudMensaje")]
         public required string Mensaje { get; set; }
         public required int InventarioId { get; set; }
         public int? UsuarioId { get; set; }

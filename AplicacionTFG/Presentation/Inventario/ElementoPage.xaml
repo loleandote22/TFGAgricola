@@ -10,19 +10,17 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,0">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,10">
         <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
         <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
         <TextBlock Text="{Binding Elemento.Nombre}" FontSize="40" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock FontSize="20"  HorizontalAlignment="Center" >
+        <TextBlock FontSize="20"  HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" >
                <Run Text="{Binding Elemento.Cantidad}"/>
                <Run Text=" "/>
                <Run Text="{Binding Elemento.Unidad}" FontSize="15"/>
-            </TextBlock>
-        </StackPanel>
-        <TextBlock Text="{Binding Elemento.Descripcion}" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" VerticalAlignment="Top" />
-        <TextBlock Text="{Binding Elemento.Tipo}" HorizontalAlignment="Center" Grid.Row="3" />
+        </TextBlock>
+        <TextBox IsReadOnly="True" Text="{Binding Elemento.Descripcion}" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="200" FontSize="20" Grid.Row="2" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" VerticalAlignment="Top" />
+        <TextBlock Text="{Binding TipoNombre}" HorizontalAlignment="Center" Grid.Row="3" />
         <utu:TabBar MaxWidth="350" Grid.ColumnSpan="2" Grid.Row="4" SelectedIndex="{Binding Indice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Style="{StaticResource TopTabBarStyle}">
             <utu:TabBar.Items>
                 <utu:TabBarItem IsSelected="True" Content="{Binding Eventos_Loc, UpdateSourceTrigger=PropertyChanged}"/>
@@ -59,7 +57,7 @@
                         <DataTemplate>
                             <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
                                 <TextBlock Text="{Binding Fecha}" />
-                                <TextBlock Text="{Binding Tipo}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding TipoNombre}" Grid.Column="1"/>
                                 <TextBlock Text="{Binding Cantidad}"  Grid.Column="2"/>
                                 <TextBlock Text="{Binding UsuarioNombre}" Grid.Column="3"/>
                             </Grid>

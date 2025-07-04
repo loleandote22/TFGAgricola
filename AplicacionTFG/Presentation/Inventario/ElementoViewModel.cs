@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Xml.Linq;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
 using Windows.UI.ViewManagement;
@@ -45,7 +46,7 @@ public class ElementoViewModel : ViewModelBase
     private int _PaginaEventos = 0;
     private int _PaginaMensajes = 0;
 
-
+    public string TipoNombre { get; set; } = string.Empty;
     private bool hayMensaje;
     public bool HayMensaje { get => hayMensaje; set { hayMensaje = value; OnPropertyChanged(nameof(HayMensaje)); } }
     public string Mensaje { get => mensaje; set { 
@@ -90,7 +91,9 @@ public class ElementoViewModel : ViewModelBase
             var resultado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
             if (resultado is not null)
             {
+                List<string> tipos = [_localizer["Maquinaria"], _localizer["Consumible"]];
                 Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
+                TipoNombre = tipos[Elemento.Tipo];
                 CargarMasEventos();
                 CargarMasMensajes();
 
@@ -295,21 +298,21 @@ public class EdicionElementoViewModel : ViewModelBase
     public required string Cantidad_Loc { get; set; }
     public required string Medicion_Loc { get; set; }
     public required string Tipo_Loc { get; set; }
-    public List<string> Tipos { get; set; } = new() { "Material", "Herramienta", "Equipo" };
     #endregion
 
     #region Campos
     private string nombre= null!;
     private string descripcion = null!;
-    private int cantidad;
     private string unidad = null!;
-    private string tipo = null!;
+    private int cantidad;
+    private int tipo;
 
+    public List<string> Tipos { get; set; }
     public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public required string Descripcion { get => descripcion; set { descripcion = value!; OnPropertyChanged(nameof(Descripcion)); } }
     public int Cantidad { get => cantidad;  set { cantidad = value; OnPropertyChanged(nameof(Cantidad)); } }
     public string Unidad { get => unidad; set { unidad = value; OnPropertyChanged(nameof(Unidad)); }}
-    public string Tipo { get => tipo; set { tipo= value; OnPropertyChanged(nameof(Tipo)); } }
+    public int Tipo { get => tipo; set { tipo= value; OnPropertyChanged(nameof(Tipo)); } }
     #endregion
 
     #region Comandos
@@ -321,6 +324,7 @@ public class EdicionElementoViewModel : ViewModelBase
     private int id;
     public EdicionElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, InventarioConsulta elemento) : base(localizer, navigator, appInfo)
     {
+        Tipos = [_localizer["Maquinaria"], _localizer["Consumible"]];
         id = elemento.Id;
         Nombre = elemento.Nombre;
         Descripcion = elemento.Descripcion;
@@ -358,7 +362,7 @@ public class EdicionElementoViewModel : ViewModelBase
             };
             if (!ValidarModelo(inventario))
             {
-                await _navigator.ShowMessageDialogAsync(this, title:"Error al guardar", content: _localizer[_mensajeError]);
+                await _navigator.ShowMessageDialogAsync(this, title: "Error al guardar", content: _localizer[_mensajeError]);
                 return;
             }
             await _inventarioApi.PutInventarioAsync(inventario);

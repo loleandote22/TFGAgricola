@@ -471,4 +471,16 @@
   <data name="UsuarioNoExiste" xml:space="preserve">
     <value>The user does not exist</value>
   </data>
+  <data name="Consumible" xml:space="preserve">
+    <value>Consumable</value>
+  </data>
+  <data name="Maquinaria" xml:space="preserve">
+    <value>Machinery</value>
+  </data>
+  <data name="LongitudUnidad" xml:space="preserve">
+    <value>The unit cannot be longer than 50 characters</value>
+  </data>
+  <data name="LongitudDescripcion300" xml:space="preserve">
+    <value>The description cannot be longer than 300 characters</value>
+  </data>
 </root>
