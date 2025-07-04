@@ -27,10 +27,12 @@ public class ElementoViewModel : ViewModelBase
     private Visibility verMasMensajes;
     public Visibility VerMasEventos { get => verMasEventos; set { verMasEventos = value; OnPropertyChanged(nameof(VerMasEventos)); }}
     public Visibility VerMasMensajes { get => verMasMensajes; set { verMasMensajes = value; OnPropertyChanged(nameof(VerMasMensajes)); }}
+    private Visibility verEditarEliminar = Visibility.Collapsed; public Visibility VerEditarEliminar { get => verEditarEliminar; set => verEditarEliminar = value; }
+
 
     #endregion
-    
-    
+
+
     private int indice;
     public int Indice
     {
@@ -69,6 +71,7 @@ public class ElementoViewModel : ViewModelBase
 
 
 
+
     #endregion
 
     private readonly InventarioApi _inventarioApi;
@@ -80,7 +83,8 @@ public class ElementoViewModel : ViewModelBase
 #pragma warning disable CS8618
     public ElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber elemento) : base(localizer, navigator, appInfo)
     {
-         _tiposEventos = [_localizer["Salida"], _localizer["Entrada"]];
+        VerEditarEliminar = Usuario.Tipo <2 ? Visibility.Visible : Visibility.Collapsed;
+        _tiposEventos = [_localizer["Salida"], _localizer["Entrada"]];
         VerMensajes = Visibility.Collapsed;
        _inventarioApi = new InventarioApi(Apiurl);
 #if __WASM__
