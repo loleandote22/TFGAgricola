@@ -197,6 +197,8 @@ public class PerfilViewModel: ViewModelBase
                 localSettings.Values["Usuario"] = result;
             }
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"], content: _localizer["ExitoGuardado"]);
+
+            TransientSettings.Set("Usuario", Usuario);
             if (_localizationService is not null)
                 Funcional = false;
             else
