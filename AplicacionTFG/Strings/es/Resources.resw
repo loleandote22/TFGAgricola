@@ -228,4 +228,247 @@
   <data name="Medida" xml:space="preserve">
     <value>Medida</value>
   </data>
+  <data name="Calendario" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="Lunes" xml:space="preserve">
+    <value>Lunes</value>
+  </data>
+  <data name="Martes" xml:space="preserve">
+    <value>Martes</value>
+  </data>
+  <data name="Miercoles" xml:space="preserve">
+    <value>Miercoles</value>
+  </data>
+  <data name="Jueves" xml:space="preserve">
+    <value>Jueves</value>
+  </data>
+  <data name="Viernes" xml:space="preserve">
+    <value>Viernes</value>
+  </data>
+  <data name="Sabado" xml:space="preserve">
+    <value>Sábado</value>
+  </data>
+  <data name="Domingo" xml:space="preserve">
+    <value>Domingo</value>
+  </data>
+  <data name="EventosHoy" xml:space="preserve">
+    <value>Eventos de hoy</value>
+  </data>
+  <data name="Hola" xml:space="preserve">
+    <value>Hola</value>
+  </data>
+  <data name="Enero" xml:space="preserve">
+    <value>Enero</value>
+  </data>
+  <data name="Febrero" xml:space="preserve">
+    <value>Febrero</value>
+  </data>
+  <data name="Marzo" xml:space="preserve">
+    <value>Marzo</value>
+  </data>
+  <data name="Abril" xml:space="preserve">
+    <value>Abril</value>
+  </data>
+  <data name="Mayo" xml:space="preserve">
+    <value>Mayo</value>
+  </data>
+  <data name="Junio" xml:space="preserve">
+    <value>Junio</value>
+  </data>
+  <data name="Julio" xml:space="preserve">
+    <value>Julio</value>
+  </data>
+  <data name="Agosto" xml:space="preserve">
+    <value>Agosto</value>
+  </data>
+  <data name="Septiembre" xml:space="preserve">
+    <value>Septiembre</value>
+  </data>
+  <data name="Octubre" xml:space="preserve">
+    <value>Octubre</value>
+  </data>
+  <data name="Nobiembre" xml:space="preserve">
+    <value>Nobiembre</value>
+  </data>
+  <data name="Diciembre" xml:space="preserve">
+    <value>Diciembre</value>
+  </data>
+  <data name="Hoy" xml:space="preserve">
+    <value>Hoy</value>
+  </data>
+  <data name="MesAnterior" xml:space="preserve">
+    <value>Mes anterior</value>
+  </data>
+  <data name="MesSiguiente" xml:space="preserve">
+    <value>Mes siguiente</value>
+  </data>
+  <data name="Todos" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="Evento" xml:space="preserve">
+    <value>Evento</value>
+  </data>
+  <data name="Tarea" xml:space="preserve">
+    <value>Tarea</value>
+  </data>
+  <data name="Recordatorio" xml:space="preserve">
+    <value>Recordatorio</value>
+  </data>
+  <data name="Añadir" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="Inicio" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Fin" xml:space="preserve">
+    <value>Fin</value>
+  </data>
+  <data name="Dia" xml:space="preserve">
+    <value>Día</value>
+  </data>
+  <data name="Reunion" xml:space="preserve">
+    <value>Reunión</value>
+  </data>
+  <data name="Dueno" xml:space="preserve">
+    <value>Dueño</value>
+  </data>
+  <data name="Administrador" xml:space="preserve">
+    <value>Administrador</value>
+  </data>
+  <data name="Empleado" xml:space="preserve">
+    <value>Empleado</value>
+  </data>
+  <data name="EditarEvento" xml:space="preserve">
+    <value>Edita el evento</value>
+  </data>
+  <data name="CrearEvento" xml:space="preserve">
+    <value>Crea el evento</value>
+  </data>
+  <data name="Detalle" xml:space="preserve">
+    <value>Detalle</value>
+  </data>
+  <data name="Completado" xml:space="preserve">
+    <value>Completado</value>
+  </data>
+  <data name="AnadirActualizacion" xml:space="preserve">
+    <value>Añadir actualización</value>
+  </data>
+  <data name="DetallesTareaAlerta" xml:space="preserve">
+    <value>Los detalles de la tarea por defecto son:\Cantidad: 0\Unidad: Unidades </value>
+  </data>
+  <data name="Actualizacion" xml:space="preserve">
+    <value>Actualización</value>
+  </data>
+  <data name="Actualizaciones" xml:space="preserve">
+    <value>Actualizaciones</value>
+  </data>
+  <data name="ContraNoCoin" xml:space="preserve">
+    <value>Las contraseñas no coinciden</value>
+  </data>
+  <data name="ErrorCambiarContra" xml:space="preserve">
+    <value>Error al cambiar la contraseña</value>
+  </data>
+  <data name="RegistrarUsuario" xml:space="preserve">
+    <value>Registrar usuario</value>
+  </data>
+  <data name="ACrearEmpresa" xml:space="preserve">
+    <value>A continuación crea tu empresa</value>
+  </data>
+  <data name="UnirEmpresa" xml:space="preserve">
+    <value>A continuación únete a tu equipo</value>
+  </data>
+  <data name="RegistrarEmpresa" xml:space="preserve">
+    <value>Registrar empresa</value>
+  </data>
+  <data name="UsuarioContraseña" xml:space="preserve">
+    <value>Por favor, introduce un nombre de usuario y una contraseña</value>
+  </data>
+  <data name="ErrorCrearEmpresa" xml:space="preserve">
+    <value>Error al registrar la empresa</value>
+  </data>
+  <data name="UsuarioCreado" xml:space="preserve">
+    <value>Usuario registrado correctamente</value>
+  </data>
+  <data name="NombreExistente" xml:space="preserve">
+    <value>El nombre ya está en uso</value>
+  </data>
+  <data name="ErrorCrearUsuario" xml:space="preserve">
+    <value>Error al registrar el usuario</value>
+  </data>
+  <data name="ErrorConexion" xml:space="preserve">
+    <value>Error de conexión con el servidor</value>
+  </data>
+  <data name="ErrorLogin" xml:space="preserve">
+    <value>Error en el login</value>
+  </data>
+  <data name="RespuestaIncorrecta" xml:space="preserve">
+    <value>La respuesta es incorrecta</value>
+  </data>
+  <data name="NombreObligatorio" xml:space="preserve">
+    <value>El nombre es obligatorio</value>
+  </data>
+  <data name="ContraseñaObligatoria" xml:space="preserve">
+    <value>La contraseña es obligatoria</value>
+  </data>
+  <data name="LongitudContraseña" xml:space="preserve">
+    <value>La contraseña debe tener entre 8 y 16 caracteres</value>
+  </data>
+  <data name="ContraseñaLetraNumero" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra y un número</value>
+  </data>
+  <data name="SeleccionaUsuario" xml:space="preserve">
+    <value>Selecciona el tipo de usuario</value>
+  </data>
+  <data name="PreguntaRequerida" xml:space="preserve">
+    <value>Introduce una pregunta de seguridad</value>
+  </data>
+  <data name="RespuestaRequerida" xml:space="preserve">
+    <value>La pregunta de seguridad requiere respuesta</value>
+  </data>
+  <data name="LongitudNombre" xml:space="preserve">
+    <value>El nombre no puede tener más de 50 caracteres</value>
+  </data>
+  <data name="LongitudDescripcion" xml:space="preserve">
+    <value>La descripción no puede tener más de 250 caracteres</value>
+  </data>
+  <data name="LongitudUbicacion" xml:space="preserve">
+    <value>La ubicación no puede tener más de 50 caracteres</value>
+  </data>
+  <data name="CantidadRequerida" xml:space="preserve">
+    <value>La cantidad es requerida</value>
+  </data>
+  <data name="UnidadRequerida" xml:space="preserve">
+    <value>La unidad es requerida</value>
+  </data>
+  <data name="TipoEventoRequerido" xml:space="preserve">
+    <value>El tipo de evento es obligatorio</value>
+  </data>
+  <data name="TipoObligatorio" xml:space="preserve">
+    <value>El tipo es obligatorio</value>
+  </data>
+  <data name="DescripcionObligatoria" xml:space="preserve">
+    <value>La descripción es obligatoria</value>
+  </data>
+  <data name="LongitudDescripcion200" xml:space="preserve">
+    <value>La descripción no puede tener más de 200 caracteres</value>
+  </data>
+  <data name="Entrada" xml:space="preserve">
+    <value>Entrada</value>
+  </data>
+  <data name="Salida" xml:space="preserve">
+    <value>Salida</value>
+  </data>
+  <data name="LongitudMensaje" xml:space="preserve">
+    <value>El mensaje no puede tener más de 250 caracteres</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="TareasPendientes" xml:space="preserve">
+    <value>Tareas pendientes</value>
+  </data>
+  <data name="UsuarioNoExiste" xml:space="preserve">
+    <value>El usuario no existe</value>
+  </data>
 </root>

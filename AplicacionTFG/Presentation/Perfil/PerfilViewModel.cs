@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AplicacionTFG.Presentation.Personal;
+using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Options;
 using Windows.ApplicationModel;
+using Windows.UI.ViewManagement;
 
 namespace AplicacionTFG.Presentation.Perfil;
 public class PerfilViewModel: ViewModelBase
@@ -18,11 +22,22 @@ public class PerfilViewModel: ViewModelBase
     public List<string> Imagenes { get => imagenes; set => imagenes = value; }
     private bool funcional;
     public bool Funcional { get => funcional; set { funcional = value; OnPropertyChanged(nameof(Funcional)); }}
-    private Visibility verRoles= Visibility.Collapsed;
+
+    public Idioma IdiomaPerfil { get => IdiomaSeleccionado; set { IdiomaSeleccionado = value; _messenger.Send(new Languagechanged(value)); }}
+
+    private readonly IMessenger _messenger;
+
+    #endregion
+
+    #region Visibilidad
+    private Visibility verRoles = Visibility.Collapsed;
     public Visibility VerRoles { get => verRoles; set => verRoles = value; }
 
     private Visibility verIdiomas;
     public Visibility VerIdiomas { get => verIdiomas; set => verIdiomas = value; }
+
+    private Visibility verPeligro;
+    public Visibility VerPeligro { get => verPeligro; set => verPeligro = value; }
     #endregion
 
     #region Localización
@@ -60,9 +75,10 @@ public class PerfilViewModel: ViewModelBase
     private string respuesta = "";
     private string imagenSeleccionada = "";
     private string imagenPerfil = "";
+    private int rolSeleccionado = -1;
 
-    public List<string> Roles { get; set; } = ["Dueño", "Administrador", "Empleado"];
-    public string RolSeleccionado { get; set; } = string.Empty;
+    public List<string> Roles { get; set; }
+    public int RolSeleccionado { get => rolSeleccionado; set { Funcional = true; rolSeleccionado = value; }}
     public string Nombre { get => nombre; set { Funcional = true; nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Contraseña { get => contraseña; set { Funcional = true; contraseña = value; OnPropertyChanged(nameof(Contraseña)); } }
     public string ConfirmarContraseña { get => confirmarContraseña; set { confirmarContraseña = value; OnPropertyChanged(nameof(ConfirmarContraseña)); } }
@@ -96,7 +112,7 @@ public class PerfilViewModel: ViewModelBase
         ContentDialog dialog = new ContentDialog
         {
             Title = _localizer["Eliminar"],
-            Content = _localizer["EliminarIreversible"],
+            Content = _localizer["EliminarIrreversible"],
             PrimaryButtonText = _localizer["Aceptar"],
             SecondaryButtonText = _localizer["Cancelar"],
             XamlRoot = xamlRoot
@@ -104,19 +120,27 @@ public class PerfilViewModel: ViewModelBase
         ContentDialogResult resultado = await dialog.ShowAsync();
         if (resultado == ContentDialogResult.Primary)
         {
-             var result = await _usuarioApi.DeleteUsuarioAsync(Usuario.Id);
+            var result = await _usuarioApi.DeleteUsuarioAsync(Usuario.Id);
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["PerfilEliminado"], content: _localizer["PerfilEliminadoCorrectamente"]);
             await _navigator.NavigateBackAsync(this);
         }
     });
 
 
+
     #endregion
 
     private readonly UsuarioApi _usuarioApi;
 
-    public PerfilViewModel(IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
+    public Usuario UsuarioActualizar { get; set; }
+
+    public PerfilViewModel(IMessenger messenger, IStringLocalizer localizer, ILocalizationService localizationService, INavigator navigator, IOptions<AppConfig> appInfo):base(localizer, navigator, appInfo, localizationService)
     {
+        List<string> RolesTemp = [_localizer["Dueno"], _localizer["Administrador"], _localizer["Empleado"]];
+        UsuarioActualizar = Usuario;
+        Roles = RolesTemp.GetRange(Usuario.Tipo, 3-Usuario.Tipo);
+        _messenger = messenger;
+        IdiomaPerfil = IdiomaSeleccionado;
         if (_localizationService is not null)
         {
             CargarCampos();
@@ -130,44 +154,58 @@ public class PerfilViewModel: ViewModelBase
 
     public void CargarCampos()
     {
-        ImagenPerfil = directorioImagenes + Usuario.Imagen;
+        ImagenPerfil = directorioImagenes + UsuarioActualizar.Imagen;
         ImagenSeleccionada = ImagenPerfil;
         Imagenes = _appInfo.Value.Icons!;
-        Nombre = Usuario.Nombre;
-        RolSeleccionado = Usuario.Tipo;
-        VerRoles = RolSeleccionado == "Dueño" || RolSeleccionado == "Administrador" ? Visibility.Visible : Visibility.Collapsed;
-        Pregunta = Usuario.Pregunta;
+        Nombre = UsuarioActualizar.Nombre;
+        RolSeleccionado = UsuarioActualizar.Tipo-Usuario.Tipo;
+        VerRoles = Usuario.Tipo < 2 && UsuarioActualizar.Tipo >= Usuario.Tipo ? Visibility.Visible : Visibility.Collapsed;
+        Pregunta = UsuarioActualizar.Pregunta;
         Funcional = false;
     }
 
-    private async  void Guardar()
+    private async void Guardar()
     {
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
         UsuarioAcutliazarDto usuarioActualizado = new UsuarioAcutliazarDto
         {
             Nombre = Nombre,
-            Tipo = RolSeleccionado,
+            Tipo = RolSeleccionado+Usuario.Tipo,
             Imagen =ImagenPerfil.Substring(ImagenPerfil.LastIndexOf('/')+1),
             Contrasena = Contraseña.Length>0 ? Contraseña: "default123",
-            Pregunta = Pregunta.Length>0 ? Pregunta : Usuario.Pregunta,
-            Respuesta = Respuesta.Length>0 ? Respuesta : Usuario.Respuesta,
-            EmpresaId = Usuario.EmpresaId
+            Pregunta = Pregunta.Length>0 ? Pregunta : UsuarioActualizar.Pregunta,
+            Respuesta = Respuesta.Length>0 ? Respuesta : UsuarioActualizar.Respuesta,
+            EmpresaId = UsuarioActualizar.EmpresaId
         };
         if (Contraseña != ConfirmarContraseña)
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _mensajeError);
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer[_mensajeError]);
             return;
         }
         if (!ValidarModelo(usuarioActualizado))
         {
-            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _mensajeError);
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer[_mensajeError]);
             return;
         }
-        var result = await _usuarioApi.PutUsuarioAsync(Usuario.Id, usuarioActualizado);
-        await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"],content: _localizer["ExitoGuardado"]);
-        if (_localizationService is not null)
-            Funcional = false;
-        else
-            await _navigator.NavigateViewModelAsync<PersonalViewModel>(this);
+        try
+        {
+            var result = await _usuarioApi.PutUsuarioAsync(Usuario.Id, usuarioActualizado);
+            if (result is not null)
+            {
+                localSettings.Values["Usuario"] = result;
+            }
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Perfil"], content: _localizer["ExitoGuardado"]);
+            if (_localizationService is not null)
+                Funcional = false;
+            else
+                await _navigator.NavigateViewModelAsync<PersonalViewModel>(this);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     protected override void CargarPalabras()

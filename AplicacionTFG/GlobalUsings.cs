@@ -1,9 +1,6 @@
-﻿global using System.Collections.Immutable;
-global using AplicacionTFG.DataContracts;
-global using AplicacionTFG.DataContracts.Serialization;
+global using System.Collections.Immutable;
 global using AplicacionTFG.Models;
 global using AplicacionTFG.Presentation;
-global using AplicacionTFG.Services.Caching;
 global using AplicacionTFG.Services.Endpoints;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;

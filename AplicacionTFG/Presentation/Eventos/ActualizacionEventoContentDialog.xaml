@@ -1,0 +1,18 @@
+﻿<ContentDialog
+    x:Class="AplicacionTFG.Presentation.Eventos.ActualizacionEventoContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="{Binding Actualizacion_Loc}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    PrimaryButtonText="{Binding Aceptar_Loc}"
+    SecondaryButtonText="{Binding Cancelar_Loc}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+	<StackPanel Spacing="10">
+        <TextBox Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number"/>
+        <DatePicker SelectedDate="{Binding DiaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TimePicker SelectedTime="{Binding HoraSeleccionada, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </StackPanel>
+</ContentDialog>

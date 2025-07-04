@@ -228,4 +228,247 @@
   <data name="Medida" xml:space="preserve">
     <value>Mesure</value>
   </data>
+  <data name="Calendario" xml:space="preserve">
+    <value>Calendrier</value>
+  </data>
+  <data name="Lunes" xml:space="preserve">
+    <value>Lundi</value>
+  </data>
+  <data name="Martes" xml:space="preserve">
+    <value>Martes</value>
+  </data>
+  <data name="Miercoles" xml:space="preserve">
+    <value>Mercredi</value>
+  </data>
+  <data name="Jueves" xml:space="preserve">
+    <value>Jeudi</value>
+  </data>
+  <data name="Viernes" xml:space="preserve">
+    <value>Vendredi</value>
+  </data>
+  <data name="Sabado" xml:space="preserve">
+    <value>Samedi</value>
+  </data>
+  <data name="Domingo" xml:space="preserve">
+    <value>Dimanche</value>
+  </data>
+  <data name="EventosHoy" xml:space="preserve">
+    <value>Événements de la journée</value>
+  </data>
+  <data name="Hola" xml:space="preserve">
+    <value>Salut</value>
+  </data>
+  <data name="Enero" xml:space="preserve">
+    <value>Janvier</value>
+  </data>
+  <data name="Febrero" xml:space="preserve">
+    <value>Février</value>
+  </data>
+  <data name="Marzo" xml:space="preserve">
+    <value>Mars</value>
+  </data>
+  <data name="Abril" xml:space="preserve">
+    <value>Avril</value>
+  </data>
+  <data name="Mayo" xml:space="preserve">
+    <value>Mai</value>
+  </data>
+  <data name="Junio" xml:space="preserve">
+    <value>Juin</value>
+  </data>
+  <data name="Julio" xml:space="preserve">
+    <value>Juillet</value>
+  </data>
+  <data name="Agosto" xml:space="preserve">
+    <value>Août</value>
+  </data>
+  <data name="Septiembre" xml:space="preserve">
+    <value>Septembre</value>
+  </data>
+  <data name="Octubre" xml:space="preserve">
+    <value>Octobre</value>
+  </data>
+  <data name="Nobiembre" xml:space="preserve">
+    <value>Nobembre</value>
+  </data>
+  <data name="Diciembre" xml:space="preserve">
+    <value>Décembre</value>
+  </data>
+  <data name="Hoy" xml:space="preserve">
+    <value>Aujourd'hui</value>
+  </data>
+  <data name="MesAnterior" xml:space="preserve">
+    <value>Mois précédent</value>
+  </data>
+  <data name="MesSiguiente" xml:space="preserve">
+    <value>Mois suivant</value>
+  </data>
+  <data name="Todos" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="Evento" xml:space="preserve">
+    <value>Événement</value>
+  </data>
+  <data name="Tarea" xml:space="preserve">
+    <value>Travail</value>
+  </data>
+  <data name="Recordatorio" xml:space="preserve">
+    <value>Rappel</value>
+  </data>
+  <data name="Añadir" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Inicio" xml:space="preserve">
+    <value>Début</value>
+  </data>
+  <data name="Fin" xml:space="preserve">
+    <value>Fin</value>
+  </data>
+  <data name="Dia" xml:space="preserve">
+    <value>Jour</value>
+  </data>
+  <data name="Reunion" xml:space="preserve">
+    <value>Réunion</value>
+  </data>
+  <data name="Dueno" xml:space="preserve">
+    <value>Propriétaire</value>
+  </data>
+  <data name="Administrador" xml:space="preserve">
+    <value>Administrateur</value>
+  </data>
+  <data name="Empleado" xml:space="preserve">
+    <value>Employé</value>
+  </data>
+  <data name="EditarEvento" xml:space="preserve">
+    <value>Modifier l'événement</value>
+  </data>
+  <data name="CrearEvento" xml:space="preserve">
+    <value>Créer un événement</value>
+  </data>
+  <data name="Detalle" xml:space="preserve">
+    <value>Détail</value>
+  </data>
+  <data name="Completado" xml:space="preserve">
+    <value>Concluído</value>
+  </data>
+  <data name="AnadirActualizacion" xml:space="preserve">
+    <value>Ajouter un update</value>
+  </data>
+  <data name="DetallesTareaAlerta" xml:space="preserve">
+    <value>Les détails de la tâche par défaut sont:\Quantité: 0 \Unité: Unidades </value>
+  </data>
+  <data name="Actualizacion" xml:space="preserve">
+    <value>Actualisation</value>
+  </data>
+  <data name="Actualizaciones" xml:space="preserve">
+    <value>Actualisation</value>
+  </data>
+  <data name="ContraNoCoin" xml:space="preserve">
+    <value>Les mots de passe ne correspondent pas</value>
+  </data>
+  <data name="ErrorCambiarContra" xml:space="preserve">
+    <value>Erreur de modification du mot de passe</value>
+  </data>
+  <data name="RegistrarUsuario" xml:space="preserve">
+    <value>Enregistrer un utilisateur</value>
+  </data>
+  <data name="ACrearEmpresa" xml:space="preserve">
+    <value>Créez votre entreprise.</value>
+  </data>
+  <data name="UnirEmpresa" xml:space="preserve">
+    <value>Alors rejoignez votre équipe</value>
+  </data>
+  <data name="RegistrarEmpresa" xml:space="preserve">
+    <value>Enregistrer l'entreprise</value>
+  </data>
+  <data name="UsuarioContraseña" xml:space="preserve">
+    <value>Veuillez saisir un nom d'utilisateur et un mot de passe</value>
+  </data>
+  <data name="ErrorCrearEmpresa" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement de la société</value>
+  </data>
+  <data name="UsuarioCreado" xml:space="preserve">
+    <value>Utilisateur enregistré avec succès</value>
+  </data>
+  <data name="NombreExistente" xml:space="preserve">
+    <value>Le nom est déjà utilisé</value>
+  </data>
+  <data name="ErrorCrearUsuario" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement de l'utilisateur</value>
+  </data>
+  <data name="ErrorConexion" xml:space="preserve">
+    <value>Erreur de connexion au serveur</value>
+  </data>
+  <data name="ErrorLogin" xml:space="preserve">
+    <value>Erreur d'identification</value>
+  </data>
+  <data name="RespuestaIncorrecta" xml:space="preserve">
+    <value>La réponse est incorrecte</value>
+  </data>
+  <data name="NombreObligatorio" xml:space="preserve">
+    <value>Le nom est obligatoire</value>
+  </data>
+  <data name="ContraseñaObligatoria" xml:space="preserve">
+    <value>Le mot de passe est obligatoire</value>
+  </data>
+  <data name="LongitudContraseña" xml:space="preserve">
+    <value>Le mot de passe doit comporter entre 8 et 16 caractères.</value>
+  </data>
+  <data name="ContraseñaLetraNumero" xml:space="preserve">
+    <value>Le mot de passe doit contenir au moins une lettre et un chiffre.</value>
+  </data>
+  <data name="SeleccionaUsuario" xml:space="preserve">
+    <value>Sélectionner le type d'utilisateur</value>
+  </data>
+  <data name="PreguntaRequerida" xml:space="preserve">
+    <value>Saisir une question de sécurité</value>
+  </data>
+  <data name="RespuestaRequerida" xml:space="preserve">
+    <value>La question de sécurité nécessite une réponse</value>
+  </data>
+  <data name="LongitudNombre" xml:space="preserve">
+    <value>Le nom ne doit pas comporter plus de 50 caractères</value>
+  </data>
+  <data name="LongitudDescripcion" xml:space="preserve">
+    <value>La description ne doit pas dépasser 250 caractères</value>
+  </data>
+  <data name="LongitudUbicacion" xml:space="preserve">
+    <value>L'emplacement ne doit pas dépasser 50 caractères</value>
+  </data>
+  <data name="CantidadRequerida" xml:space="preserve">
+    <value>Quantité requise</value>
+  </data>
+  <data name="UnidadRequerida" xml:space="preserve">
+    <value>L'unité est requise</value>
+  </data>
+  <data name="TipoEventoRequerido" xml:space="preserve">
+    <value>Le type d'événement est obligatoire</value>
+  </data>
+  <data name="TipoObligatorio" xml:space="preserve">
+    <value>Le type est obligatoire</value>
+  </data>
+  <data name="DescripcionObligatoria" xml:space="preserve">
+    <value>La description est obligatoire</value>
+  </data>
+  <data name="LongitudDescripcion200" xml:space="preserve">
+    <value>La description ne doit pas dépasser 200 caractères</value>
+  </data>
+  <data name="Entrada" xml:space="preserve">
+    <value>Admission</value>
+  </data>
+  <data name="Salida" xml:space="preserve">
+    <value>Sortie</value>
+  </data>
+  <data name="LongitudMensaje" xml:space="preserve">
+    <value>Le message ne doit pas comporter plus de 250 caractères</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="TareasPendientes" xml:space="preserve">
+    <value>Affaires inachevées</value>
+  </data>
+  <data name="UsuarioNoExiste" xml:space="preserve">
+    <value>L'utilisateur n'existe pas</value>
+  </data>
 </root>

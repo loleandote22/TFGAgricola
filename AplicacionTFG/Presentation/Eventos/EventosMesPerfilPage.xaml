@@ -1,0 +1,140 @@
+﻿<Page
+    x:Class="AplicacionTFG.Presentation.Eventos.EventosMesPerfilPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ut="using:Uno.Themes"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <ResourceDictionary Source="/Presentation/Icons/Icons.xaml"/>
+    </Page.Resources>
+    <Grid RowDefinitions="Auto,Auto,*" Margin="0,15,0,0">
+            <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+                <Button Content="{Binding Hoy_Loc}" Command="{Binding VerMesActualCommand}" VariableSizedWrapGrid.ColumnSpan="2"/>
+                <Button Command="{Binding VerMesAnteriorCommand}" ToolTipService.ToolTip="{Binding MesAnterior_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Left}" Padding="-10,0,0,0"/>
+                <Button Command="{Binding VerMesSiguienteCommand}" ToolTipService.ToolTip="{Binding MesSiguiente_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Right}" Padding="-5,0,0,0"/>
+                <TextBlock Text="{Binding Fecha_Loc}" FontSize="24" Margin="10,0" VariableSizedWrapGrid.ColumnSpan="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding Tipos}" VariableSizedWrapGrid.ColumnSpan="6" SelectedIndex="{Binding TipoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}" Margin="0,0,15,0"/>
+            </VariableSizedWrapGrid>
+            <utu:ResponsiveView Grid.Row="1">
+                <utu:ResponsiveView.NarrowTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+                            <Border BorderThickness="1,0" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding LunesCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="1" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding MartesCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="2" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding MiercolesCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="3" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding JuevesCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="4" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding ViernesCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="5" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding SabadoCorto_Loc}"  HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="6" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding DomingoCorto_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </utu:ResponsiveView.NarrowTemplate>
+                <utu:ResponsiveView.WideTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+                            <Border BorderThickness="1,0" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Lunes_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="1" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Martes_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="2" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Miercoles_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="3" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Jueves_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="4" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Viernes_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="5" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Sabado_Loc}"  HorizontalAlignment="Center"/>
+                            </Border>
+                            <Border BorderThickness="1,0" Grid.Column="6" BorderBrush="LightGray" >
+                                <TextBlock Text="{Binding Domingo_Loc}" HorizontalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </utu:ResponsiveView.WideTemplate>
+            </utu:ResponsiveView>
+            <Grid Grid.Row="2"  ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="*,*,*,*,*,*" Grid.ColumnSpan="4">
+                <!--Semana 1 -->
+                <local:DiaControl Dia="{Binding Dias[0].Numero}" Eventos="{Binding Dias[0].Eventos}"/>
+                <local:DiaControl Grid.Column="1" Dia="{Binding Dias[1].Numero}" Eventos="{Binding Dias[1].Eventos}"/>
+                <local:DiaControl Grid.Column="2" Dia="{Binding Dias[2].Numero}" Eventos="{Binding Dias[2].Eventos}"/>
+                <local:DiaControl Grid.Column="3" Dia="{Binding Dias[3].Numero}" Eventos="{Binding Dias[3].Eventos}"/>
+                <local:DiaControl Grid.Column="4"  Dia="{Binding Dias[4].Numero}" Eventos="{Binding Dias[4].Eventos}"/>
+                <local:DiaControl Grid.Column="5" Dia="{Binding Dias[5].Numero}" Eventos="{Binding Dias[5].Eventos}"/>
+                <local:DiaControl Grid.Column="6" Dia="{Binding Dias[6].Numero}" Eventos="{Binding Dias[6].Eventos}"/>
+
+                <!--Semana 2 -->
+                <local:DiaControl Grid.Row="1" Dia="{Binding Dias[7].Numero}" Eventos="{Binding Dias[7].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="1" Dia="{Binding Dias[8].Numero}" Eventos="{Binding Dias[8].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="2" Dia="{Binding Dias[9].Numero}" Eventos="{Binding Dias[9].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="3" Dia="{Binding Dias[10].Numero}" Eventos="{Binding Dias[10].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="4"  Dia="{Binding Dias[11].Numero}" Eventos="{Binding Dias[11].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="5" Dia="{Binding Dias[12].Numero}" Eventos="{Binding Dias[12].Eventos}"/>
+                <local:DiaControl Grid.Row="1" Grid.Column="6" Dia="{Binding Dias[13].Numero}" Eventos="{Binding Dias[13].Eventos}"/>
+
+                <!--Semana 3 -->
+                <local:DiaControl Grid.Row="2" Dia="{Binding Dias[14].Numero}" Eventos="{Binding Dias[14].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="1" Dia="{Binding Dias[15].Numero}" Eventos="{Binding Dias[15].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="2" Dia="{Binding Dias[16].Numero}" Eventos="{Binding Dias[16].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="3" Dia="{Binding Dias[17].Numero}" Eventos="{Binding Dias[17].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="4"  Dia="{Binding Dias[18].Numero}" Eventos="{Binding Dias[18].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="5" Dia="{Binding Dias[19].Numero}" Eventos="{Binding Dias[19].Eventos}"/>
+                <local:DiaControl Grid.Row="2" Grid.Column="6" Dia="{Binding Dias[20].Numero}" Eventos="{Binding Dias[20].Eventos}"/>
+
+                <!--Semana 4 -->
+                <local:DiaControl Grid.Row="3" Dia="{Binding Dias[21].Numero}" Eventos="{Binding Dias[21].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="1" Dia="{Binding Dias[22].Numero}" Eventos="{Binding Dias[22].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="2" Dia="{Binding Dias[23].Numero}" Eventos="{Binding Dias[23].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="3" Dia="{Binding Dias[24].Numero}" Eventos="{Binding Dias[24].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="4"  Dia="{Binding Dias[25].Numero}" Eventos="{Binding Dias[25].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="5" Dia="{Binding Dias[26].Numero}" Eventos="{Binding Dias[26].Eventos}"/>
+                <local:DiaControl Grid.Row="3" Grid.Column="6" Dia="{Binding Dias[27].Numero}" Eventos="{Binding Dias[27].Eventos}"/>
+
+                <!--Semana 5 -->
+                <local:DiaControl Grid.Row="4" Dia="{Binding Dias[28].Numero}" Eventos="{Binding Dias[28].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="1" Dia="{Binding Dias[29].Numero}" Eventos="{Binding Dias[29].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="2" Dia="{Binding Dias[30].Numero}" Eventos="{Binding Dias[30].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="3" Dia="{Binding Dias[31].Numero}" Eventos="{Binding Dias[31].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="4"  Dia="{Binding Dias[32].Numero}" Eventos="{Binding Dias[32].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="5" Dia="{Binding Dias[33].Numero}" Eventos="{Binding Dias[33].Eventos}"/>
+                <local:DiaControl Grid.Row="4" Grid.Column="6" Dia="{Binding Dias[34].Numero}" Eventos="{Binding Dias[34].Eventos}"/>
+
+                <!--Semana 6 -->
+                <local:DiaControl Grid.Row="5" Dia="{Binding Dias[35].Numero}" Eventos="{Binding Dias[35].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="1" Dia="{Binding Dias[36].Numero}" Eventos="{Binding Dias[36].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="2" Dia="{Binding Dias[37].Numero}" Eventos="{Binding Dias[37].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="3" Dia="{Binding Dias[38].Numero}" Eventos="{Binding Dias[38].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="4"  Dia="{Binding Dias[39].Numero}" Eventos="{Binding Dias[39].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="5" Dia="{Binding Dias[40].Numero}" Eventos="{Binding Dias[40].Eventos}"/>
+                <local:DiaControl Grid.Row="5" Grid.Column="6" Dia="{Binding Dias[41].Numero}" Eventos="{Binding Dias[41].Eventos}"/>
+            </Grid>
+            <Button Grid.Row="2" Visibility="{Binding AñadirEventosVisibility}" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,0" Command="{Binding AñadirEventoCommand}">
+                <ut:ControlExtensions.Icon>
+                    <SymbolIcon Symbol="Add" />
+                </ut:ControlExtensions.Icon>
+            </Button>
+        </Grid>
+</Page>

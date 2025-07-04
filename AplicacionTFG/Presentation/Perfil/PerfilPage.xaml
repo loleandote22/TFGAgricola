@@ -8,36 +8,34 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <utu:SafeArea Insets="SoftInput">
-        <ScrollView VerticalScrollBarVisibility="Auto">
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="15,0,0,0"  RowSpacing="10" Grid.Row="1">
-                <!--<Rectangle Grid.RowSpan="12"/>-->
-                <ComboBox HorizontalAlignment="Right" Margin="10" Width="200"  Grid.Row="1" Visibility="{Binding VerIdiomas}" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Bandera}"  Stretch="UniformToFill" Width="15" Height="15"  Margin="0,0,5,0"/>
-                                <TextBlock Text="{Binding Lengua}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <TextBlock Text=" Perfil" FontSize="30"/>
-                <Button Style="{StaticResource AccentButtonStyle}" Background="Transparent" BorderThickness="0" Padding="0" Command="{Binding SeleccionarImagenCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Width="150" HorizontalAlignment="Center" Grid.Row="2">
-                    <Image Width="150" Source="{Binding ImagenPerfil, UpdateSourceTrigger=PropertyChanged}"  />
-                </Button>
-                <TextBox HorizontalAlignment="Center" Width="300" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="3"/>
-                <PasswordBox Width="300" HorizontalAlignment="Center" Password="{Binding Contraseña, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4"/>
-                <PasswordBox Width="300" HorizontalAlignment="Center" Password="{Binding ConfirmarContraseña, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5"/>
-                <ComboBox Width="300" ItemsSource="{Binding Roles}" Visibility="{Binding VerRoles}" SelectedItem="{Binding RolSeleccionado, Mode=TwoWay}" PlaceholderText="{Binding Tipo_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="6"/>
-                <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Pregunta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Pregunta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7"/>
-                <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Respuesta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="8"/>
-                <Button  Content="{Binding Guardar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding GuardarCommand}" IsEnabled="{Binding Funcional, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" HorizontalAlignment="Center" Width="150"/>
-                <TextBlock Text="{Binding ZonaPeligrosa_Loc,UpdateSourceTrigger=PropertyChanged}" Grid.Row="10" FontSize="20" Margin="10,10,0,0" />
-                <Line X1="60" Stretch="Fill" Grid.Row="11" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-                <Button Style="{StaticResource EliminarButton}" Width="150" HorizontalAlignment="Center"  Content="{Binding Eliminar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding EliminarPerfilCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Grid.Row="12"/>
-            </Grid>
-        </ScrollView>
+
+    <utu:SafeArea Insets="All">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="15,0,0,0"  RowSpacing="10" Grid.Row="1">
+            <!--<Rectangle Grid.RowSpan="12"/>-->
+            <ComboBox HorizontalAlignment="Right" Margin="10" Width="200"  Grid.Row="1" Visibility="{Binding VerIdiomas}" ItemsSource="{Binding Idiomas, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding IdiomaPerfil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Bandera}"  Stretch="UniformToFill" Width="15" Height="15"  Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Lengua}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Style="{StaticResource AccentButtonStyle}" Background="Transparent" BorderThickness="0" Padding="0" Command="{Binding SeleccionarImagenCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Width="150" HorizontalAlignment="Center" Grid.Row="2">
+                <Image Width="150" Source="{Binding ImagenPerfil, UpdateSourceTrigger=PropertyChanged}"  />
+            </Button>
+            <TextBox HorizontalAlignment="Center" Width="300" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="3"/>
+            <PasswordBox Width="300" HorizontalAlignment="Center" Password="{Binding Contraseña, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding Contraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4"/>
+            <PasswordBox Width="300" HorizontalAlignment="Center" Password="{Binding ConfirmarContraseña, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsPasswordRevealButtonEnabled="True" PlaceholderText="{Binding ConfirmarContraseña_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5"/>
+            <ComboBox Width="300" ItemsSource="{Binding Roles}" Visibility="{Binding VerRoles}" SelectedIndex="{Binding RolSeleccionado, Mode=TwoWay}" PlaceholderText="{Binding Tipo_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="6"/>
+            <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Pregunta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Pregunta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7"/>
+            <TextBox Width="300" HorizontalAlignment="Center" Text="{Binding Respuesta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Respuesta_Loc, UpdateSourceTrigger=PropertyChanged}" Grid.Row="8"/>
+            <Button  Content="{Binding Guardar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding GuardarCommand}" IsEnabled="{Binding Funcional, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" HorizontalAlignment="Center" Width="150"/>
+            <TextBlock Visibility="{Binding VerRoles}" Text="{Binding ZonaPeligrosa_Loc,UpdateSourceTrigger=PropertyChanged}" Grid.Row="10" FontSize="20" Margin="10,10,0,0" />
+            <Line Visibility="{Binding VerRoles}" X1="60" Stretch="Fill" Grid.Row="11" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
+            <Button Visibility="{Binding VerRoles}" Style="{StaticResource EliminarButton}" Width="150" HorizontalAlignment="Center"  Content="{Binding Eliminar_Loc, UpdateSourceTrigger=PropertyChanged}" Command="{Binding EliminarPerfilCommand}" CommandParameter="{x:Bind XamlRoot, Mode=OneTime}" Grid.Row="12"/>
+        </Grid>
     </utu:SafeArea>
     <!--Posible implentación de logros del usuario-->
 </Page>

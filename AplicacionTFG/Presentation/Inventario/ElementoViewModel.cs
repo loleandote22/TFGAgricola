@@ -1,6 +1,7 @@
 using System.Text.Json;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
+using Windows.UI.ViewManagement;
 
 namespace AplicacionTFG.Presentation.Inventario;
 public class ElementoViewModel : ViewModelBase
@@ -72,26 +73,35 @@ public class ElementoViewModel : ViewModelBase
     private readonly InventarioApi _inventarioApi;
     private InventarioConsulta elemento;
     private string mensaje;
+
+    private List<string> _tiposEventos;
+
 #pragma warning disable CS8618
     public ElementoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber elemento) : base(localizer, navigator, appInfo)
     {
+         _tiposEventos = [_localizer["Salida"], _localizer["Entrada"]];
         VerMensajes = Visibility.Collapsed;
        _inventarioApi = new InventarioApi(Apiurl);
 #if __WASM__
         CargarElemento(elemento.number);
-
 #else
-       var resultado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
-        if (resultado is not null)
+        try
         {
-            Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
-            CargarMasEventos();
-            CargarMasMensajes();
-            if (Mensajes.Count < 20)
-                VerMasEventos = Visibility.Collapsed;
+            var resultado = _inventarioApi.GetInventarioAsync(elemento.number).Result;
+            if (resultado is not null)
+            {
+                Elemento = JsonSerializer.Deserialize(resultado, InventarioConsultaContext.Default.InventarioConsulta)!;
+                CargarMasEventos();
+                CargarMasMensajes();
+
+            }
+            else
+                _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
         }
-        else
-            _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
 #endif
     }
 #pragma warning restore CS8618 
@@ -110,74 +120,108 @@ public class ElementoViewModel : ViewModelBase
                 await _navigator.ShowMessageDialogAsync(this, title: "Error", content: "No se ha podido cargar el elemento del inventario.");
             
         }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
         catch(Exception ex)
         {
             Console.WriteLine(ex.Message);
             await _navigator.ShowMessageDialogAsync(this, title:"Fallo", content: ex.Message);
         }
-       
     }
 
 #if __WASM__
     private void CargarMasEventos()
     {
-        _PaginaEventos++;
-        Console.WriteLine(_PaginaEventos);
-        _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos).ContinueWith(t =>
+        try
         {
-            if (t.Result is not null)
+            _PaginaEventos++;
+            _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos).ContinueWith(t =>
             {
-                var eventosNuevos = JsonSerializer.Deserialize(t.Result, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
-                if (eventosNuevos.Count < 20)
+                if (t.Result is not null)
                 {
-                    VerMasEventos = Visibility.Collapsed;
+                    var eventosNuevos = JsonSerializer.Deserialize(t.Result, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
+                    if (eventosNuevos.Count < 20)
+                    {
+                        VerMasEventos = Visibility.Collapsed;
+                    }
+                    foreach (InventarioEventoConsulta evento in eventosNuevos)
+                    {
+                        evento.TipoNombre = _tiposEventos[evento.Tipo] ;
+                    }
+                    Eventos = Eventos.Union(eventosNuevos).ToList();
                 }
-                Eventos = Eventos.Union(eventosNuevos).ToList();
+            });
             }
-        });
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
     private void CargarMasMensajes()
     {
-        _PaginaMensajes++;
-        _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes).ContinueWith(t =>
+        try
         {
-            if (t.Result is not null)
+            _PaginaMensajes++;
+            _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes).ContinueWith(t =>
             {
-                var mensajesNuevos = JsonSerializer.Deserialize(t.Result, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
-                if (mensajes.Count < 20)
-                    VerMasMensajes = Visibility.Collapsed;
-                Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+                if (t.Result is not null)
+                {
+                    var mensajesNuevos = JsonSerializer.Deserialize(t.Result, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
+                    if (mensajes.Count < 20)
+                        VerMasMensajes = Visibility.Collapsed;
+                    Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+                }
+            });
             }
-        });
+        catch (HttpRequestException)
+        {
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 #else
     private async void CargarMasEventos()
     {
-        _PaginaEventos++;
-        var resultado = await _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos);
-       if (resultado is not null)
+        try
         {
-            var eventosNuevos = JsonSerializer.Deserialize(resultado, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
-            if (eventosNuevos.Count < 20)
+            _PaginaEventos++;
+            var resultado = await _inventarioApi.GetInventarioEventosAsync(Elemento!.Id, _PaginaEventos);
+           if (resultado is not null)
             {
-                VerMasEventos = Visibility.Collapsed;
+                var eventosNuevos = JsonSerializer.Deserialize(resultado, InventarioEventoConsultaContext.Default.ListInventarioEventoConsulta)!;
+                if (eventosNuevos.Count < 20)
+                    VerMasEventos = Visibility.Collapsed;
+                foreach (InventarioEventoConsulta evento in eventosNuevos)
+                {
+                    evento.TipoNombre = _tiposEventos[evento.Tipo] ;
+                }
+                Eventos = Eventos.Union(eventosNuevos).ToList();
             }
-            Eventos = Eventos.Union(eventosNuevos).ToList();
         }
-
-        Console.WriteLine(VerMasEventos);
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     private async void CargarMasMensajes()
     {
-        _PaginaMensajes++;
-        var resultado = await _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes);
-        if (resultado is not null)
+        try 
         {
-            var mensajesNuevos = JsonSerializer.Deserialize(resultado, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
-            if (mensajesNuevos.Count < 20)
-                VerMasMensajes = Visibility.Collapsed;
-            Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+            _PaginaMensajes++;
+            var resultado = await _inventarioApi.GetInventarioChatsAsync(Elemento!.Id, _PaginaMensajes);
+            if (resultado is not null)
+            {
+                var mensajesNuevos = JsonSerializer.Deserialize(resultado, InventarioChatConsultaContext.Default.ListInventarioChatConsulta)!;
+                if (mensajesNuevos.Count < 20)
+                    VerMasMensajes = Visibility.Collapsed;
+                Mensajes = Mensajes.Union(mensajesNuevos).ToList();
+            }
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
     }
 #endif
@@ -198,34 +242,47 @@ public class ElementoViewModel : ViewModelBase
         Mas_Loc = _localizer["Mas"];
     }
 
-
     private async void Eliminar()
     {
-        await _inventarioApi.DeleteInventarioAsync(Elemento!.Id);
-        await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+        try
+        {
+            await _inventarioApi.DeleteInventarioAsync(Elemento!.Id);
+            await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     private async void EnviarMensaje()
     {
-        InventarioChat inventarioChat = new ()
+        try
         {
-            Mensaje = Mensaje,
-            InventarioId = Elemento.Id,
-            UsuarioId = Usuario.Id,
-            Fecha = DateTime.Now
-        };
-        InventarioChatConsulta inventarioChatConsulta = new()
+            InventarioChat inventarioChat = new ()
+            {
+                Mensaje = Mensaje,
+                InventarioId = Elemento.Id,
+                UsuarioId = Usuario.Id,
+                Fecha = DateTime.Now
+            };
+            InventarioChatConsulta inventarioChatConsulta = new()
+            {
+                Fecha = inventarioChat.Fecha,
+                Mensaje = Mensaje,
+                UsuarioNombre = Usuario.Nombre
+            };
+            await _inventarioApi.PostComentarioInventario(inventarioChat);
+            Mensaje = string.Empty;
+            if (Mensajes is null)
+                Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta };
+            else
+                Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta }.Union(Mensajes).ToList();
+        }
+        catch (HttpRequestException)
         {
-            Fecha = inventarioChat.Fecha,
-            Mensaje = Mensaje,
-            UsuarioNombre = Usuario.Nombre
-        };
-        await _inventarioApi.PostComentarioInventario(inventarioChat);
-        Mensaje = string.Empty;
-        if (Mensajes is null)
-            Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta };
-        else
-            Mensajes = new List<InventarioChatConsulta>() { inventarioChatConsulta }.Union(Mensajes).ToList();
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
 
     }
 }
@@ -284,28 +341,45 @@ public class EdicionElementoViewModel : ViewModelBase
 
     private async void Guardar()
     {
-        InventarioActualizaDto inventario = new InventarioActualizaDto()
+#if !WINAPPSDK_PACKAGED
+        InputPane.GetForCurrentView().TryHide();
+#endif
+        try
         {
-            Id = id,
-            Nombre = Nombre,
-            Tipo = Tipo,
-            Descripcion = Descripcion,
-            Cantidad = Cantidad,
-            UsuarioId = Usuario.Id,
-            Unidad = Unidad
-        };
-        if (!ValidarModelo(inventario))
-        {
-            await _navigator.ShowMessageDialogAsync(this, title:"Error al guardar", content: _mensajeError);
-            return;
+            InventarioActualizaDto inventario = new InventarioActualizaDto()
+            {
+                Id = id,
+                Nombre = Nombre,
+                Tipo = Tipo,
+                Descripcion = Descripcion,
+                Cantidad = Cantidad,
+                UsuarioId = Usuario.Id,
+                Unidad = Unidad
+            };
+            if (!ValidarModelo(inventario))
+            {
+                await _navigator.ShowMessageDialogAsync(this, title:"Error al guardar", content: _localizer[_mensajeError]);
+                return;
+            }
+            await _inventarioApi.PutInventarioAsync(inventario);
+            await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
         }
-        await _inventarioApi.PutInventarioAsync(inventario);
-        await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 
     private async void Eliminar()
     {
-        await _inventarioApi.DeleteInventarioAsync(id);
-        await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+        try
+        {
+            await _inventarioApi.DeleteInventarioAsync(id);
+            await _navigator.NavigateViewModelAsync<InventarioViewModel>(this);
+        }
+        catch (HttpRequestException)
+        {
+            await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
+        }
     }
 }

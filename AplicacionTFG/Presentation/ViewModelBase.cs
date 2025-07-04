@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
 using AplicacionTFG.Serialization;
+using AplicacionTFG.Services;
 
 namespace AplicacionTFG.Presentation;
 public abstract class ViewModelBase : ObservableObject
@@ -19,10 +20,10 @@ public abstract class ViewModelBase : ObservableObject
     public bool ValidarModelo(object modelo)
     {
         List<ValidationResult> validationResults = new ();
-#pragma warning disable IL2026 // Se usa para evitar el error de "El tipo 'ValidationContext' no se puede usar como un tipo de parámetro genérico porque no tiene un constructor sin parámetros público o protegido".
+#pragma warning disable IL2026
         var context = new ValidationContext(modelo);
         bool isValid = Validator.TryValidateObject(modelo, context, validationResults, true);
-#pragma warning restore IL2026 // Se usa para evitar el error de "El tipo 'ValidationContext' no se puede usar como un tipo de parámetro genérico porque no tiene un constructor sin parámetros público o protegido".
+#pragma warning restore IL2026
         _mensajeError = validationResults.Count > 0 ? validationResults[0].ErrorMessage! : string.Empty;
         return isValid;
     }
@@ -46,7 +47,11 @@ public abstract class ViewModelBase : ObservableObject
         set
         {
             idiomaSeleccionado = value;
-            _localizationService.SetCurrentCultureAsync(new CultureInfo(value.Simbolo + "-" + value.Simbolo.ToUpper().Replace("PT", "BR")));
+            if (_localizationService is not null && value.Simbolo is not null)
+            {
+                _localizationService.SetCurrentCultureAsync(new CultureInfo(value.Simbolo + "-" + value.Simbolo.ToUpper().Replace("PT", "BR")));
+                CultureInfo.CurrentCulture = new CultureInfo(value.Simbolo + "-" + value.Simbolo.ToUpper().Replace("PT", "BR"));
+            }
             CargarPalabras();
             OnPropertyChanged(nameof(IdiomaSeleccionado));
         }
@@ -73,16 +78,13 @@ public abstract class ViewModelBase : ObservableObject
         _localizer = localizer;
         _navigator = navigator;
         _appInfo = appInfo;
-        string usuario = (string)localSettings.Values["Usuario"];
-        if (usuario is not null)
-            Usuario = JsonSerializer.Deserialize(usuario, UsuarioContext.Default.Usuario)!;
+        Usuario = (Usuario)TransientSettings.Get("Usuario");
         Apiurl = appInfo.Value.ApiUrl ?? throw new ArgumentNullException(nameof(appInfo.Value.ApiUrl), "La URL de la API no puede ser nula.");
         CargarPalabras();
     }
-
 #pragma warning restore CS8618
 
-    public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo, ILocalizationService? localizationService = null) :this(localizer, navigator, appInfo) 
+    public ViewModelBase(IStringLocalizer localizer, INavigator navigator, IOptions<AppConfig> appInfo, ILocalizationService? localizationService = null) : this(localizer, navigator, appInfo) 
     {
         if (localizationService is not null)
         {

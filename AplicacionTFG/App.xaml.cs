@@ -1,6 +1,8 @@
+using AplicacionTFG.Presentation.Eventos;
 using AplicacionTFG.Presentation.Inventario;
 using AplicacionTFG.Presentation.Perfil;
 using AplicacionTFG.Presentation.Personal;
+using CommunityToolkit.Mvvm.Messaging;
 using Uno.Resizetizer;
 
 namespace AplicacionTFG;
@@ -66,16 +68,14 @@ public partial class App : Application
                 // Enable localization (see appsettings.json for supported languages)
                 .UseLocalization()
                 // Register Json serializers (ISerializer and ISerializer)
-                .UseSerialization((context, services) => services
-                    .AddContentSerializer(context)
-                    .AddJsonTypeInfo(WeatherForecastContext.Default.IImmutableListWeatherForecast))
+                
                 .UseHttp((context, services) =>
                 {
 #if DEBUG
                     // DelegatingHandler will be automatically injected
                     services.AddTransient<DelegatingHandler, DebugHttpHandler>();
 #endif
-                    services.AddSingleton<IWeatherCache, WeatherCache>();
+                   
                     //services.AddKiotaClient<WeatherServiceClient>(
                     //context,
                     //options: new EndpointOptions { Url = context.Configuration["ApiClient:Url"]! }
@@ -86,6 +86,8 @@ public partial class App : Application
                 {
                     // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
+                    services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
+
                 })
                 .UseNavigation(RegistroRoutes)
             );
@@ -106,13 +108,22 @@ public partial class App : Application
             new ViewMap<LoginPage, LoginViewModel>(),
             new ViewMap<MainPage, MainViewModel>(),
             new ViewMap<InicioPage, InicioViewModel>(),
-            new ViewMap<PersonalPage, PersonalViewModel>(),
-            new ViewMap<InventarioPage, InventarioViewModel>(),
             new ViewMap<PerfilPage, PerfilViewModel>(),
-            new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
+        #region Personal
+            new ViewMap<PersonalPage, PersonalViewModel>(),
             new DataViewMap<PersonaPage, PersonaViewModel, EntityNumber>(),
+        #endregion
+        #region Inventario
+            new ViewMap<InventarioPage, InventarioViewModel>(),
+            new DataViewMap<ElementoPage, ElementoViewModel, EntityNumber>(),
             new DataViewMap<EdicionElementoPage, EdicionElementoViewModel, InventarioConsulta>(),
-            new DataViewMap<SecondPage, SecondViewModel, Entity>()
+        #endregion
+        #region Eventos
+            new ViewMap<EventosMesPage, EventosMesViewModel>(),
+            new DataViewMap<AñadirEventoPage, AñadirEventoViewModel, EntityDateNumber>(),
+            new DataViewMap<EventosDiaPage, EventosDiaViewModel, EntityDateNumber>(),
+            new DataViewMap<EventoPage, EventoViewModel, EntityNumber>()
+        #endregion
         );
 
         routes.Register(
@@ -121,19 +132,25 @@ public partial class App : Application
                 [
                     new ("Login", View: views.FindByViewModel<LoginViewModel>(), IsDefault:true),
                     new ("Main", View: views.FindByViewModel<MainViewModel>(),
-                    Nested: [
-                        new ("Inicio", View: views.FindByViewModel<InicioViewModel>()),
-                        new ("Inventario",View: views.FindByViewModel<InventarioViewModel>(),
-                        Nested:[
-                            new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
-                            new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
-                            ]),
-                        new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
-                        new ("Persona", View: views.FindByViewModel<PersonaViewModel>()),
-                        new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
-                    ]
+                        Nested: [
+                            new ("Inicio", View: views.FindByViewModel<InicioViewModel>()),
+                            new ("Inventario",View: views.FindByViewModel<InventarioViewModel>(),
+                            Nested:[
+                                new ("Elemento",View: views.FindByViewModel<ElementoViewModel>()),
+                                new ("EdicionElemento",View: views.FindByViewModel<EdicionElementoViewModel>()),
+                                ]),
+                            new ("Personal", View: views.FindByViewModel<PersonalViewModel>()),
+                            new ("Persona", View: views.FindByViewModel<PersonaViewModel>(),
+                            Nested:[
+                                new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
+                                new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
+                                ]),
+                            new ("EventosMes", View: views.FindByViewModel<EventosMesViewModel>()),
+                            new ("EventosDia", View: views.FindByViewModel<EventosDiaViewModel>()),
+                            new ("Evento", View: views.FindByViewModel<EventoViewModel>()),
+                            new ("Perfil", View: views.FindByViewModel<PerfilViewModel>()),
+                        ]
                     ),
-                    new ("Second", View: views.FindByViewModel<SecondViewModel>()),
                 ]
             )
         );

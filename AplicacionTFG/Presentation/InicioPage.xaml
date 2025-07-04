@@ -5,12 +5,40 @@
     xmlns:local="using:AplicacionTFG.Presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:eventos="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:utu="using:Uno.Toolkit.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    
     <Grid>
         <Image Source="{Binding ImagenFondo, UpdateSourceTrigger=PropertyChanged}" Stretch="Fill" />
-        <Rectangle Fill="#80000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.25"/>
-        <TextBlock Text="Inicio" FontSize="40" VerticalAlignment="Top"/>
+        <Rectangle Fill="#80000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0.25" />
+        <Grid RowDefinitions="Auto,*" Margin="10,0,0,0">
+            <TextBlock Text="{Binding Bienvenida_Loc}" FontSize="40" VerticalAlignment="Top"/>
+            <utu:SafeArea Insets="All" Grid.Row="1">
+                <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                   
+                        <utu:ResponsiveView >
+                            <utu:ResponsiveView.NarrowTemplate>
+                            <DataTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="310" >
+                                    <eventos:EventosDiaInicioPage Margin="0,10,0,0" MaxHeight="400" Width="300" VerticalAlignment="Top"/>
+                                    <eventos:TareasPendientesPage Margin="0,10,0,0" MaxHeight="400" Width="300" VerticalAlignment="Top"/>
+                                </VariableSizedWrapGrid>
+                            </DataTemplate>
+                            </utu:ResponsiveView.NarrowTemplate>
+                        <utu:ResponsiveView.NormalTemplate>
+                            <DataTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="310" >
+                                    <eventos:EventosDiaInicioPage Margin="0,10,0,0" Height="400" Width="300" VerticalAlignment="Top"/>
+                                    <eventos:TareasPendientesPage Margin="0,10,0,0" Height="400" Width="300" VerticalAlignment="Top"/>
+                                </VariableSizedWrapGrid>
+                            </DataTemplate>
+                        </utu:ResponsiveView.NormalTemplate>
+                    </utu:ResponsiveView>
+                </ScrollViewer>
+            </utu:SafeArea>
+            
+        </Grid>
     </Grid>
 </Page>

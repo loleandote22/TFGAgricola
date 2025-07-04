@@ -14,9 +14,9 @@ public class Empresa
 public class EmpresaDto
 {
     [JsonPropertyName("nombre")]
-    [Required(ErrorMessage = "El nombre es obligatoria")]
+    [Required(ErrorMessage = "NombreObligatorio")]
     public required string Nombre { get; set; }
-    [Required(ErrorMessage = "La contraseña es obligatoria")]
+    [Required(ErrorMessage = "ContraseñaObligatoria")]
     [JsonPropertyName("password")]
     public required string Contrasena { get; set; }
 }

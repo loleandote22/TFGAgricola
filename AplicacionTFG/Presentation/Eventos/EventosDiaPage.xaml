@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="AplicacionTFG.Presentation.Eventos.EventosDiaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AplicacionTFG.Presentation.Eventos"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utu="using:Uno.Toolkit.UI"
+    xmlns:ut="using:Uno.Themes"
+    mc:Ignorable="d"
+    Background="{Binding Color}">
+    <Grid MinWidth="300" RowDefinitions="Auto,*">
+        <TextBlock Text="{Binding EventosHoy_Loc}" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
+        <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
+            <TextBlock Text="{Binding Fecha_Loc, UpdateSourceTrigger=PropertyChanged}" VariableSizedWrapGrid.ColumnSpan="6" FontSize="20" Margin="10"/>
+            <Button Command="{Binding VerDiaAnteriorCommand}" ToolTipService.ToolTip="{Binding MesAnterior_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Left}" Padding="-10,0,0,0"/>
+            <Button Command="{Binding VerDiaSiguienteCommand}" ToolTipService.ToolTip="{Binding MesSiguiente_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Right}" Padding="-5,0,0,0"/>
+        </VariableSizedWrapGrid>
+        <ListView Grid.Row="1" ItemsSource="{Binding Eventos}" SelectedItem="{Binding EventoSeleccionado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="2" CornerRadius="10" Padding="2">
+                        <Grid RowDefinitions="Auto,Auto,*" Background="{Binding Color}" Padding="5">
+                            <TextBlock Text="{Binding Nombre}" Foreground="{Binding ColorLetra}"/>
+                            <TextBlock Grid.Row="1" Foreground="{Binding ColorLetra}">
+                                <Run Text="{Binding InicioHora}"/>
+                                <Run Text=" - "/>
+                                <Run Text="{Binding FinHora}"/>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Descripcion}" Foreground="{Binding ColorLetra}" Grid.Row="2"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Grid.Row="1" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,20" Command="{Binding AñadirEventoCommand}">
+            <ut:ControlExtensions.Icon>
+                <SymbolIcon Symbol="Add" />
+            </ut:ControlExtensions.Icon>
+        </Button>
+        <TextBlock Grid.Row="1" Text="{Binding NoHayEventos_Loc}" HorizontalAlignment="Center" FontSize="20" Visibility="{Binding VerNoHayEventos}"/>
+    </Grid>
+</Page>

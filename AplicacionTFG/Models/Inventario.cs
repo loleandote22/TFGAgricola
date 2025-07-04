@@ -15,18 +15,18 @@ namespace AplicacionTFG.Models;
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("nombre")]
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
+        [Required(ErrorMessage = "NombreObligatorio")]
+        [StringLength(50, ErrorMessage = "LongitudNombre")]
         public required string Nombre { get; set; }
         [StringLength(50)]
-        [Required(ErrorMessage = "El tipo es obligatorio")]
+        [Required(ErrorMessage = "TipoObligatorio")]
         [JsonPropertyName("tipo")]
         public required string Tipo { get; set; }
-        [Required(ErrorMessage = "La descripción es obligatoria")]
+        [Required(ErrorMessage = "DescripcionObligatoria")]
         [JsonPropertyName("descripcion")]
-        [StringLength(200, ErrorMessage = "La descripción no puede tener más de 200 caracteres")]
+        [StringLength(200, ErrorMessage = "LongitudDescripcion200")]
         public required string Descripcion { get; set; }
-        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        [Required(ErrorMessage = "CantidadRequerida")]
         [JsonPropertyName("cantidad")]
         public required int Cantidad { get; set; }
         [JsonPropertyName("empresaId")]
@@ -42,8 +42,7 @@ namespace AplicacionTFG.Models;
         [JsonPropertyName("id")]
         public int Id { get; set; }
         [JsonPropertyName("tipo")]
-        [StringLength(50, ErrorMessage = "El tipo no puede tener más de 50 caracteres")]
-        public required string Tipo { get; set; }
+        public required int Tipo { get; set; }
         [JsonPropertyName("fecha")]
         public required DateTime Fecha { get; set; }
         [JsonPropertyName("cantidad")]
@@ -58,7 +57,7 @@ namespace AplicacionTFG.Models;
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-        [StringLength(250, ErrorMessage = "El mensaje no puede tener más de 250 caracteres")]
+        [StringLength(250, ErrorMessage = "LongitudMensaje")]
         [JsonPropertyName("mensaje")]
         public required string Mensaje { get; set; }
         [JsonPropertyName("fecha")]
@@ -110,7 +109,10 @@ public class InventarioConsulta
 
     public class InventarioEventoConsulta
     {
-        public required string Tipo { get; set; }
+        public required int Tipo { get; set; }
+
+        [JsonIgnore]
+        public string TipoNombre { get; set; }
         public required DateTime Fecha { get; set; }
         public required int Cantidad { get; set; }
         [JsonPropertyName("usuarioNombre")]
@@ -133,7 +135,7 @@ public class InventarioConsulta
         [JsonPropertyName("nombre")]
         [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres")]
         public required string Nombre { get; set; }
-        [StringLength(50)]
+        [StringLength(50, MinimumLength =1)]
         public required string Tipo { get; set; }
         [StringLength(300, ErrorMessage = "El nombre no puede tener más de 300 caracteres")]
         public required string Descripcion { get; set; }
