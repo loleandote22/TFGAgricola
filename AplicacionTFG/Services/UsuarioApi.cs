@@ -14,6 +14,12 @@ public class UsuarioApi(string url) : WebApiBase(url)
         return await GetAsync(url);
     }
 
+    public async Task<string?> GetUsuarioNombreAsync(string nombre)
+    {
+        var url = urlbase + "nombre/"+nombre;
+        return await GetAsync(url);
+    }
+
     public async Task<string?> GetPregunta(string nombre)
     {
         var url = urlbase + "pregunta/" + nombre;

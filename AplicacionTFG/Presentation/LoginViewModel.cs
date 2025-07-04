@@ -1,7 +1,6 @@
 using System.Text.Json;
 using AplicacionTFG.Serialization;
 using AplicacionTFG.Services;
-using Microsoft.UI.Xaml.Input;
 using Windows.UI.ViewManagement;
 namespace AplicacionTFG.Presentation;
 public partial class LoginViewModel: ViewModelBase
