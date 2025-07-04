@@ -483,4 +483,7 @@
   <data name="LongitudDescripcion300" xml:space="preserve">
     <value>La description ne doit pas dépasser 300 caractères</value>
   </data>
+  <data name="NoEliminarActualizacionesAjena" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à supprimer les mises à jour d'autres travailleurs.</value>
+  </data>
 </root>

@@ -12,7 +12,7 @@
     <Grid MinWidth="300" RowDefinitions="Auto,*">
         <TextBlock Text="{Binding EventosHoy_Loc}" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
         <VariableSizedWrapGrid Orientation="Horizontal" Margin="0,0,0,15" ItemWidth="50" ItemHeight="60">
-            <TextBlock Text="{Binding Fecha_Loc, UpdateSourceTrigger=PropertyChanged}" VariableSizedWrapGrid.ColumnSpan="6" FontSize="20" Margin="10"/>
+            <TextBlock Text="{Binding Fecha_Loc, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VariableSizedWrapGrid.ColumnSpan="6" FontSize="20" Margin="10"/>
             <Button Command="{Binding VerDiaAnteriorCommand}" ToolTipService.ToolTip="{Binding MesAnterior_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Left}" Padding="-10,0,0,0"/>
             <Button Command="{Binding VerDiaSiguienteCommand}" ToolTipService.ToolTip="{Binding MesSiguiente_Loc}"  Style="{StaticResource TextButtonStyle}" Content="{StaticResource Right}" Padding="-5,0,0,0"/>
         </VariableSizedWrapGrid>
@@ -33,7 +33,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Grid.Row="1" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,20" Command="{Binding AñadirEventoCommand}">
+        <Button Visibility="{Binding AñadirEventosVisibility}" Grid.Row="1" Style="{StaticResource FabStyle}" ToolTipService.ToolTip="{Binding Añadir_Loc}" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,10,10,20" Command="{Binding AñadirEventoCommand}">
             <ut:ControlExtensions.Icon>
                 <SymbolIcon Symbol="Add" />
             </ut:ControlExtensions.Icon>

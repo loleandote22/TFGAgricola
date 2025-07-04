@@ -16,8 +16,8 @@
     <Grid>
         <utu:SafeArea Insets="All">
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto, Auto,*" ColumnDefinitions="*,Auto" RowSpacing="16" Margin="15,15,15,50">
-                <Button Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
-                <Button Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
+                <Button Visibility="{Binding EditarEliminarVisibility}" Content="{Binding Editar_Loc}" Command="{Binding EditarCommand}" Margin="10"/>
+                <Button Visibility="{Binding EditarEliminarVisibility}" Content="{Binding Eliminar_Loc}" Style="{StaticResource EliminarButton}" Grid.Column="1" Command="{Binding EliminarCommand}"/>
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
                     <TextBlock Text="{Binding Tipo}" FontSize="24" Margin="10,0,0,0"/>
                     <Line X1="60" Stretch="Fill" Margin="0,16,0,10" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="1" />

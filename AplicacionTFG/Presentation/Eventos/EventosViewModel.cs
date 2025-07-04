@@ -113,7 +113,7 @@ public class EventosMesViewModel : ViewModelBase
         _eventoApi = new EventoApi(Apiurl);
         _usuarioApi = new UsuarioApi(Apiurl);
         _fechaBusqueda = DateOnly.FromDateTime(DateTime.Now);
-        AñadirEventosVisibility = Visibility.Visible;
+        AñadirEventosVisibility = _tipoUsuario <2 ? Visibility.Visible: Visibility.Collapsed;
         EmpleadosVisibility = Usuario.Tipo<2 ? Visibility.Visible : Visibility.Collapsed;
         CargarUsuarios();
         noCargar = false;
@@ -358,7 +358,7 @@ public class EventosDiaViewModel : ViewModelBase
     #endregion
 
    
-
+    public Visibility AñadirEventosVisibility { get; set; } = Visibility.Collapsed;
 
     #region Eventos
     public List<EventoDia> Eventos { get; set; } = null!;
@@ -400,6 +400,7 @@ public class EventosDiaViewModel : ViewModelBase
         _fechaBusqueda = DateOnly.FromDateTime(diaUsuario.date);
         _idUsuario = diaUsuario.number;
         _tipoUsuario = Usuario.Tipo;
+        AñadirEventosVisibility = _tipoUsuario < 2 ? Visibility.Visible : Visibility.Collapsed;
         Fecha_Loc = _fechaBusqueda.ToString("dddd dd-MM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
         _eventoApi = new EventoApi(Apiurl);
         CargarEventos();
@@ -564,6 +565,8 @@ public class EventoViewModel : ViewModelBase
 
     private Visibility detalleVisibility = Visibility.Collapsed;
     private Visibility noHayActualizacionesVisibility;
+    private Visibility editarEliminarVisibility;
+    public Visibility EditarEliminarVisibility { get => editarEliminarVisibility; set => editarEliminarVisibility = value; }
     #endregion
 
     #region Campos
@@ -575,7 +578,8 @@ public class EventoViewModel : ViewModelBase
     public TimeSpan HoraSeleccionada { get; set; }
 
     public ObservableCollection<TareaActualizacion> Actualizaciones { get; set; }
-    public bool Finalizada { get => finalizada; set  { finalizada = value; OnPropertyChanged(nameof(Finalizada)); }}
+    public bool Finalizada { get => finalizada; set  { finalizada = value; 
+            OnPropertyChanged(nameof(Finalizada)); }}
     #endregion
 
     private readonly EventoApi _eventoApi;
@@ -584,6 +588,7 @@ public class EventoViewModel : ViewModelBase
     
     public EventoViewModel(INavigator navigator, IStringLocalizer localizer, IOptions<AppConfig> appInfo, EntityNumber id): base(localizer, navigator, appInfo)
     {
+        EditarEliminarVisibility = Usuario.Tipo < 2 ? Visibility.Visible : Visibility.Collapsed;
         DeleteCommand = new RelayCommand<TareaActualizacion>(OnDelete);
         DiaSeleccionado = DateTimeOffset.Now;
         HoraSeleccionada = DateTime.Now.TimeOfDay;
@@ -625,11 +630,13 @@ public class EventoViewModel : ViewModelBase
     private void TerminarCarga(string result )
     {
         Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
+       
         List<string> Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
         Tipo = Tipos[Evento.Tipo];
         OnPropertyChanged(nameof(Tipo));
         if (Evento.Tipo == 1)
         {
+            Finalizada = Evento.TareaDetalle!.Finalizada;
             DetalleVisibility = Visibility.Visible;
             if (Evento.TareaDetalle.Actualizaciones is not null && Evento.TareaDetalle.Actualizaciones.Count > 0)
             {
@@ -677,8 +684,18 @@ public class EventoViewModel : ViewModelBase
         {
             if (item != null && Actualizaciones.Contains(item))
             {
-               var result =  _eventoApi.DeleteActualizacion(item.Id);
+                if (Usuario.Tipo== 2 && item.UsuarioId != Usuario.Id)
+                {
+                    _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["NoEliminarActualizacionesAjena"]);
+                    return;
+                }
+                var result =  _eventoApi.DeleteActualizacion(item.Id);
                 Actualizaciones.Remove(item);
+                if (Actualizaciones.Count == 0)
+                {
+                    NoHayActualizacionesVisibility = Visibility.Visible;
+                    OnPropertyChanged(nameof(NoHayActualizacionesVisibility));
+                }
                 Evento.TareaDetalle!.Actualizaciones!.Remove(item);
             }
         }
