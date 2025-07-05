@@ -170,7 +170,7 @@ public class EventosMesViewModel : ViewModelBase
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
-    }
+        }
 #else
     private void CargarEventos(int mes, int año)
     {
@@ -234,9 +234,19 @@ public class EventosMesViewModel : ViewModelBase
             Dias = new();
             return;
         }
-        _eventos = JsonSerializer.Deserialize(result, EventoMesContext.Default.ListEventoMes)!;
-        ActualizarEventos();
+        try
+        {
+            _eventos = JsonSerializer.Deserialize(result, EventoMesContext.Default.ListEventoMes)!;
+            ActualizarEventos();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los eventos: {ex.Message}");
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: "Parece que algo salió mal");
+        }
     }
+
+
 
     private void TerminarCargaUsuarios(string? result)
     {
@@ -691,6 +701,7 @@ public class EventoViewModel : ViewModelBase
                 }
                 var result =  _eventoApi.DeleteActualizacion(item.Id);
                 Actualizaciones.Remove(item);
+                Finalizada = Evento.TareaDetalle!.Cantidad <= Actualizaciones.Sum(ac => ac.Cantidad);
                 if (Actualizaciones.Count == 0)
                 {
                     NoHayActualizacionesVisibility = Visibility.Visible;
@@ -752,8 +763,6 @@ public class EditarEventoViewModel : ViewModelBase
     public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
     public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
-    private Color colorSeleccionado = Colors.Black;
-    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
  
     public DateTimeOffset? DiaInicio{ get; set; } = null;
     private string nombre = null!;
@@ -761,7 +770,7 @@ public class EditarEventoViewModel : ViewModelBase
     private string ubicacion = null!;
     private double cantidad = 0;
     private string unidad = null!;
-
+    private string _color;
     private bool finalizada = false;
     public TimeSpan? HoraInicio { get; set; } = null;
     public DateTimeOffset? DiaFin { get; set; } = null;
@@ -836,9 +845,9 @@ public class EditarEventoViewModel : ViewModelBase
         Nombre = evento.Nombre;
         Descripcion = evento.Descripcion ?? string.Empty;
         Ubicacion = evento.Ubicacion ?? string.Empty;
-        ColorSeleccionado = Color.FromArgb(255, byte.Parse(evento.Color.Substring(3, 2), System.Globalization.NumberStyles.HexNumber), byte.Parse(evento.Color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber), byte.Parse(evento.Color.Substring(7, 2), System.Globalization.NumberStyles.HexNumber));
         DiaInicio = new DateTimeOffset(evento.Inicio);
         HoraInicio = evento.Inicio.TimeOfDay;
+        _color = evento.Color;
         if (evento.Fin.HasValue)
         {
             DiaFin = new DateTimeOffset(evento.Fin.Value);
@@ -875,7 +884,7 @@ public class EditarEventoViewModel : ViewModelBase
             Nombre = Nombre,
             Descripcion = Descripcion,
             Ubicacion = Ubicacion,
-            Color = ColorSeleccionado.ToString(),
+            Color = _color,
             Inicio = DiaInicio!.Value.Date + HoraInicio!.Value,
             Fin = DiaFin.HasValue ? DiaFin.Value.Date + HoraFin : null,
             Tipo = Evento.Tipo,
@@ -892,8 +901,8 @@ public class EditarEventoViewModel : ViewModelBase
                 Unidad = Unidad,
                 Finalizada = Finalizada,
                 EventoId = Evento.Id
-
             };
+            eventoguarda.Color =  eventoguarda.TareaDetalle.Finalizada?"#FF0BE62F":"#FF0B83E6";
         }
         if (!ValidarModelo(eventoguarda))
         {
@@ -963,8 +972,6 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
     public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
-    private Color colorSeleccionado = Colors.Black;
-    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
     private DateTimeOffset _diaInicio;
     public DateTimeOffset DiaInicio
     {
@@ -1087,7 +1094,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
                 Nombre = Nombre,
                 Descripcion = Descripcion,
                 Ubicacion = Ubicacion,
-                Color = ColorSeleccionado.ToString(),
+                Color = "#FF0B83E6",
                 Inicio = DiaInicio.Date + HoraInicio,
                 Fin = DiaFin.HasValue ? DiaInicio.Date + HoraInicio : null,
                 Tipo = TipoSeleccionado,
