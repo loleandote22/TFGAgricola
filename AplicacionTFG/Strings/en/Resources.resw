@@ -327,9 +327,6 @@
   <data name="Dia" xml:space="preserve">
     <value>Day</value>
   </data>
-  <data name="Reunion" xml:space="preserve">
-    <value>Meeting</value>
-  </data>
   <data name="Dueno" xml:space="preserve">
     <value>Owner</value>
   </data>
@@ -355,7 +352,7 @@
     <value>Add update</value>
   </data>
   <data name="DetallesTareaAlerta" xml:space="preserve">
-    <value>The default task details are:\Quantity: 0\Unit: Unidades </value>
+    <value>The task is to be created with:Quantity: \Unit:</value>
   </data>
   <data name="Actualizacion" xml:space="preserve">
     <value>Update</value>
