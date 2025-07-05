@@ -99,7 +99,8 @@ public class EventoMes
 {
     public int Id { get; set; }
     public string Nombre { get; set; }= string.Empty;
-    public string Color { get; set; } = string.Empty; private string colorLetra = string.Empty;
+    public string Color { get; set; } = string.Empty; 
+    private string colorLetra = string.Empty;
     [JsonIgnore]
     public string ColorLetra
     {
@@ -115,6 +116,8 @@ public class EventoMes
     public DateTime? Fin { get; set; }
     public int Tipo { get; set; }
     public int UsuarioId { get; set; }
+    public string Ubicacion { get; set; } = string.Empty;
+    public string NombreUsuario { get; set; } = string.Empty;
 }
 
 public class EventoDia
@@ -140,4 +143,5 @@ public class EventoDia
     public string FinHora { get => Fin is not null ? Fin.Value.ToString("HH:mm", System.Globalization.CultureInfo.CurrentCulture) : ""; }
     public required string Ubicacion { get; set; }
     public required string Descripcion { get; set; }
+    public required string NombreUsuario { get; set; }
 }

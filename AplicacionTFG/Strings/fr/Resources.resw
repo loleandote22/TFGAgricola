@@ -175,7 +175,7 @@
     <value>Personnel</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
-    <value>Question</value>
+    <value>Question sur la récupération</value>
   </data>
   <data name="RecuperarContraseña" xml:space="preserve">
     <value>Recouvrer mot de passe</value>
@@ -184,7 +184,7 @@
     <value>Inscription</value>
   </data>
   <data name="Respuesta" xml:space="preserve">
-    <value>Résponse</value>
+    <value>Réponse à la récupération</value>
   </data>
   <data name="Restablecer" xml:space="preserve">
     <value>Rétablir</value>
@@ -327,9 +327,6 @@
   <data name="Dia" xml:space="preserve">
     <value>Jour</value>
   </data>
-  <data name="Reunion" xml:space="preserve">
-    <value>Réunion</value>
-  </data>
   <data name="Dueno" xml:space="preserve">
     <value>Propriétaire</value>
   </data>
@@ -355,7 +352,7 @@
     <value>Ajouter un update</value>
   </data>
   <data name="DetallesTareaAlerta" xml:space="preserve">
-    <value>Les détails de la tâche par défaut sont:\Quantité: 0 \Unité: Unidades </value>
+    <value>La tâche doit être créée avec:Quantity : \NUnité :</value>
   </data>
   <data name="Actualizacion" xml:space="preserve">
     <value>Actualisation</value>

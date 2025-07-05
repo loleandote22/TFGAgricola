@@ -170,7 +170,7 @@ public class EventosMesViewModel : ViewModelBase
         {
             await _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: _localizer["ErrorConexion"]);
         }
-    }
+        }
 #else
     private void CargarEventos(int mes, int año)
     {
@@ -234,9 +234,19 @@ public class EventosMesViewModel : ViewModelBase
             Dias = new();
             return;
         }
-        _eventos = JsonSerializer.Deserialize(result, EventoMesContext.Default.ListEventoMes)!;
-        ActualizarEventos();
+        try
+        {
+            _eventos = JsonSerializer.Deserialize(result, EventoMesContext.Default.ListEventoMes)!;
+            ActualizarEventos();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los eventos: {ex.Message}");
+            _navigator.ShowMessageDialogAsync(this, title: _localizer["Error"], content: "Parece que algo salió mal");
+        }
     }
+
+
 
     private void TerminarCargaUsuarios(string? result)
     {
@@ -301,7 +311,7 @@ public class EventosMesViewModel : ViewModelBase
 
     protected override void CargarPalabras()
     {
-        Tipos = new (){ _localizer["Todos"], _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        Tipos = new (){ _localizer["Todos"], _localizer["Tarea"], _localizer["Recordatorio"] };
         var lunes = new DateOnly(2023, 1, 2);
         var martes = lunes.AddDays(1);
         var miercoles = lunes.AddDays(2);
@@ -631,10 +641,10 @@ public class EventoViewModel : ViewModelBase
     {
         Evento = JsonSerializer.Deserialize(result, EventoContext.Default.Evento)!;
        
-        List<string> Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        List<string> Tipos = new() { _localizer["Tarea"], _localizer["Recordatorio"] };
         Tipo = Tipos[Evento.Tipo];
         OnPropertyChanged(nameof(Tipo));
-        if (Evento.Tipo == 1)
+        if (Evento.Tipo == 0)
         {
             Finalizada = Evento.TareaDetalle!.Finalizada;
             DetalleVisibility = Visibility.Visible;
@@ -691,6 +701,7 @@ public class EventoViewModel : ViewModelBase
                 }
                 var result =  _eventoApi.DeleteActualizacion(item.Id);
                 Actualizaciones.Remove(item);
+                Finalizada = Evento.TareaDetalle!.Cantidad <= Actualizaciones.Sum(ac => ac.Cantidad);
                 if (Actualizaciones.Count == 0)
                 {
                     NoHayActualizacionesVisibility = Visibility.Visible;
@@ -752,8 +763,6 @@ public class EditarEventoViewModel : ViewModelBase
     public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
     public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
-    private Color colorSeleccionado = Colors.Black;
-    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
  
     public DateTimeOffset? DiaInicio{ get; set; } = null;
     private string nombre = null!;
@@ -761,7 +770,7 @@ public class EditarEventoViewModel : ViewModelBase
     private string ubicacion = null!;
     private double cantidad = 0;
     private string unidad = null!;
-
+    private string _color;
     private bool finalizada = false;
     public TimeSpan? HoraInicio { get; set; } = null;
     public DateTimeOffset? DiaFin { get; set; } = null;
@@ -836,9 +845,9 @@ public class EditarEventoViewModel : ViewModelBase
         Nombre = evento.Nombre;
         Descripcion = evento.Descripcion ?? string.Empty;
         Ubicacion = evento.Ubicacion ?? string.Empty;
-        ColorSeleccionado = Color.FromArgb(255, byte.Parse(evento.Color.Substring(3, 2), System.Globalization.NumberStyles.HexNumber), byte.Parse(evento.Color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber), byte.Parse(evento.Color.Substring(7, 2), System.Globalization.NumberStyles.HexNumber));
         DiaInicio = new DateTimeOffset(evento.Inicio);
         HoraInicio = evento.Inicio.TimeOfDay;
+        _color = evento.Color;
         if (evento.Fin.HasValue)
         {
             DiaFin = new DateTimeOffset(evento.Fin.Value);
@@ -875,7 +884,7 @@ public class EditarEventoViewModel : ViewModelBase
             Nombre = Nombre,
             Descripcion = Descripcion,
             Ubicacion = Ubicacion,
-            Color = ColorSeleccionado.ToString(),
+            Color = _color,
             Inicio = DiaInicio!.Value.Date + HoraInicio!.Value,
             Fin = DiaFin.HasValue ? DiaFin.Value.Date + HoraFin : null,
             Tipo = Evento.Tipo,
@@ -892,8 +901,8 @@ public class EditarEventoViewModel : ViewModelBase
                 Unidad = Unidad,
                 Finalizada = Finalizada,
                 EventoId = Evento.Id
-
             };
+            eventoguarda.Color =  eventoguarda.TareaDetalle.Finalizada?"#FF0BE62F":"#FF0B83E6";
         }
         if (!ValidarModelo(eventoguarda))
         {
@@ -963,8 +972,6 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public string Nombre { get => nombre; set { nombre = value; OnPropertyChanged(nameof(Nombre)); } }
     public string Descripcion { get => descripcion; set { descripcion = value; OnPropertyChanged(nameof(Descripcion)); } }
     public string Ubicacion { get => ubicacion; set { ubicacion = value; OnPropertyChanged(nameof(Ubicacion)); } }
-    private Color colorSeleccionado = Colors.Black;
-    public Color ColorSeleccionado { get => colorSeleccionado; set { colorSeleccionado = value; OnPropertyChanged(nameof(ColorSeleccionado)); } }
     private DateTimeOffset _diaInicio;
     public DateTimeOffset DiaInicio
     {
@@ -978,7 +985,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
             }
         }
     }
-    private int tipoSeleccionado = 1;
+    private int tipoSeleccionado = 0;
     private string nombre = null!;
     private string descripcion = null!;
     private string ubicacion = null!;
@@ -988,7 +995,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
     public DateTimeOffset? DiaFin { get; set; } = null;
     public TimeSpan? HoraFin { get; set; } = null;
     public List<string> Tipos { get; set; } = null!;
-    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed; OnPropertyChanged(nameof(TipoSeleccionado)); } }
+    public int TipoSeleccionado { get => tipoSeleccionado; set { tipoSeleccionado = value; TareaVisibility = value == 0 ? Visibility.Visible : Visibility.Collapsed; OnPropertyChanged(nameof(TipoSeleccionado)); } }
     public int Cantidad { get => cantidad; set => cantidad = value; }
     public string Unidad { get => unidad; set => unidad = value; }
     public List<UsuarioNombre> Empleados { get; set; } = null!;
@@ -1068,7 +1075,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
 #endif
         try
         {
-            if (TipoSeleccionado == 1 && (Unidad is null || Cantidad == 0))
+            if (TipoSeleccionado == 0 && (Unidad is null || Cantidad == 0))
             {
                 var acciones = new[]
                 {
@@ -1077,8 +1084,9 @@ public partial class AñadirEventoViewModel : ViewModelBase
                 };
                 string texto = _localizer["DetallesTareaAlerta"];
                 string[] parts = texto.Split('\\');
-                string textoseparado = parts[0] + "\n" + parts[1] + "\n" + parts[2];
-                string resultado = await _navigator.ShowMessageDialogAsync<string>(this, title: _localizer["Error"], content: textoseparado, buttons: acciones);
+                var textoUnidad = Unidad ?? "nan";
+                string textoseparado = parts[0] + "\n" + parts[1] +" "+ Cantidad + "\n" + parts[2] +" "+textoUnidad;
+                string? resultado = await _navigator.ShowMessageDialogAsync<string>(this, title: _localizer["Error"], content: textoseparado, buttons: acciones);
                 if (resultado != _localizer["Aceptar"].ToString())
                     return;
             }
@@ -1087,16 +1095,16 @@ public partial class AñadirEventoViewModel : ViewModelBase
                 Nombre = Nombre,
                 Descripcion = Descripcion,
                 Ubicacion = Ubicacion,
-                Color = ColorSeleccionado.ToString(),
+                Color = TipoSeleccionado ==0 ?"#FF0B83E6": "#FFFFFFFF",
                 Inicio = DiaInicio.Date + HoraInicio,
                 Fin = DiaFin.HasValue ? DiaInicio.Date + HoraInicio : null,
                 Tipo = TipoSeleccionado,
                 UsuarioId = EmpleadoSeleccionado is null ? _usuarioId : EmpleadoSeleccionado.Id,
                 EmpresaId = Usuario.EmpresaId,
-                TareaDetalle = TipoSeleccionado == 1 ? new TareaDetalleDto
+                TareaDetalle = TipoSeleccionado == 0 ? new TareaDetalleDto
                 {
                     Cantidad = Cantidad,
-                    Unidad = Unidad ?? "Unidades"
+                    Unidad = Unidad ?? "nan"
                 } : null
             };
             if (!ValidarModelo(Evento))
@@ -1122,7 +1130,7 @@ public partial class AñadirEventoViewModel : ViewModelBase
 
     protected override void CargarPalabras()
     {
-        Tipos = new() { _localizer["Reunion"], _localizer["Tarea"], _localizer["Recordatorio"] };
+        Tipos = new() { _localizer["Tarea"], _localizer["Recordatorio"] };
         Nombre_Loc = _localizer["Nombre"];
         Descripcion_Loc = _localizer["Descripcion"];
         Ubicacion_Loc = _localizer["Ubicacion"];

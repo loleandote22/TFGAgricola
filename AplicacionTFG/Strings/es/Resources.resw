@@ -175,7 +175,7 @@
     <value>Personal</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
-    <value>Pregunta</value>
+    <value>Pregunta de recuperación</value>
   </data>
   <data name="RecuperarContraseña" xml:space="preserve">
     <value>Recuperar contraseña</value>
@@ -184,7 +184,7 @@
     <value>Registrarse</value>
   </data>
   <data name="Respuesta" xml:space="preserve">
-    <value>Respuesta</value>
+    <value>Respuesta de recuperación</value>
   </data>
   <data name="Restablecer" xml:space="preserve">
     <value>Restablecer</value>
@@ -327,9 +327,6 @@
   <data name="Dia" xml:space="preserve">
     <value>Día</value>
   </data>
-  <data name="Reunion" xml:space="preserve">
-    <value>Reunión</value>
-  </data>
   <data name="Dueno" xml:space="preserve">
     <value>Dueño</value>
   </data>
@@ -355,7 +352,7 @@
     <value>Añadir actualización</value>
   </data>
   <data name="DetallesTareaAlerta" xml:space="preserve">
-    <value>Los detalles de la tarea por defecto son:\Cantidad: 0\Unidad: Unidades </value>
+    <value>La tarea se va a crear con:\Cantidad: \Unidad:</value>
   </data>
   <data name="Actualizacion" xml:space="preserve">
     <value>Actualización</value>

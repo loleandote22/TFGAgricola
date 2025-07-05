@@ -40,7 +40,7 @@ public class InicioViewModel :ViewModelBase
     private EventoDia eventoSeleccionado;
     public EventoDia EventoSeleccionado { get => eventoSeleccionado; set { eventoSeleccionado = value; VerEvento(); } }
     public Visibility VerNoHayEventos { get => Eventos.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
-    public Visibility VerNoHayTareasPendientes { get => TareasPendientes.Count == 0 ? Visibility.Visible : Visibility.Collapsed; }
+    public Visibility VerNoHayTareasPendientes { get; set; } = Visibility.Visible;
     #endregion
     private string imagenFondo;
 
@@ -101,6 +101,8 @@ public class InicioViewModel :ViewModelBase
             var result = await _eventoApi.GetTareasPendientes(Usuario.Id);
             if (result is not null)
                 TareasPendientes = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
+            VerNoHayTareasPendientes = TareasPendientes is null || TareasPendientes.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            OnPropertyChanged(nameof(VerNoHayTareasPendientes));
         }
         catch (HttpRequestException)
         {
@@ -131,8 +133,8 @@ public class InicioViewModel :ViewModelBase
             var result = _eventoApi.GetTareasPendientes(Usuario.Id).GetAwaiter().GetResult();
             if (result is not null)
                 TareasPendientes = JsonSerializer.Deserialize(result, EventoDiaContext.Default.ListEventoDia)!;
-
-            Console.WriteLine(TareasPendientes.Count);
+            VerNoHayTareasPendientes = TareasPendientes is null || TareasPendientes.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            OnPropertyChanged(nameof(VerNoHayTareasPendientes));
         }
         catch (HttpRequestException)
         {

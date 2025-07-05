@@ -175,7 +175,7 @@
     <value>Pessoal</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
-    <value>Pregunta </value>
+    <value>Pergunta sobre recuperação</value>
   </data>
   <data name="RecuperarContraseña" xml:space="preserve">
     <value>Recuperar senha</value>
@@ -184,7 +184,7 @@
     <value>Cadastrar-se</value>
   </data>
   <data name="Respuesta" xml:space="preserve">
-    <value>Resposta</value>
+    <value>Resposta de recuperação</value>
   </data>
   <data name="Restablecer" xml:space="preserve">
     <value>Restaurar</value>
@@ -327,9 +327,6 @@
   <data name="Dia" xml:space="preserve">
     <value>Dia</value>
   </data>
-  <data name="Reunion" xml:space="preserve">
-    <value>Reunião</value>
-  </data>
   <data name="Dueno" xml:space="preserve">
     <value>Proprietário</value>
   </data>
@@ -355,7 +352,7 @@
     <value>Añadir actualización</value>
   </data>
   <data name="DetallesTareaAlerta" xml:space="preserve">
-    <value>Os detalhes padrão da tarefa são:\Quantidade: 0\Unidade: Unidades </value>
+    <value>A tarefa deve ser criada com:Quantity: \Unidade:</value>
   </data>
   <data name="Actualizacion" xml:space="preserve">
     <value>Atualizações</value>

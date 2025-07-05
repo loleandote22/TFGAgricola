@@ -18,7 +18,11 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="10" Background="{Binding Color}">
-                                <TextBlock Text="{Binding Nombre}" Foreground="{Binding ColorLetra}"/>
+                                <TextBlock Foreground="{Binding ColorLetra}">
+                                     <Run Text="{Binding NombreUsuario}"/>
+                                     <Run Text="{Binding Nombre}"/>
+                                     <Run Text="{Binding Ubicacion}"/>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
