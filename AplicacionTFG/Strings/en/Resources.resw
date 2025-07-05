@@ -175,7 +175,7 @@
     <value>Staff</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
-    <value>Question</value>
+    <value>Recovery question</value>
   </data>
   <data name="RecuperarContraseña" xml:space="preserve">
     <value>Password recover</value>
@@ -184,7 +184,7 @@
     <value>Sign up</value>
   </data>
   <data name="Respuesta" xml:space="preserve">
-    <value>Answer</value>
+    <value>Recovery response</value>
   </data>
   <data name="Restablecer" xml:space="preserve">
     <value>Recover</value>

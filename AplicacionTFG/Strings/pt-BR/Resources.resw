@@ -175,7 +175,7 @@
     <value>Pessoal</value>
   </data>
   <data name="Pregunta" xml:space="preserve">
-    <value>Pregunta </value>
+    <value>Pergunta sobre recuperação</value>
   </data>
   <data name="RecuperarContraseña" xml:space="preserve">
     <value>Recuperar senha</value>
@@ -184,7 +184,7 @@
     <value>Cadastrar-se</value>
   </data>
   <data name="Respuesta" xml:space="preserve">
-    <value>Resposta</value>
+    <value>Resposta de recuperação</value>
   </data>
   <data name="Restablecer" xml:space="preserve">
     <value>Restaurar</value>
