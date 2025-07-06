@@ -14,10 +14,6 @@
             <TextBlock Text="{Binding Titulo_Loc}" FontSize="40" Margin="0,10,0,0"/>
             <TextBox Header="{Binding Nombre_Loc}" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel>
-                <TextBlock Text="{Binding Color_Loc}" FontSize="24"/>
-                <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
-            </StackPanel>
-            <StackPanel>
                 <TextBlock Text="{Binding Inicio_Loc}"  FontSize="24"/>
                 <Line X1="60" Stretch="Fill" Margin="0,10,0,0" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center"/>
             </StackPanel>

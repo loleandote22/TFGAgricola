@@ -13,14 +13,14 @@
     <UnoSingleProject>true</UnoSingleProject>
 
     <!-- Display name -->
-    <ApplicationTitle>AplicacionTFG</ApplicationTitle>
+    <ApplicationTitle>	VerdeBitácora</ApplicationTitle>
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.AplicacionTFG</ApplicationId>
+    <ApplicationId>	VerdeBitácora</ApplicationId>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <!-- Package Publisher -->
-    <ApplicationPublisher>alfos</ApplicationPublisher>
+    <ApplicationPublisher>Alfonso Sebastián Simorte Ramos</ApplicationPublisher>
     <!-- Package Description -->
     <Description>AplicacionTFG powered by Uno Platform.</Description>
     <!--

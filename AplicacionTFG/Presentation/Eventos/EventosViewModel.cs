@@ -688,7 +688,7 @@ public class EventoViewModel : ViewModelBase
         }
     }
 
-    private void OnDelete(TareaActualizacion item)
+    private void OnDelete(TareaActualizacion? item)
     {
         try 
         {
