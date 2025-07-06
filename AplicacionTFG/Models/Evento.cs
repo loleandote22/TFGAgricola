@@ -83,7 +83,6 @@ public class TareaActualizacion
     [JsonIgnore]
     public TareaDetalle TareaDetalle { get; set; }
     public int UsuarioId { get; set; }
-    [JsonIgnore]
     public Usuario Usuario { get; set; }
 }
 
