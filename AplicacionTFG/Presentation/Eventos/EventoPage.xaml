@@ -36,7 +36,7 @@
                     <CheckBox Grid.Row="3" IsEnabled="False" IsChecked="{Binding Finalizada,Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"/>
                     <TextBlock Text="{Binding Actualizaciones_Loc}" Margin="10,0,0,0" Grid.Row="4" Grid.ColumnSpan="3"/>
                     <Line X1="60" Stretch="Fill" Margin="0,0,0,10" Stroke="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="5" />
-                    <TextBlock Grid.Row="6" Visibility="{Binding NoHayActualizacionesVisibility, UpdateSourceTrigger=PropertyChanged}" Text="{Binding NoElementos_Loc}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="6" Visibility="{Binding NoHayActualizacionesVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3" Text="{Binding NoElementos_Loc}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <ListView ItemsSource="{Binding Actualizaciones, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="6" Grid.ColumnSpan="3">
                         <ListView.ItemTemplate>
                             <DataTemplate>
