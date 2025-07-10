@@ -14,11 +14,11 @@
         <GridView Grid.Row="1" ItemsSource="{Binding Usuarios}" SelectedItem="{Binding UsuarioSeleccionado,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <utu:Card
+                    <utu:Card 
                         HeaderContent="{Binding Nombre}"
                         SubHeaderContent="{Binding TipoNombre}"
                         MediaContent="{Binding Imagen}"
-                        AutomationProperties.AutomationId="Outlined_Card" Style="{StaticResource OutlinedCardStyle}" Width="125">
+                        AutomationProperties.AutomationId="{Binding Nombre}" Style="{StaticResource OutlinedCardStyle}" Width="125">
                         <utu:Card.HeaderContentTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" FontSize="15" HorizontalAlignment="Center"/>

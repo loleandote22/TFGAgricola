@@ -380,7 +380,7 @@ public partial class LoginViewModel: ViewModelBase
                     await _navigator.NavigateViewModelAsync<MainViewModel>(this, data: usuarioDevuelto);
                 }
                 else
-                    await _navigator.ShowMessageDialogAsync(this, title: "Login", content: _localizer["ErrorLogin"]);
+                    await _navigator.ShowMessageDialogAsync(this, title: "Login", content: _localizer["NombreContraseñaError"]);
             }
             catch (HttpRequestException)
             {

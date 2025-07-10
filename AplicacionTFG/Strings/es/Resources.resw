@@ -483,4 +483,7 @@
   <data name="NoEliminarActualizacionesAjena" xml:space="preserve">
     <value>No tienes permiso para eliminar actualizaciones de otros trabajadores</value>
   </data>
+  <data name="NombreContraseñaError" xml:space="preserve">
+    <value>Nombre o contraseña incorrectos</value>
+  </data>
 </root>

@@ -7,15 +7,15 @@
         net9.0-windows10.0.26100;
         net9.0-browserwasm;
         net9.0-desktop
-</TargetFrameworks>
+    </TargetFrameworks>
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
 
     <!-- Display name -->
-    <ApplicationTitle>	VerdeBitácora</ApplicationTitle>
+    <ApplicationTitle>VerdeBitácora</ApplicationTitle>
     <!-- App Identifier -->
-    <ApplicationId>	VerdeBitácora</ApplicationId>
+    <ApplicationId>VerdeBitácora</ApplicationId>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
@@ -52,7 +52,7 @@
         Localization;
         Navigation;
         ThemeService;
-        SkiaRenderer;<!--Si no web SkiaRenderer; Add SkiaRendering feature for SkiaSharp support -->
+        SkiaRenderer; <!--Si NO se estan ejecutando pruebas automáticas en web añadir SkiaRenderer; Add SkiaRendering feature for SkiaSharp support -->
     </UnoFeatures>
   </PropertyGroup>
     <ItemGroup>

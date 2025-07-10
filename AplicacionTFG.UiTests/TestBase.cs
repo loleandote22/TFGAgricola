@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework;
 using Uno.UITest;
@@ -48,6 +48,7 @@ public class TestBase
     public void TearDownTest()
     {
         TakeScreenshot("teardown");
+        (App as IDisposable)?.Dispose();
     }
 
     public FileInfo TakeScreenshot(string stepName)

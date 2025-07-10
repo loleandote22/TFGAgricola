@@ -12,12 +12,12 @@
     <utu:SafeArea Insets="SoftInput">
         <ScrollView VerticalScrollBarVisibility="Auto">
             <Grid RowDefinitions ="Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="16" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <TextBox Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc}"/>
-                <TextBox InputScope="Number" Style="{StaticResource Microsoft.UI.Xaml.Controls.NumberBox}" Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Header="{Binding Cantidad_Loc}"/>
-                <TextBox Text="{Binding Unidad, Mode= TwoWay}" Grid.Row="2" Header="{Binding Medicion_Loc}"/>
-                <TextBox MaxHeight="150" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AutomationProperties.AutomationId="TextBox_MultiLine_Material" AcceptsReturn="True" Grid.Row="3" Header="{Binding Descripcion_Loc}"/>
-                <ComboBox ItemsSource="{Binding Tipos}"  SelectedIndex="{Binding Tipo, Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}" Grid.Row="4"/>
-                <Button Command="{Binding GuardarCommand}" Grid.Row="5" Content="{Binding Guardar_Loc}" HorizontalAlignment="Center" Margin="0,10,10,0" Width="150" />
+                <TextBox AutomationProperties.AutomationId="NombreInventario" Text="{Binding Nombre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{Binding Nombre_Loc}"/>
+                <TextBox AutomationProperties.AutomationId="CantidadInventario" InputScope="Number" Style="{StaticResource Microsoft.UI.Xaml.Controls.NumberBox}" Text="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Header="{Binding Cantidad_Loc}"/>
+                <TextBox AutomationProperties.AutomationId="UnidadInventario" Text="{Binding Unidad, Mode= TwoWay}" Grid.Row="2" Header="{Binding Medicion_Loc}"/>
+                <TextBox AutomationProperties.AutomationId="DescripcionInventario" MaxHeight="150" Text="{Binding Descripcion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="3" Header="{Binding Descripcion_Loc}"/>
+                <ComboBox AutomationProperties.AutomationId="TipoInventario" ItemsSource="{Binding Tipos}"  SelectedIndex="{Binding Tipo, Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{Binding Tipo_Loc}" Grid.Row="4"/>
+                <Button AutomationProperties.AutomationId="GuardarInventario" Command="{Binding GuardarCommand}" Grid.Row="5" Content="{Binding Guardar_Loc}" HorizontalAlignment="Center" Margin="0,10,10,0" Width="150" />
             </Grid>
         </ScrollView>
     </utu:SafeArea>
